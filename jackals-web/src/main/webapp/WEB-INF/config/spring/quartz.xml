@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util-4.0.xsd"
+       default-lazy-init="true">
+
+    <description>Quartz的本地Cron式执行任务配置</description>
+
+    <bean id="localQuartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean"
+          lazy-init="false">
+        <property name="triggers">
+            <list>
+                <ref bean="upgradeTrigger"/><!-- 升级信息 -->
+                <ref bean="fpGrowthTrigger"/><!-- 升级信息 -->
+                <ref bean="tencentNewsTrigger"/><!-- 升级信息 -->
+                <ref bean="ifengTrigger"/><!-- 升级信息 -->
+            </list>
+        </property>
+        <property name="quartzProperties">
+            <props>
+                <prop key="org.quartz.threadPool.threadCount">20</prop>
+            </props>
+        </property>
+        <property name="startupDelay" value="3"/>
+    </bean>
+    <!--*****************************************************-->
+
+    <bean id="upgradeTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="upgradeJobDetail"/>
+        <property name="cronExpression" value="${quartz.exp.163}"/>
+    </bean>
+    <bean id="upgradeJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="upgradeJob"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="upgradeJob" class="jackals.web.quartz.News163Job"/>
+
+    <!--*****************************************************-->
+    <bean id="fpGrowthTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="fpGrowthJobDetail"/>
+        <property name="cronExpression" value="${quartz.exp.fpgrowth}"/>
+    </bean>
+    <bean id="fpGrowthJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="fpGrowthJob"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+
+    <bean id="fpGrowthJob" class="jackals.web.quartz.FpGrowthJob"/>
+    <!--*****************************************************-->
+    <bean id="tencentNewsTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="tencentNewsJobDetail"/>
+        <property name="cronExpression" value="${quartz.exp.tencent}"/>
+    </bean>
+    <bean id="tencentNewsJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="tencentNewsJob"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+
+    <bean id="tencentNewsJob" class="jackals.web.quartz.TencentNewsJob"/>
+
+    <!--*****************************************************-->
+    <bean id="ifengTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="ifengJobDetail"/>
+        <property name="cronExpression" value="${quartz.exp.ifeng}"/>
+    </bean>
+    <bean id="ifengJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="ifengJob"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+
+    <bean id="ifengJob" class="jackals.web.quartz.IfengJob"/>
+</beans>
