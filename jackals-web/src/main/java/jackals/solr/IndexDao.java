@@ -1,5 +1,7 @@
 package jackals.solr;
 
+import jackals.web.pojo.News;
+
 import java.util.List;
 import java.util.Map;
 
@@ -12,5 +14,7 @@ public interface IndexDao {
     public List<? extends Map> sortList(
             String queryStr, int pageNum, int size, String orderBy);
 
-    public void delete(String q) ;
+    public void delete(String q);
+
+    public List<News> sortListObj(String queryStr, int pageNum, int size, String orderBy);
 }

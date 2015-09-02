@@ -3,6 +3,7 @@ package jackals.web.controller;
 import com.alibaba.fastjson.JSON;
 import jackals.model.WordGroup;
 import jackals.solr.IndexDao;
+import jackals.web.pojo.News;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,19 +39,16 @@ public class TestController {
     @RequestMapping("test.do")
     public ModelAndView test(HttpServletRequest request,
                              @RequestParam(required = false) String word,
-                             @RequestParam(required = false) String page
+                             @RequestParam(required = false,defaultValue = "1") Integer page
     ) {
         String user = request.getAttribute("user") + "";
-
-        if (!StringUtils.isNumeric(page)) {
-            page = "1";
-        }
 //        String query = "title:(" + word.replaceAll("\\s","") + ")";
         String query = buildQueyr(word);
         log.info(query);
-        List list = indexDao.sortList(query, Integer.valueOf(page), 30, "infoTime_dt desc");
+        List<News> list = indexDao.sortListObj(query, Integer.valueOf(page), 10, "infoTime_dt desc");
         request.setAttribute("words", redisTemplate.opsForZSet().range(user, 0, Long.MAX_VALUE));
         request.setAttribute("list", list);
+        request.setAttribute("page", page);
         return new ModelAndView("/index");
     }
 

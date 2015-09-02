@@ -1,5 +1,6 @@
 package jackals.solr;
 
+import jackals.web.pojo.News;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -49,12 +50,31 @@ public class SolrDaoImpl implements IndexDao {
         }
 
     }
-
+    public List<News> sortListObj(String queryStr, int pageNum, int size, String orderBy) {
+        try {
+            SolrQuery query = new SolrQuery();
+            query.setQuery(queryStr);
+            query.set("fl", "id,title,infoTime_dt,content_css");
+            query.set("q.op", "AND");
+            query.set("wt", "json");
+            query.set("sort", orderBy);
+            query.setStart((pageNum - 1) * size);
+            query.setRows(size);
+            long s = System.currentTimeMillis();
+            log.info("sortList: /select?" + query.toString());
+            QueryResponse rsp = solrServer.query(query);
+            System.out.println(System.currentTimeMillis()-s);
+            return rsp.getBeans(News.class);
+        } catch (Exception e) {
+            log.error("listBySolrQuery error", e);
+        }
+        return new ArrayList();
+    }
     public List<? extends Map> sortList(String queryStr, int pageNum, int size, String orderBy) {
         try {
             SolrQuery query = new SolrQuery();
             query.setQuery(queryStr);
-            query.set("fl", "id,title,infoTime_dt");
+            query.set("fl", "id,title,infoTime_dt,content_css");
             query.set("q.op", "AND");
             query.set("wt", "json");
             query.set("sort", orderBy);

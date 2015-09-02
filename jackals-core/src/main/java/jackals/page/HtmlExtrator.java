@@ -53,7 +53,8 @@ abstract public class HtmlExtrator {
         }
         JSONObject obj = (JSONObject) extrat(page, jobInfo);
         System.out.println("==================================================");
-        System.out.println(obj.get("content_css").toString().replaceAll("\\s*",""));
+        System.out.println(obj);
+//        System.out.println(obj.get("content_css").toString().replaceAll("\\s*",""));
 
 
 

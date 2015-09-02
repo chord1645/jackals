@@ -202,6 +202,7 @@ public class ContentExtrat {
         doc.select("style").remove();
         doc.select("form").remove();
         doc.select("input").remove();
+        doc.select("textarea").remove();
         doc.getElementsByAttributeValue("style", "display:none; width:0px; height:0px; overflow:hidden;").remove();
         return doc;
     }

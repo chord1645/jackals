@@ -4,6 +4,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="jackals.web.pojo.News" %>
 <!DOCTYPE html>
 <html lang="en" ng-app="offsetapp">
 <head>
@@ -33,6 +34,7 @@
             display: inline-block !important;
             padding-bottom: 5px !important;
             padding-top: 5px !important;
+            font-size: medium;
         }
 
         .link3 {
@@ -79,7 +81,7 @@
             <tr>
                 <td>
                     <form action="subscribe.do">
-                        <input name="word" value="">
+                        &nbsp;&nbsp;&nbsp;&nbsp;<input name="word" value="">
                         <button type="submit">+</button>
                         <a style="display: inline-block;" href="topic.do">\("▔□▔)/ </a>
                     </form>
@@ -97,34 +99,41 @@
     <div ng-view>
         <table>
             <%
-                List<Map<String, Object>> list = (List<Map<String, Object>>) request.getAttribute("list");
-                for (Map<String, Object> obj : list) {
+                List<News>  list = (List<News> ) request.getAttribute("list");
+                for (News obj : list) {
             %>
             <tr>
-                <td><a class="link2" target="_blank" href="<%=obj.get("id")%>"><%=obj.get("title")%>
+                <td><a class="link2" target="_blank" href="<%=obj.getId()%>"><%=obj.getTitle()%>
                 </a></td>
+
+            </tr>
+            <tr>
+
                 <td>
-                    <%Date infoTime = (Date) obj.get("infoTime_dt");%>
-                    <%=infoTime!=null?new DateTime(infoTime).toString("yyyy-MM-dd HH:mm:ss"):""%>
-                <%--<%=sdf.format(obj.get("infoTime_dt"))%>--%>
+                    <%=obj.getTime()!=null?new DateTime(obj.getTime()).toString("yyyy-MM-dd HH:mm:ss"):""%>
+                    <%--<%=sdf.format(obj.get("infoTime_dt"))%>--%>
                 </td>
             </tr>
             <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
+                <td>
+                    <span style="color: #ababab"> <%=obj.getContent()%></span>
+
+                </td>
             </tr>
             <%
                 }
             %>
-
+            <tr>
+                <td style="text-align:justify"><a class="link1" href="test.do?page=${page-1}">上页</a>
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+                    <a class="link1" href="test.do?page=${page+1}">下页</a>  </td>
+            </tr>
         </table>
-
     </div>
 
 </div>
-<!-- /.container -->
-
-<!-- Bootstrap core JavaScript
-================================================== -->
 </body>
 </html>
