@@ -20,7 +20,7 @@ import org.junit.Before;
 
 public class KafkaConsumer extends Thread {
     //    static String testTopic = "listener_job_news.mtime.com_1006";
-    public static String testTopic = "listener_job_news.163.com";
+    public static String testTopic = "test";
 
     public KafkaConsumer() {
         super();

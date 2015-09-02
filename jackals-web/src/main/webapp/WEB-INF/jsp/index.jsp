@@ -3,6 +3,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="org.joda.time.DateTime" %>
+<%@ page import="java.util.Date" %>
 <!DOCTYPE html>
 <html lang="en" ng-app="offsetapp">
 <head>
@@ -103,8 +104,8 @@
                 <td><a class="link2" target="_blank" href="<%=obj.get("id")%>"><%=obj.get("title")%>
                 </a></td>
                 <td>
-                    <%--<%=obj.get("infoTime_dt")%>--%>
-                    <%=new DateTime(obj.get("infoTime_dt")).toString("yyyy-MM-dd HH:mm:ss")%>
+                    <%Date infoTime = (Date) obj.get("infoTime_dt");%>
+                    <%=infoTime!=null?new DateTime(infoTime).toString("yyyy-MM-dd HH:mm:ss"):""%>
                 <%--<%=sdf.format(obj.get("infoTime_dt"))%>--%>
                 </td>
             </tr>

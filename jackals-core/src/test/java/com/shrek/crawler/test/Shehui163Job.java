@@ -50,7 +50,8 @@ public class Shehui163Job extends BaseTest {
 //        TopicManager.deleteTopic(Constants.TopicJobPrefix + jobInfo.getId());
         jobManager.update(jobInfo,
 //                ImmutableList.of("1")
-                ImmutableList.of("10", "20", "30")
+//                ImmutableList.of("10", "20", "30")
+                ImmutableList.of("10")
         );
     }
 
@@ -61,7 +62,7 @@ public class Shehui163Job extends BaseTest {
         jobInfo.setJobModel(Constants.JobModel.addSpider);
 //        jobManager.addSpider(jobInfo, "1");
 //        jobManager.addSpider(jobInfo, "10");
-        jobManager.addSpider(jobInfo, "20");
+//        jobManager.addSpider(jobInfo, "20");
         jobManager.addSpider(jobInfo, "30");
     }
 

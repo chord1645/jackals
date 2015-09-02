@@ -3,14 +3,16 @@ package com.shrek.crawler.test.kafka;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import com.shrek.crawler.test.BaseTest;
 import jackals.Constants;
 import jackals.mq.kafka.KafkaSender;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
+import org.junit.Test;
 
 
-public class KafkaProducer extends Thread {
+public class KafkaProducer extends BaseTest implements Runnable {
 
     KafkaSender sender = new KafkaSender();
 
@@ -26,7 +28,7 @@ public class KafkaProducer extends Thread {
         int i = 0;
         while (true) {
             System.out.println("send=" + i);
-            sender.sendOne(KafkaConsumer.testTopic,"message: " + i++);
+            sender.sendOne(KafkaConsumer.testTopic, "message: " + i++);
 //            producer.send(new KeyedMessage<String, String>(KafkaConsumer.testTopic, i+"", "message: " + i++));
             if (i > 50000)
                 break;
@@ -38,11 +40,12 @@ public class KafkaProducer extends Thread {
         }
     }
 
-
-    public static void main(String[] args) {
+    @Test
+    public void start() throws InterruptedException {
 //        for(int i=0;i<3;i++){
-        new KafkaProducer().start();// 使用kafka集群中创建好的主题 test
+        new Thread(new KafkaProducer()).start();
 //        }
+        TimeUnit.HOURS.sleep(1);
 
     }
 

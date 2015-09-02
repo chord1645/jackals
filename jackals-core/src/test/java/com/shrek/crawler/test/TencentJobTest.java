@@ -25,7 +25,7 @@ public class TencentJobTest extends BaseTest {
     }
 
     @Test
-    public void start() throws IOException, SolrServerException {
+    public void update() throws IOException, SolrServerException {
         JobInfo jobInfo = TencentNews.job();
         jobManager.update(jobInfo,
                 ImmutableList.of("10")
