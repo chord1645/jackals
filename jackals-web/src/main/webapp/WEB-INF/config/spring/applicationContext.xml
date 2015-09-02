@@ -42,8 +42,8 @@
 	<context:annotation-config/>
 
     <task:annotation-driven/>
-	
-	<util:properties id="crawlerConfig" location="WEB-INF/config/config-crawler.properties" />
+    <util:properties id="mqConfig" location="WEB-INF/config/config-mq.properties" />
+    <util:properties id="crawlerConfig" location="WEB-INF/config/config-crawler.properties" />
 	<util:properties id="cxfConfig" location="WEB-INF/config/config-cxf.properties" />
 
 
@@ -54,7 +54,7 @@
     <import resource="beans.xml"/>
     <import resource="mvc.xml"/>
     <import resource="solr.xml"/>
-    <!--<import resource="quartz.xml"/>-->
+    <import resource="quartz.xml"/>
     <import resource="redis.xml"/>
 
 	<!--<bean id="messageSource"-->

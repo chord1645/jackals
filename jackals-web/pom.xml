@@ -54,7 +54,7 @@
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.github.shrek</groupId>
+            <groupId>com.github.chord1645</groupId>
             <artifactId>jackals-core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
