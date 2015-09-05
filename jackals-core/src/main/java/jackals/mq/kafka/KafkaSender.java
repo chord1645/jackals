@@ -2,8 +2,6 @@ package jackals.mq.kafka;
 
 import com.alibaba.fastjson.JSON;
 import jackals.Constants;
-import jackals.job.pojo.ExtratField;
-import jackals.job.pojo.JobInfo;
 import jackals.model.RequestOjb;
 import jackals.mq.CommonTextSender;
 import jackals.utils.SpringContextHolder;
@@ -15,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 public class KafkaSender extends CommonTextSender {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -29,18 +27,31 @@ public class KafkaSender extends CommonTextSender {
         properties.put("zookeeper.connect", mqConfig.getProperty("mq.kafka.zookeeper"));//声明zk
         properties.put("serializer.class", "kafka.serializer.StringEncoder");
         properties.put("metadata.broker.list", mqConfig.getProperty("mq.kafka.server"));
-//        properties.put("group.id", KafkaProperties.group1);// 必须要使用别的组名称， 如果生产者和消费者都在同一组，则不能访问同一组内的topic数据
+        properties.put("group.id", Constants.Kafka.defaultGroup+System.currentTimeMillis());// 必须要使用别的组名称， 如果生产者和消费者都在同一组，则不能访问同一组内的topic数据
         return new Producer<Integer, String>(new ProducerConfig(properties));
     }
-
+    public void sendOne(String topic, String key ,String msg) {
+        long s = System.currentTimeMillis();
+        logger.debug("send topic={} ,msg={}", topic, msg);
+        Producer producer = createProducer();
+        producer.send(new KeyedMessage<String, String>(topic,key, msg));
+//        producer.send(new KeyedMessage<String, String>(topic, randomKey(), msg));
+        producer.close();
+        logger.info("cost:{}ms", System.currentTimeMillis() - s);
+    }
     @Override
     public void sendOne(String topic, String msg) {
         long s = System.currentTimeMillis();
         logger.debug("send topic={} ,msg={}", topic, msg);
         Producer producer = createProducer();
-        producer.send(new KeyedMessage<String, String>(topic, Constants.Kafka.DefaultKey, msg));
+//        producer.send(new KeyedMessage<String, String>(topic, msg));
+        producer.send(new KeyedMessage<String, String>(topic, randomKey(), msg));
         producer.close();
         logger.info("cost:{}ms", System.currentTimeMillis() - s);
+    }
+
+    private String randomKey() {
+        return UUID.randomUUID().toString();
     }
 
 //    @Override
@@ -65,7 +76,7 @@ public class KafkaSender extends CommonTextSender {
         List<KeyedMessage> msgList = new ArrayList<KeyedMessage>();
         for (RequestOjb r : list) {
             i++;
-            msgList.add(new KeyedMessage<String, String>(topic, JSON.toJSONString(r)));
+            msgList.add(new KeyedMessage<String, String>(topic,i+"", JSON.toJSONString(r)));
         }
         producer.send(msgList);
         producer.close();

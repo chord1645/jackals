@@ -13,8 +13,8 @@ public class RunSpider2 extends BaseTest {
 //        new LogbackConfigurer();
 //        new ClassPathXmlApplicationContext("/jar/config/spring/applicationContext.xml");
 //        new KafkaSpider("2");
-        new ActiveMQSpider("2").start();
-        TimeUnit.MINUTES.sleep(300000000);
+        new KafkaSpider("2").start();
+
 
     }
 

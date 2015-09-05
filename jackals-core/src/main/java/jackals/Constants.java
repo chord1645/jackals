@@ -9,7 +9,7 @@ public class Constants {
     public static String TopicJobPrefix = "listener_job_";
 
     static public class Kafka {
-        public final static String defaultGroup = "group";
+        public final static String defaultGroup = "defaultGroup";
         public final static String DefaultKey = "key";
     }
 

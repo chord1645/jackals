@@ -1,13 +1,8 @@
 package com.shrek.crawler.test.kafka;
 
-import java.util.List;
-import java.util.Properties;
-
+import com.shrek.crawler.test.BaseTest;
 import jackals.Constants;
-import jackals.job.JobManager;
 import jackals.mq.MQListener;
-import jackals.mq.activemq.ActiveMQSender;
-import jackals.mq.kafka.KafkaSender;
 import jackals.utils.BlockExecutorPool;
 import jackals.utils.CountableThreadPool;
 import jackals.utils.LogbackConfigurer;
@@ -15,13 +10,35 @@ import jackals.utils.SpringContextHolder;
 import kafka.consumer.*;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
-import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 
-public class KafkaConsumer extends Thread {
+public class KafkaConsumer extends BaseTest implements Runnable {
     //    static String testTopic = "listener_job_news.mtime.com_1006";
     public static String testTopic = "test";
-
+    @Test
+    public void main() throws InterruptedException {
+//        testTopic = Constants.TopicSpiderPrefix+"30";
+        new LogbackConfigurer("/jar/config/test/logback.xml");
+        new Thread(new KafkaConsumer()).start();
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                try {
+//                    TimeUnit.SECONDS.sleep(30);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                kafkaConsumer.shutdown();
+//            }
+//        }.start();
+        System.out.println("kafkaConsumer started");
+        TimeUnit.MINUTES.sleep(3000);
+    }
     public KafkaConsumer() {
         super();
     }
@@ -32,7 +49,7 @@ public class KafkaConsumer extends Thread {
         Properties mqConfig = SpringContextHolder.getBean("mqConfig");
         Properties properties = new Properties();
         properties.put("zookeeper.connect", mqConfig.getProperty("mq.kafka.zookeeper"));//声明zk
-        properties.put("group.id", "testGroup1");// 必须要使用别的组名称， 如果生产者和消费者都在同一组，则不能访问同一组内的topic数据
+        properties.put("group.id", Constants.Kafka.defaultGroup);// 必须要使用别的组名称， 如果生产者和消费者都在同一组，则不能访问同一组内的topic数据
         return Consumer.createJavaConsumerConnector(new ConsumerConfig(properties));
     }
 
@@ -143,23 +160,6 @@ public class KafkaConsumer extends Thread {
     }
 
 
-    public static void main(String[] args) {
-        new LogbackConfigurer("/jar/config/test/logback.xml");
-        final KafkaConsumer kafkaConsumer = new KafkaConsumer();// 使用kafka集群中创建好的主题 test
-        kafkaConsumer.start();
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                try {
-//                    TimeUnit.SECONDS.sleep(30);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                kafkaConsumer.shutdown();
-//            }
-//        }.start();
-        System.out.println("kafkaConsumer started");
-    }
 
     synchronized private void shutdown() {
         System.out.println("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");

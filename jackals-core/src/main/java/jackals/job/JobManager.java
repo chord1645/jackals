@@ -82,6 +82,7 @@ public class JobManager {
         String json = JSON.toJSONString(jobInfo);
         if (!CollectionUtils.isEmpty(spiders)) {
             for (String spiderId : spiders) {
+                TopicManager.deleteTopic(Constants.TopicSpiderPrefix + spiderId);
                 logger.info("update {} {}",Constants.TopicSpiderPrefix + spiderId,json);
                 commonSender.sendOne(Constants.TopicSpiderPrefix + spiderId, json);
             }

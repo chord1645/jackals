@@ -6,7 +6,6 @@ import jackals.job.pojo.JobInfo;
 import jackals.mq.kafka.KafkaSender;
 import jackals.page.HtmlExtratorImpl;
 import jackals.simples.IfengNews;
-import jackals.simples.TencentNews;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.junit.Test;
 
@@ -26,11 +25,11 @@ public class IfengJobTest extends BaseTest {
     }
 
     @Test
-    public void start() throws IOException, SolrServerException {
+    public void update() throws IOException, SolrServerException {
         JobInfo jobInfo = IfengNews.job();
         jobManager.update(jobInfo,
-                ImmutableList.of("10")
-//                ImmutableList.of("10", "20", "30")
+//                ImmutableList.of("1", "2")
+                ImmutableList.of("10", "30")
         );
     }
 
