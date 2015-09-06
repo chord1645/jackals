@@ -39,7 +39,7 @@ public class News163Job {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, -7);
-        query += " infoTime_dt:[* TO " + sdf.format(c.getTime()) + "]";
+        query += " saveTime_dt:[* TO " + sdf.format(c.getTime()) + "]";
         query += " AND -title:北京 ";
         log.info("clean solr {}",query);
         indexDao.delete(query);
