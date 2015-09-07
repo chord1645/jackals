@@ -5,6 +5,7 @@
 <%@ page import="org.joda.time.DateTime" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="jackals.web.pojo.News" %>
+<%@ page import="org.apache.commons.lang3.StringUtils" %>
 <!DOCTYPE html>
 <html lang="en" ng-app="offsetapp">
 <head>
@@ -20,6 +21,27 @@
     <link href="//netdna.bootstrapcdn.com/bootswatch/3.0.3/slate/bootstrap.min.css" rel="stylesheet">
     <style>
         .link1 {
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+            color: #fff !important;
+            font-weight: bold;
+            font-size: large;
+            display: inline-block !important;
+            padding-bottom: 5px !important;
+            padding-top: 5px !important;
+
+        }
+
+        .link1_chos {
+            /*border-bottom: outset;*/
+            /*border-bottom-width: 2px;*/
+            /*border-bottom-color: #d8d8d8;*/
+            /*border-right: outset !important;*/
+            /*border-right-width: 2px !important;*/
+            /*border-right-color: #d8d8d8 !important;*/
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+            background-color: #6e6e6e;
             color: #fff !important;
             font-weight: bold;
             font-size: large;
@@ -46,26 +68,40 @@
             padding-left: 5px !important;
             padding-right: 5px !important;
         }
+
         .li_1 {
+            display: inline !important;
+        }
+
+        .li_2 {
+            /*background-color: #606060;*/
+            border-color: #d8d8d8;
+            border-bottom: solid;
+            border-bottom-width: 2px;
             display: inline !important;
         }
     </style>
 </head>
 
 <body>
-<nav class="navbar navbar-default" role="navigation">
+<nav class="navbar navbar-default" style="padding-left: 15px" role="navigation">
     <div class="container-fluid">
+
         <table style="width: 100%">
             <tr>
                 <td>
+                    <% String word = (String) request.getAttribute("word");%>
+                    <!-- <%=word%>-->
                     <ul class="nav navbar-nav" style="display: inline;">
-                        <li class="li_1"><a class="link1" href="test.do">最新</a></li>
+                        <li class="li_1">
+                            &nbsp;&nbsp;&nbsp; &nbsp;<a class="<%=StringUtils.isEmpty(word)?"link1_chos":"link1"%>"
+                                                        href="test.do">最新</a></li>
                         <%
                             LinkedHashSet<String> words = (LinkedHashSet<String>) request.getAttribute("words");
                             for (String s : words) {
                         %>
                         <li class="li_1">
-                            <a class="link1" href="test.do?word=<%=s%>"><%=s%>
+                            <a class="<%=s.equals(word)?"link1_chos":"link1"%>" href="test.do?word=<%=s%>"><%=s%>
                             </a>
                             <a class="link3" href="del.do?word=<%=s%>">×</a>
                         </li>
@@ -81,7 +117,7 @@
             <tr>
                 <td>
                     <form action="subscribe.do">
-                        &nbsp;&nbsp;&nbsp;&nbsp;<input name="word" value="">
+                        <input name="word" value="">
                         <button type="submit">+</button>
                         <a style="display: inline-block;" href="topic.do">\("▔□▔)/ </a>
                     </form>
@@ -99,7 +135,7 @@
     <div ng-view>
         <table>
             <%
-                List<News>  list = (List<News> ) request.getAttribute("list");
+                List<News> list = (List<News>) request.getAttribute("list");
                 for (News obj : list) {
             %>
             <tr>
@@ -110,7 +146,7 @@
             <tr>
 
                 <td>
-                    <%=obj.getTime()!=null?new DateTime(obj.getTime()).toString("yyyy-MM-dd HH:mm:ss"):""%>
+                    <%=obj.getTime() != null ? new DateTime(obj.getTime()).toString("yyyy-MM-dd HH:mm:ss") : ""%>
                     <%--<%=sdf.format(obj.get("infoTime_dt"))%>--%>
                 </td>
             </tr>
@@ -129,7 +165,7 @@
                     &nbsp;
                     &nbsp;
                     &nbsp;
-                    <a class="link1" href="test.do?page=${page+1}">下页</a>  </td>
+                    <a class="link1" href="test.do?page=${page+1}">下页</a></td>
             </tr>
         </table>
     </div>

@@ -19,9 +19,10 @@ public class EncryptConfig extends Thread {
     static String key;
     static String encoding = "utf-8";
     //    static String path = "D:\\work\\workspace\\crawler\\jackals\\src\\main\\resources\\jar\\config\\config-jackals.properties";
-    static String path1 = "D:\\work\\workspace-idea\\jackals\\jackals-core\\src";
-    static String path2 = "D:\\work\\workspace-idea\\jackals\\jackals-web\\src";
-
+//    static String path1 = "D:\\work\\workspace-idea\\jackals\\jackals-core\\src";
+//    static String path2 = "D:\\work\\workspace-idea\\jackals\\jackals-web\\src";
+    static String path1 = "D:\\work\\workspace\\jackals\\jackals-core\\src";
+    static String path2 = "D:\\work\\workspace\\jackals\\jackals-web\\src";
 
     public static void main(String[] args) throws IOException {
         BufferedReader strin = new BufferedReader(new InputStreamReader(System.in));
