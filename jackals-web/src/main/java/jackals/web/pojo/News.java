@@ -40,7 +40,7 @@ public class News {
         if (StringUtils.isEmpty(content)) {
             return "";
         } else {
-            String str = content.replaceAll("(?is)<.*?>","").replaceAll("\n","").trim();
+            String str = content.replaceAll("(?is)<.*?>","").replaceAll("\n|　", "").trim();
             return str.substring(0, str.length() > 50 ? 50 : str.length())+"...";
         }
 

@@ -49,6 +49,7 @@ public class TestController {
         request.setAttribute("words", redisTemplate.opsForZSet().range(user, 0, Long.MAX_VALUE));
         request.setAttribute("list", list);
         request.setAttribute("page", page);
+        request.setAttribute("word", word);
         return new ModelAndView("/index");
     }
 
