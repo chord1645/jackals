@@ -15,7 +15,7 @@
     <meta name="description" content="">
     <meta name="author" content="pierre">
 
-    <title>∑(っ °Д °;)っ</title>
+    <title>∑(っ °Д °;)っ没想好叫啥名字哪！</title>
 
     <!-- Bootstrap core CSS -->
     <link href="//netdna.bootstrapcdn.com/bootswatch/3.0.3/slate/bootstrap.min.css" rel="stylesheet">
@@ -160,12 +160,12 @@
                 }
             %>
             <tr>
-                <td style="text-align:justify"><a class="link1" href="test.do?page=${page-1}">上页</a>
+                <td style="text-align:justify"><a class="link1" href="test.do?word=<%=StringUtils.isEmpty(word)?"":word%>&page=${page-1<1?1:page-1}">上页</a>
                     &nbsp;
                     &nbsp;
                     &nbsp;
                     &nbsp;
-                    <a class="link1" href="test.do?page=${page+1}">下页</a></td>
+                    <a class="link1" href="test.do?word=<%=StringUtils.isEmpty(word)?"":word%>&page=${page+1}">下页</a></td>
             </tr>
         </table>
     </div>
