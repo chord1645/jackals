@@ -15,15 +15,14 @@ import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 
 /**
- * 
- * @description 自定义持久性的zookeeper watcher
  * @author zhangchaoyang
+ * @description 自定义持久性的zookeeper watcher
  * @date 2014-6-22
  */
 public class PersistWatcher {
 
     private static final int TIMEOUT = 6000;
-    private static final String znode = "/globalconfnode";
+    private static final String znode = "/root";
     private static String globalConfData = "";
 
     private static Watcher getConnectWatcher() {
@@ -43,28 +42,10 @@ public class PersistWatcher {
             @Override
             public void process(WatchedEvent event) {
                 System.out.println("------------------------------------" + event);
-
                 try {
-                    if (event.getType().equals(EventType.NodeDataChanged)
-                            || event.getType().equals(EventType.NodeCreated)) {
-                        // 节点被创建或修改时更新缓存中的值
-                        Stat stat = zkp.exists(znode, this);// 再次注册监听
-//                        String data = new String(
-//                                zkp.getData(znode, false, stat));
-//                        globalConfData = data;
-                    } else if (event.getType().equals(EventType.NodeDeleted)) {
-                        // 节点被删除时报警
-                        System.out
-                                .println("global configuration node have been deleted!");
-                        try {
-                            // 再次注册监听
-                            zkp.exists(znode, this);
-                        } catch (KeeperException e) {
-                            if (e instanceof ConnectionLossException) {
-                                System.out.println("连接已断开。");
-                            }
-                        }
-                    }
+//                    zkp.register(this);
+//                    zkp.register(this);
+                    zkp.getChildren(znode, this);// 再次注册监听
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -76,21 +57,32 @@ public class PersistWatcher {
         try {
             new LogbackConfigurer();
             String connection = "localhost:" + 3181;
-            ZooKeeper zkp = new ZooKeeper(connection,
-                    TIMEOUT, 
-                    getConnectWatcher());
-            zkp.exists(znode, getExistsWatcher(zkp));
+            ZooKeeper zkp = new ZooKeeper(connection, TIMEOUT,
+                    new Watcher() {
+                        @Override
+                        public void process(WatchedEvent event) {
+
+                        }
+                    });
+//            zkp.register(getExistsWatcher(zkp));
             zkp.create(znode, "config_value".getBytes(), Ids.OPEN_ACL_UNSAFE,
-                    CreateMode.EPHEMERAL);
+                    CreateMode.PERSISTENT);
+            zkp.getChildren(znode, getExistsWatcher(zkp));
 
-            Thread.sleep(500);// 修改节点后必须sleep，等待watcher回调完成
+//            Thread.sleep(500);// 修改节点后必须sleep，等待watcher回调完成
             System.out.println(globalConfData);
-
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 3; i++) {
                 zkp.setData(znode, ("config_value" + i).getBytes(), -1);
-                Thread.sleep(500);// 修改节点后必须sleep，等待watcher回调完成
-                System.out.println(globalConfData);
+//                Thread.sleep(100);// 修改节点后必须sleep，等待watcher回调完成
             }
+            for (int i = 0; i < 3; i++) {
+                String child = "/child" + i;
+                zkp.create(znode + child, null, Ids.OPEN_ACL_UNSAFE,
+                        CreateMode.PERSISTENT);
+                zkp.setData(znode + child, ("config_value" + i).getBytes(), -1);
+//                Thread.sleep(500);// 修改节点后必须sleep，等待watcher回调完成
+            }
+
 
             zkp.close();// EPHEMERAL节点会被删除，但Session并不会马上失效(只不过ConnectionLoss了)，所以还是会触发watcher
 

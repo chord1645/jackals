@@ -44,15 +44,16 @@ public class WatcherDemo {
         System.out.println("--------------2----------------");
         zkp.create("/znodename", "znodedata".getBytes(), Ids.OPEN_ACL_UNSAFE,
                 CreateMode.PERSISTENT);
+        zkp.getChildren("/znodename", getWatcher("GETCHILDREN2"));
         zkp.create("/znodename/childnode", new byte[0], Ids.OPEN_ACL_UNSAFE,
                 CreateMode.PERSISTENT);
 
         Stat stat = zkp.exists("/znodename", getWatcher("EXISTS"));
-        zkp.getChildren("/", getWatcher("GETCHILDREN"));
+        zkp.getChildren("/", getWatcher("GETCHILDREN1"));
         zkp.getData("/znodename", getWatcher("GETDATA"), stat);
 
         stat = zkp.exists("/znodename/childnode", getWatcher("EXISTS"));
-        zkp.getChildren("/znodename", getWatcher("GETCHILDREN"));
+
         zkp.getData("/znodename/childnode", getWatcher("GETDATA"), stat);
 
         // zkp.close();
@@ -65,6 +66,7 @@ public class WatcherDemo {
                 CreateMode.PERSISTENT);
 //        zkp.delete("/znodename/childnode", -1);
         zkp.delete("/znodename/childnode3", -1);
+        zkp.delete("/znodename/childnode", -1);
         zkp.delete("/znodename", -1);
         zkp.close();
     }

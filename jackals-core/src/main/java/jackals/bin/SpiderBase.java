@@ -19,9 +19,7 @@ abstract public class SpiderBase implements MQListener {
     private ConcurrentHashMap<String, SpiderJob> jobMap = new ConcurrentHashMap<String, SpiderJob>();
 
     public static void main(String[] args) {
-
         System.out.println("###################################################");
-
     }
 
     /**
@@ -82,6 +80,11 @@ abstract public class SpiderBase implements MQListener {
 
     protected abstract SpiderJob createSpiderJob(JobInfo jobInfo);
 
-    protected abstract void start();
+    /**
+     * 添加zookeeper watcher
+     */
+    protected void start(){
+
+    }
 
 }
