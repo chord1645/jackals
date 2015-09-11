@@ -22,7 +22,7 @@ public class InitDocs extends BaseTest {
     @Autowired
     SolrServer solrServer;
 
-    static String input = "D:\\work\\tmp\\CORPUS";
+    static String input = "D:\\work\\tmp\\CORPUS1";
 
     private String buildQuery() {
         Calendar c = Calendar.getInstance();
@@ -43,7 +43,7 @@ public class InitDocs extends BaseTest {
 //        System.out.println("delete:" + new File(input).delete());
         String query = buildQuery();
 //        String query = "title:(三大 运营商)";
-        for (int x = 1; x <= 1; x++) {
+        for (int x = 1;x<=5 ; x++) {
             List list = sortList(query, x, 100, "saveTime_dt desc");
 //            List list = sortList("jobId_t:news.163.com", x, 100, "saveTime_dt desc");
             System.out.println(x);
@@ -73,7 +73,9 @@ public class InitDocs extends BaseTest {
             BufferedWriter bw = new BufferedWriter(
                     new OutputStreamWriter(new FileOutputStream(file, false)));
 //            bw.write(Entropy.cal(hd.e.text())+"\n");
-            bw.write(s);
+//            bw.write(title);
+            bw.write(title.replaceAll("_.*",""));
+//            bw.write(s);
             bw.close();
         } catch (Exception e) {
             e.printStackTrace();

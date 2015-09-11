@@ -26,7 +26,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: cn.nhorizon.commons:commons-classfier:2.1-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="commons-classfier" />
     <orderEntry type="library" name="Maven: com.chenlb.mmseg4j:mmseg4j-all-with-dic:1.8.6" level="project" />
     <orderEntry type="library" name="Maven: net.java.dev.appframework:appframework:1.03" level="project" />
     <orderEntry type="library" name="Maven: org.swinglabs:swing-worker:1.1" level="project" />

@@ -6,15 +6,15 @@ import cn.nhorizon.commons.classfier.utils.CHNWVTTokenizer;
 import com.alibaba.fastjson.JSON;
 import edu.udo.cs.wvtool.main.WVTWordVector;
 import smile.clustering.DBScan;
-import smile.math.distance.*;
-import smile.neighbor.KDTree;
+import smile.clustering.XMeans;
+import smile.math.distance.EuclideanDistance;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DbscanTest {
+public class XmeansTest {
     static VSMService service;
     static List<Doc> list = new ArrayList<Doc>();
     static File root = new File("D:\\work\\tmp\\CORPUS");
@@ -42,16 +42,12 @@ public class DbscanTest {
             list.add(doc);
             x++;
         }
-        EuclideanDistance ed =new EuclideanDistance();
-        long s = System.currentTimeMillis();
-        ed.d(list.get(0).vector.getValues(),list.get(1).vector.getValues());
-        System.out.println(System.currentTimeMillis()-s);
 //        cluster(data);
         write(cluster(data));
         System.currentTimeMillis();
     }
 
-    private static void write(DBScan<double[]> dbscan) {
+    private static void write(XMeans dbscan) {
         System.out.println(dbscan.toString());
         int[] lab = dbscan.getClusterLabel();
         for (int x = 0; x < lab.length; x++) {
@@ -68,10 +64,10 @@ public class DbscanTest {
         }
     }
 
-    private static DBScan<double[]> cluster(double[][] data) {
+    private static XMeans cluster(double[][] data) {
         long clock = System.currentTimeMillis();
-        DBScan<double[]> dbscan = new DBScan<double[]>(data, new KDTree<double[]>(data, data), 2, 1.2);
-//        DBScan<double[]> dbscan = new DBScan<double[]>(data, new EuclideanDistance(), 2, 1.0);
+        XMeans dbscan = new XMeans(data, data.length/3);
+
         System.out.format("DBSCAN clusterings %d samples in %dms\n", data.length, System.currentTimeMillis() - clock);
         System.out.println("getNumClusters:" + dbscan.getNumClusters());
         System.out.println("getClusterSize:" + dbscan.getClusterSize());
