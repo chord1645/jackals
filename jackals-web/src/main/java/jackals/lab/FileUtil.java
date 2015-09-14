@@ -23,7 +23,7 @@ public class FileUtil {
                     new InputStreamReader(new FileInputStream(file), encoding));
             String s = null;
             for (; (s = br.readLine()) != null; ) {
-                out.append(s);
+                out.append(s).append("\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -37,11 +37,11 @@ public class FileUtil {
         return out.toString();
     }
 
-    public static void write(File file, String text) {
+    public static void  write(File file, String text,boolean  append) {
         file.getParentFile().mkdirs();
         try {
             BufferedWriter bw = new BufferedWriter(
-                    new OutputStreamWriter(new FileOutputStream(file, false)));
+                    new OutputStreamWriter(new FileOutputStream(file, append)));
             bw.write(text);
             bw.close();
         } catch (Exception e) {

@@ -56,7 +56,7 @@ public class DbscanTest {
         int[] lab = dbscan.getClusterLabel();
         for (int x = 0; x < lab.length; x++) {
             Doc doc = list.get(x);
-            FileUtil.write(new File(output, lab[x] + "/" + doc.file.getName()), doc.text);
+            FileUtil.write(new File(output, lab[x] + "/" + doc.file.getName()), doc.text,false);
 //            double[][] cluster = new double[dbscan.getClusterSize()[k]][];
 //            for (int i = 0, j = 0; i < dataset[datasetIndex].length; i++) {
 //                if (dbscan.getClusterLabel()[i] == k) {
