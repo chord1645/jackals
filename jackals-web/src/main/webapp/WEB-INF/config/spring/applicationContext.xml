@@ -54,7 +54,7 @@
     <import resource="beans.xml"/>
     <import resource="mvc.xml"/>
     <import resource="solr.xml"/>
-    <!--<import resource="quartz.xml"/>-->
+    <import resource="quartz.xml"/>
     <import resource="redis.xml"/>
 
 	<!--<bean id="messageSource"-->

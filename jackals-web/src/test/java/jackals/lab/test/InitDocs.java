@@ -29,14 +29,24 @@ public class InitDocs extends BaseTest {
 
     int num = 0;
 
+    public String query(int days) {
+        String query = "";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DAY_OF_MONTH, -days);
+        query += " infoTime_dt:[" + sdf.format(c.getTime()) + " TO *]";
+        query += " AND -title:北京 ";
+        return query;
+    }
+
     @Test
     public void buildData() throws IOException {
 
 //        System.out.println("delete:" + new File(input).delete());
-        String query = "content_css:[* TO *]";
+        String query =query(1);
 //        String query = "title:(三大 运营商)";
-        for (int x = 1; x <= 5; x++) {
-            List list = sortList(query, x, 100, "saveTime_dt desc");
+        for (int x = 1; ; x++) {
+            List list = sortList(query, x, 10, "infoTime_dt desc");
 //            List list = sortList("jobId_t:news.163.com", x, 100, "saveTime_dt desc");
             System.out.println(x);
             if (CollectionUtils.isEmpty(list))

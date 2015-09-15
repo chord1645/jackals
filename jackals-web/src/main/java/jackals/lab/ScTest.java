@@ -20,12 +20,13 @@ import java.util.Map;
  * CHNWVTTokenizer 读文件的方法
  */
 public class ScTest {
+    static String hr = "---------------------------------------------------------\n";
     static VSMService service;
     static List<Doc> list = new ArrayList<Doc>();
     static Boolean filter = true;
     static File root = new File("D:\\work\\tmp\\CORPUS1");
     static File output = new File("D:\\work\\tmp\\output");
-
+        //分类数最大一次,然后根据分数在分一次,两次ok
     public static void main(String[] args) {
         HashMap<String, Object> config = new HashMap<String, Object>();
         config.put("DF_MIN", Constants.DF_MIN);
@@ -50,7 +51,7 @@ public class ScTest {
         }
 //        cluster(data);
 //        write(cluster(data));
-        cluster(data, 5);
+        cluster(data, 80);
         print(result);
         System.currentTimeMillis();
     }
@@ -61,7 +62,8 @@ public class ScTest {
         File output = new File("D:\\work\\tmp\\output" + cluster.getNumClusters());
         for (int x = 0; x < lab.length; x++) {
             final Doc doc = list.get(x);
-            FileUtil.write(new File(output, lab[x] + ".txt"), doc.text, true);
+            String one = doc.url+"\n"+doc.title+"\n"+doc.text+"\n"+hr;
+            FileUtil.write(new File(output, lab[x] + ".txt"), one, true);
             if (!map.containsKey(new Integer(lab[x]))) {
                 map.put(new Integer(lab[x]), new ArrayList<Doc>() {
                     {
@@ -161,7 +163,7 @@ public class ScTest {
         String s = FileUtil.read(file);
         String[] arr = s.split("\n");
         WVTWordVector vector = service.getNativeVector(s);
-        if (filter){
+        if (filter) {
             Map<String, Double> newMap = new HashMap<String, Double>();
             for (Map.Entry<String, Double> entry : vector.getTFIDFValues().entrySet()) {
                 if (entry.getValue() < minScore) {
@@ -176,7 +178,7 @@ public class ScTest {
             }
         }
 
-        return new Doc(vector, file, x, arr[2],arr[0],arr[1]);
+        return new Doc(vector, file, x, arr[2], arr[0], arr[1]);
     }
 
     public static class Doc {
@@ -187,13 +189,13 @@ public class ScTest {
         String title;
         WVTWordVector vector;
 
-        public Doc(WVTWordVector vector, File file, int id, String s,String url,String title) {
+        public Doc(WVTWordVector vector, File file, int id, String s, String url, String title) {
             this.vector = vector;
             this.file = file;
             this.id = id;
             this.text = s;
-            this.url=url;
-            this.title =title;
+            this.url = url;
+            this.title = title;
         }
     }
 }

@@ -14,10 +14,10 @@
           lazy-init="false">
         <property name="triggers">
             <list>
-                <ref bean="upgradeTrigger"/><!-- 升级信息 -->
-                <ref bean="fpGrowthTrigger"/><!-- 升级信息 -->
-                <ref bean="tencentNewsTrigger"/><!-- 升级信息 -->
-                <ref bean="ifengTrigger"/><!-- 升级信息 -->
+                <ref bean="upgradeTrigger"/>
+                <ref bean="fpGrowthTrigger"/>
+                <ref bean="tencentNewsTrigger"/>
+                <ref bean="ifengTrigger"/>
             </list>
         </property>
         <property name="quartzProperties">
