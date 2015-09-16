@@ -37,7 +37,7 @@ public class FileUtil {
         return out.toString();
     }
 
-    public static void  write(File file, String text,boolean  append) {
+    public static void write(File file, String text, boolean append) {
         file.getParentFile().mkdirs();
         try {
             BufferedWriter bw = new BufferedWriter(
@@ -48,5 +48,16 @@ public class FileUtil {
             e.printStackTrace();
         }
 
+    }
+
+    public static void clean(File output) {
+        if (output.isDirectory()) {
+            for (File f : output.listFiles()) {
+                clean(f);
+                f.delete();
+            }
+        } else {
+            output.delete();
+        }
     }
 }

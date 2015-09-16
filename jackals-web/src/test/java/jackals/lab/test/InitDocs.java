@@ -2,6 +2,7 @@ package jackals.lab.test;
 
 import com.wisers.crawler.BaseTest;
 import jackals.lab.FileUtil;
+import jackals.lab.SimilarFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
@@ -15,35 +16,38 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-/**
- * 文本识别
- *
- * @author huang_pc
- */
+
 public class InitDocs extends BaseTest {
     @Autowired
     SolrServer solrServer;
 
     static String input = "D:\\work\\tmp\\CORPUS1";
 
-
+    @Autowired
+    SimilarFilter similarFilter;
     int num = 0;
 
     public String query(int days) {
         String query = "";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DAY_OF_MONTH, -days);
+        c.add(Calendar.HOUR_OF_DAY, -days);
         query += " infoTime_dt:[" + sdf.format(c.getTime()) + " TO *]";
         query += " AND -title:北京 ";
         return query;
     }
+    @Test
+    public void similarFilter() throws IOException {
+        buildData();
+        similarFilter.init();
+        similarFilter.main();
+    }
 
     @Test
     public void buildData() throws IOException {
-
+        FileUtil.clean(new File(input));
 //        System.out.println("delete:" + new File(input).delete());
-        String query =query(1);
+        String query =query(12);
 //        String query = "title:(三大 运营商)";
         for (int x = 1; ; x++) {
             List list = sortList(query, x, 10, "infoTime_dt desc");
@@ -56,7 +60,7 @@ public class InitDocs extends BaseTest {
                 //取出title
                 ArrayList<String> title = (ArrayList) map.get("title");
                 String content = (String) map.get("content_css");
-                String url = (String) map.get("url");
+                String url = (String) map.get("id");
                 //写文件
                 content = content.replaceAll("(?is)<.*?>", "").replaceAll("\n|　", "").trim();
                 File file = new File(input, (num++) + ".txt");

@@ -19,6 +19,36 @@ public class News {
     String content;
     @Field("infoTime_dt")
     Date time;
+    @Field("group_s")
+    String group;
+    @Field("sim_i")
+    Integer sim = 0;
+    @Field("useful_i")
+    Integer useful;
+
+    public String getGroup() {
+        return group;
+    }
+
+    public Integer getSim() {
+        return sim;
+    }
+
+    public void setSim(Integer sim) {
+        this.sim = sim;
+    }
+
+    public Integer getUseful() {
+        return useful;
+    }
+
+    public void setUseful(Integer useful) {
+        this.useful = useful;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
 
     public String getId() {
         return id;
@@ -40,8 +70,8 @@ public class News {
         if (StringUtils.isEmpty(content)) {
             return "";
         } else {
-            String str = content.replaceAll("(?is)<.*?>","").replaceAll("\n|　", "").trim();
-            return str.substring(0, str.length() > 50 ? 50 : str.length())+"...";
+            String str = content.replaceAll("(?is)<.*?>", "").replaceAll("\n|　", "").trim();
+            return str.substring(0, str.length() > 50 ? 50 : str.length()) + "...";
         }
 
     }

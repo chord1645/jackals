@@ -3,6 +3,7 @@ package jackals.solr;
 import jackals.web.pojo.News;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.beans.Field;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrDocumentList;
@@ -54,7 +55,7 @@ public class SolrDaoImpl implements IndexDao {
         try {
             SolrQuery query = new SolrQuery();
             query.setQuery(queryStr);
-            query.set("fl", "id,title,infoTime_dt,content_css");
+//            query.set("fl", "id,title,infoTime_dt,content_css,useful_i,sim_i,group_s");
             query.set("q.op", "AND");
             query.set("wt", "json");
             query.set("sort", orderBy);
@@ -74,7 +75,7 @@ public class SolrDaoImpl implements IndexDao {
         try {
             SolrQuery query = new SolrQuery();
             query.setQuery(queryStr);
-            query.set("fl", "id,title,infoTime_dt,content_css");
+//            query.set("fl", "id,title,infoTime_dt,content_css");
             query.set("q.op", "AND");
             query.set("wt", "json");
             query.set("sort", orderBy);

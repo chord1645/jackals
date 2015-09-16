@@ -39,7 +39,7 @@ public class TestController {
     @RequestMapping("test.do")
     public ModelAndView test(HttpServletRequest request,
                              @RequestParam(required = false) String word,
-                             @RequestParam(required = false,defaultValue = "1") Integer page
+                             @RequestParam(required = false, defaultValue = "1") Integer page
     ) {
         String user = request.getAttribute("user") + "";
 //        String query = "title:(" + word.replaceAll("\\s","") + ")";
@@ -55,13 +55,26 @@ public class TestController {
 
     private String buildQueyr(String word) {
         if (StringUtils.isEmpty(word)) {
-            return  "*:*";
+            return "-useful_i:0";
         }
-        return word.trim().replaceAll(" ", " AND title:").replaceAll("^([^ ]+)", "title:$1");
+        return word.trim().replaceAll(" ", " AND title:").replaceAll("^([^ ]+)", "title:$1") + " AND -useful_i:0";
     }
 
     public static void main(String[] args) {
         System.out.println(new TestController().buildQueyr("训练 阅兵 "));
+    }
+
+    @RequestMapping("sim.do")
+    public ModelAndView similary(HttpServletRequest request,
+                                 @RequestParam(required = true) String group) throws UnsupportedEncodingException {
+        String query = "group_s:"+group;
+        List<News> list = indexDao.sortListObj(query, 1, 10, "infoTime_dt desc");
+        String user = request.getAttribute("user") + "";
+        request.setAttribute("words", redisTemplate.opsForZSet().range(user, 0, Long.MAX_VALUE));
+        request.setAttribute("list", list);
+        request.setAttribute("page", 1);
+        request.setAttribute("word", "");
+        return new ModelAndView("/index");
     }
 
     @RequestMapping("subscribe.do")

@@ -59,6 +59,15 @@
             font-size: medium;
         }
 
+        .link4 {
+            color: #5fc3d8 !important;
+            font-weight: bold;
+            display: inline-block !important;
+            padding-bottom: 5px !important;
+            padding-top: 5px !important;
+            font-size: small !important;
+        }
+
         .link3 {
             color: #c3c3c3 !important;
             font-weight: bold;
@@ -139,8 +148,12 @@
                 for (News obj : list) {
             %>
             <tr>
-                <td><a class="link2" target="_blank" href="<%=obj.getId()%>"><%=obj.getTitle()%>
-                </a></td>
+                <td>
+                    <a class="link2" target="_blank" href="<%=obj.getId()%>"><%=obj.getTitle()%>
+                    </a>
+                    <%--<%=obj.getSim()>1  ? "相似新闻" + obj.getSim() + "条" : ""%>--%>
+
+                </td>
 
             </tr>
             <tr>
@@ -148,6 +161,10 @@
                 <td>
                     <%=obj.getTime() != null ? new DateTime(obj.getTime()).toString("yyyy-MM-dd HH:mm:ss") : ""%>
                     <%--<%=sdf.format(obj.get("infoTime_dt"))%>--%>
+
+                    <a class="link4" href="sim.do?group=<%=obj.getGroup()%>">
+                        <%=obj.getSim() > 1 ? "相似新闻" + obj.getSim() + "条" : ""%>
+                    </a>
                 </td>
             </tr>
             <tr>
@@ -160,12 +177,14 @@
                 }
             %>
             <tr>
-                <td style="text-align:justify"><a class="link1" href="test.do?word=<%=StringUtils.isEmpty(word)?"":word%>&page=${page-1<1?1:page-1}">上页</a>
+                <td style="text-align:justify"><a class="link1"
+                                                  href="test.do?word=<%=StringUtils.isEmpty(word)?"":word%>&page=${page-1<1?1:page-1}">上页</a>
                     &nbsp;
                     &nbsp;
                     &nbsp;
                     &nbsp;
-                    <a class="link1" href="test.do?word=<%=StringUtils.isEmpty(word)?"":word%>&page=${page+1}">下页</a></td>
+                    <a class="link1" href="test.do?word=<%=StringUtils.isEmpty(word)?"":word%>&page=${page+1}">下页</a>
+                </td>
             </tr>
         </table>
     </div>

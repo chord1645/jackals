@@ -7,4 +7,5 @@
     <bean id="upgradeJob" class="jackals.web.quartz.News163Job"/>
     <bean id="fpGrowthJob" class="jackals.web.quartz.FpGrowthJob"/>
     <bean id="cluster" class="jackals.lab.Cluster"/>
+    <bean   class="jackals.lab.SimilarFilter"/>
 </beans>
