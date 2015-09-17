@@ -49,10 +49,10 @@ public class SimilarFilter {
         config.put("ENCODE_RECOGNIZE", "utf-8");
         VSMService.build(config, new FileTokenizer());
         service = VSMService.getInstance();
-        _dimension();
-        config.put("CORPUS", root.getPath());
-        VSMService.build(config, new FileTokenizer());
-        service = VSMService.getInstance();
+//        _dimension();
+//        config.put("CORPUS", root.getPath());
+//        VSMService.build(config, new FileTokenizer());
+//        service = VSMService.getInstance();
     }
 
     private void _dimension() {
@@ -83,7 +83,7 @@ public class SimilarFilter {
         clustering = cluster(data, count);
 //        }
 //        SpectralClustering clustering = cluster(data, 379);
-//        print(clustering);
+        print(clustering);
         writeFile(clustering);
         writeSolr(clustering);
         System.currentTimeMillis();
@@ -100,7 +100,7 @@ public class SimilarFilter {
         double sum = 0;
         for (int i = 0; i < lab.length; i++) {
             sum += lab[i];
-            if (sum / amount > .85)
+            if (sum / amount > .95)
                 return i;
         }
         return 0;
@@ -138,9 +138,9 @@ public class SimilarFilter {
 
     private double[][] buildData() {
         int x = 0;
-        double[][] data = new double[root.list().length][];
+        double[][] data = new double[root1.list().length][];
 
-        for (File file : root.listFiles()) {
+        for (File file : root1.listFiles()) {
             Doc doc = buildDoc(x, file);
 //            System.out.println(doc.vector.getTFIDFValues());
             data[x] = doc.vector.getValues();
@@ -179,23 +179,29 @@ public class SimilarFilter {
             System.out.println("type:" + e.getKey());
 
             if (e.getValue().size() < 10) {
-//                List<String> urls = new ArrayList<String>();
-//                for (Doc doc : e.getValue()) {
-//                    urls.add(doc.url);
-//                }
-                String group = UUID.nameUUIDFromBytes(e.getValue().get(0).url.getBytes()).toString();
-                int useful = 1;
-                List<Map<String, Object>> toSave = new ArrayList<Map<String, Object>>();
-                System.out.println("group:"+group+" = "+ e.getValue().size());
+                StringBuffer query = new StringBuffer();
                 for (Doc doc : e.getValue()) {
-                    List list = indexDao.sortList("id:\"" + doc.url + "\"", 1, 1, null);
-                    SolrDocument solrDocument = (SolrDocument) list.get(0);
-                    Map<String,Object> inputDoc = new HashMap<String, Object>(solrDocument);
+                    query.append("url:\"").append(doc.url).append("\"");
+                    query.append(" OR ");
+                }
+                query.delete(query.lastIndexOf("OR"), query.length());
+                String groupId = UUID.nameUUIDFromBytes(query.toString().getBytes()).toString();
+                List<Map<String, Object>> toSave = new ArrayList<Map<String, Object>>();
+                System.out.println("group:" + groupId + " = " + e.getValue().size());
+                List<SolrDocument> list = (List<SolrDocument>) indexDao.sortList(query.toString(), 1, 100, "infoTime_dt desc");
+                Date newest = new Date(0);
+                int useful=1;
+                for (SolrDocument doc : list) {
+                    Date date = (Date) doc.get("infoTime_dt");
+                    if (date.getTime() > newest.getTime()) {
+
+                    }
+                    Map<String, Object> inputDoc = new HashMap<String, Object>(doc);
                     inputDoc.put("useful_i", useful);
-                    inputDoc.put("sim_i", e.getValue().size());
-                    inputDoc.put("group_s", group);
-                    useful = 0;
+                    inputDoc.put("sim_i", list.size());
+                    inputDoc.put("group_s", groupId);
                     toSave.add(inputDoc);
+                    useful=0;
                 }
                 indexDao.addIndex(toSave);
             }
