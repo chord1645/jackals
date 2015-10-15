@@ -15,7 +15,7 @@
         <property name="triggers">
             <list>
                 <ref bean="upgradeTrigger"/>
-                <ref bean="fpGrowthTrigger"/>
+                <!--<ref bean="fpGrowthTrigger"/>-->
                 <ref bean="tencentNewsTrigger"/>
                 <ref bean="ifengTrigger"/>
             </list>

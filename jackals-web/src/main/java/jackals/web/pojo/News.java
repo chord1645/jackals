@@ -1,5 +1,6 @@
 package jackals.web.pojo;
 
+import jackals.utils.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.beans.Field;
 
@@ -17,6 +18,7 @@ public class News {
     List<String> title;
     @Field("content_css")
     String content;
+    String img;
     @Field("infoTime_dt")
     Date time;
     @Field("group_s")
@@ -25,6 +27,15 @@ public class News {
     Integer sim = 0;
     @Field("useful_i")
     Integer useful;
+
+    public String getImg() {
+        String src = StringUtil.regxGet("src=\"(.*?\\.jpg)\"",1,content);
+        return src;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public String getGroup() {
         return group;
@@ -70,8 +81,8 @@ public class News {
         if (StringUtils.isEmpty(content)) {
             return "";
         } else {
-            String str = content.replaceAll("(?is)<.*?>", "").replaceAll("\n|　", "").trim();
-            return str.substring(0, str.length() > 50 ? 50 : str.length()) + "...";
+            String str = content.replaceAll("(?is)<[^>]*?>", "").replaceAll("\n|　", "").trim();
+            return str.substring(0, str.length() > 30 ? 30 : str.length()) + "...";
         }
 
     }

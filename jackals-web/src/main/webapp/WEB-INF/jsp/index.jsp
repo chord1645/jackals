@@ -7,188 +7,120 @@
 <%@ page import="jackals.web.pojo.News" %>
 <%@ page import="org.apache.commons.lang3.StringUtils" %>
 <!DOCTYPE html>
-<html lang="en" ng-app="offsetapp">
+<html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="pierre">
-
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta content="width=device-width,user-scalable=no" name="viewport">
+    <meta name="apple-itunes-app" content="app-id=425349261">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>∑(っ °Д °;)っ没想好叫啥名字哪！</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="//netdna.bootstrapcdn.com/bootswatch/3.0.3/slate/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .link1 {
-            padding-left: 8px !important;
-            padding-right: 8px !important;
-            color: #fff !important;
-            font-weight: bold;
-            font-size: large;
-            display: inline-block !important;
-            padding-bottom: 5px !important;
-            padding-top: 5px !important;
-
-        }
-
-        .link1_chos {
-            /*border-bottom: outset;*/
-            /*border-bottom-width: 2px;*/
-            /*border-bottom-color: #d8d8d8;*/
-            /*border-right: outset !important;*/
-            /*border-right-width: 2px !important;*/
-            /*border-right-color: #d8d8d8 !important;*/
-            padding-left: 8px !important;
-            padding-right: 8px !important;
-            background-color: #6e6e6e;
-            color: #fff !important;
-            font-weight: bold;
-            font-size: large;
-            display: inline-block !important;
-            padding-bottom: 5px !important;
-            padding-top: 5px !important;
-        }
-
-        .link2 {
-            color: #d8d8d8 !important;
-            font-weight: bold;
-            display: inline-block !important;
-            padding-bottom: 5px !important;
-            padding-top: 5px !important;
-            font-size: medium;
-        }
-
-        .link4 {
-            color: #5fc3d8 !important;
-            font-weight: bold;
-            display: inline-block !important;
-            padding-bottom: 5px !important;
-            padding-top: 5px !important;
-            font-size: small !important;
-        }
-
-        .link3 {
-            color: #c3c3c3 !important;
-            font-weight: bold;
-            display: inline-block !important;
-            padding-bottom: 5px !important;
-            padding-top: 5px !important;
-            padding-left: 5px !important;
-            padding-right: 5px !important;
-        }
-
-        .li_1 {
-            display: inline !important;
-        }
-
-        .li_2 {
-            /*background-color: #606060;*/
-            border-color: #d8d8d8;
-            border-bottom: solid;
-            border-bottom-width: 2px;
-            display: inline !important;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/main.css#1">
+    <link rel="stylesheet" href="../../css/touch_css_v2.css">
+    <script src="../../js/zepto.js"></script>
 </head>
-
 <body>
-<nav class="navbar navbar-default" style="padding-left: 15px" role="navigation">
-    <div class="container-fluid">
+<header class="index-p31 header-channel">
+</header>
+<div style="height: 698px; display: none;" id="mask"></div>
+<script>
+    var mask = document.getElementById('mask');
+    mask.style.height = screen.availHeight - 40 + 'px';
+    function showInput() {
+        if ($("#sinput").css("display") == "none") {
+            $("#sinput").show();
+//            $("#showSwitch").innerText="-";
+        } else {
+            $("#sinput").hide();
+//            $("#showSwitch").innerText="+";
+        }
+    }
+</script>
+<% String word = (String) request.getAttribute("word");%>
+<article class="topNews">
+    <div class="sBorder"></div>
+    <nav class="channel-nav">
+        <ul>
+            <li page="0" tid="9ARIUJ61yswang" cname="要闻" curl="news">
+                <a class="<%=StringUtils.isEmpty(word)?"link1_chos":"link1"%>"
+                   href="test.do">最新</a>
+                <a id="showSwitch" href="javascript:showInput();">+</a>
+            </li>
+            <%
+                LinkedHashSet<String> words = (LinkedHashSet<String>) request.getAttribute("words");
+                for (String s : words) {
+            %>
+            <li>
+                <a href="test.do?word=<%=s%>"><%=s%>
+                </a>
+                <a href="del.do?word=<%=s%>">×</a>
+            </li>
+            <%
+                }
+            %>
+        </ul>
+    </nav>
+    <section id="sinput" style="display:none;padding-left: 3.1%;">
+        <form action="subscribe.do">
+            <input name="word" value="">
+            <button type="submit">+</button>
+        </form>
+    </section>
 
-        <table style="width: 100%">
-            <tr>
-                <td>
-                    <% String word = (String) request.getAttribute("word");%>
-                    <!-- <%=word%>-->
-                    <ul class="nav navbar-nav" style="display: inline;">
-                        <li class="li_1">
-                            &nbsp;&nbsp;&nbsp; &nbsp;<a class="<%=StringUtils.isEmpty(word)?"link1_chos":"link1"%>"
-                                                        href="test.do">最新</a></li>
-                        <%
-                            LinkedHashSet<String> words = (LinkedHashSet<String>) request.getAttribute("words");
-                            for (String s : words) {
-                        %>
-                        <li class="li_1">
-                            <a class="<%=s.equals(word)?"link1_chos":"link1"%>" href="test.do?word=<%=s%>"><%=s%>
-                            </a>
-                            <a class="link3" href="del.do?word=<%=s%>">×</a>
-                        </li>
-                        <%
-                            }
-                        %>
-
-
-                    </ul>
-
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <form action="subscribe.do">
-                        <input name="word" value="">
-                        <button type="submit">+</button>
-                        <a style="display: inline-block;" href="topic.do">\("▔□▔)/ </a>
-                    </form>
-
-                </td>
-            </tr>
-        </table>
-
-        <!-- /.navbar-collapse -->
-    </div>
-    <!-- /.container-fluid -->
-</nav>
-<div class="container" style="width: 100%">
-
-    <div ng-view>
-        <table>
+    <section style="overflow: hidden;" class="newsList">
+        <ul class="newsPage" id="newsListContent">
             <%
                 List<News> list = (List<News>) request.getAttribute("list");
                 for (News obj : list) {
             %>
-            <tr>
-                <td>
-                    <a class="link2" target="_blank" href="<%=obj.getId()%>"><%=obj.getTitle()%>
-                    </a>
-                    <%--<%=obj.getSim()>1  ? "相似新闻" + obj.getSim() + "条" : ""%>--%>
+            <li class="newsHead">
+                <% if (StringUtils.isNotEmpty(obj.getImg())) {%>
+                <a href="<%=obj.getId()%>" target="_blank">
+                    <img src="<%=obj.getImg()%>"/>
+                </a>
+                <%}%>
+                <a href="<%=obj.getId()%>" target="_blank">
+                    <div>
+                        <p class="newsTitle">
+                            <%=obj.getTitle().get(0)%>
+                        </p>
 
-                </td>
+                        <p>
+                            <span style="float: left;color: #808080;font-size:12px;margin-top: 2px;">
+                                <%=obj.getContent()%>
+                            </span>
+                            <%if (obj.getSim() > 1) {%>
+                            <a style="color: cornflowerblue" href="sim.do?group=<%=obj.getGroup()%>">
+                                <%=obj.getSim() > 1 ? "相似新闻" + obj.getSim() + "条" : " "%>
+                            </a>
+                            <%}%>
+                        </p>
 
-            </tr>
-            <tr>
+                        <span class="newsTips">
+                            <%=obj.getTime() != null ? new DateTime(obj.getTime()).toString("yyyy-MM-dd HH:mm:ss") : ""%>
+                        </span>
 
-                <td>
-                    <%=obj.getTime() != null ? new DateTime(obj.getTime()).toString("yyyy-MM-dd HH:mm:ss") : ""%>
-                    <%--<%=sdf.format(obj.get("infoTime_dt"))%>--%>
-
-                    <a class="link4" href="sim.do?group=<%=obj.getGroup()%>">
-                        <%=obj.getSim() > 1 ? "相似新闻" + obj.getSim() + "条" : ""%>
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span style="color: #ababab"> <%=obj.getContent()%></span>
-
-                </td>
-            </tr>
+                    </div>
+                </a>
+            </li>
             <%
                 }
             %>
-            <tr>
-                <td style="text-align:justify"><a class="link1"
-                                                  href="test.do?word=<%=StringUtils.isEmpty(word)?"":word%>&page=${page-1<1?1:page-1}">上页</a>
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    &nbsp;
-                    <a class="link1" href="test.do?word=<%=StringUtils.isEmpty(word)?"":word%>&page=${page+1}">下页</a>
-                </td>
-            </tr>
-        </table>
-    </div>
+        </ul>
 
-</div>
+    </section>
+    <nav class="page">
+        <ul>
+            <li>
+                <a href="test.do?word=<%=StringUtils.isEmpty(word)?"":word%>&page=${page-1<1?1:page-1}">上页</a>
+            </li>
+            <li>
+                <a href="test.do?word=<%=StringUtils.isEmpty(word)?"":word%>&page=${page+1}">下页</a>
+            </li>
+        </ul>
+    </nav>
+
+</article>
+
 </body>
 </html>

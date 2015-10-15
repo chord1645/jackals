@@ -1,0 +1,264 @@
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table
+}
+
+.clearfix:after {
+    clear: both
+}
+
+/*.newsPage .newsHead {
+  border-top: 1px solid #DFDFDF;
+  padding-left: 3.1%;
+  padding-right: 3.1%;
+  background: none !important;
+}*/
+.newsPage li {
+    border-top: 1px solid #DFDFDF;
+    background: none !important;
+}
+
+.newsPage li:first-child {
+    border-top: 0;
+}
+
+.newsPage .newsHead:nth-child(1) {
+    background: none;
+}
+
+.channel-nav > ul > li > div {
+    display: inline-block;
+    position: relative
+}
+
+.channel-nav {
+    overflow: hidden;
+    font-size: 18px;
+    color: #848484;
+    background: #eee;
+    border-top: 1px solid #bebebe;
+}
+
+.channel-nav li {
+    float: left;
+    width: 27%;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    margin: 0 1%;
+}
+
+.page li {
+    float: left;
+    width: 40%;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    margin: 0 1%;
+}
+.channel-nav a,
+.channel-nav a:visited {
+    color: #565656;
+}
+
+.comment_title {
+    height: 30px;
+    line-height: 30px;
+    color: #7A7A7A;;
+    font-size: 15px;
+    padding: 0 3.1%;
+    background: #E6E6E6;
+}
+
+.pageBtn {
+    margin-bottom: 14px;
+}
+
+.footerNav {
+    height: 25px;
+    line-height: 30px;
+    text-align: center
+}
+
+.footerNav a,
+.footerNav a:visited {
+    color: #edede4;
+    font-size: 17px;
+}
+
+.footerInfo {
+    height: 15px;
+    color: #f2bcbd;
+    text-align: center;
+    font-size: 9px
+}
+
+.footer {
+    height: 45px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.footer .menu {
+    width: 24px;
+    background-size: 21px;
+    position: absolute;
+    right: 3.1%;
+    top: 0;
+}
+
+footer {
+    height: auto;
+}
+
+.newsTitle {
+    height: 26px;
+    overflow: hidden;
+}
+
+.header-channel {
+    background: #df3031 url(http://img1.cache.netease.com/3g/img14/zhuzhan/nba.png) no-repeat center;
+    background-size: 94px;
+}
+
+.newsPage li {
+    padding: 0 3.1%;
+}
+
+/*.newsPage li,
+.newsPage li:nth-child(1) {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(.5, transparent), color-stop(.5, #dfdfdf), to(#dfdfdf)) left bottom repeat-x;
+  background-size: 100% 1px;
+}*/
+.text-link {
+    margin-top: 15px;
+    line-height: 31px;
+}
+
+.wrap-text-link,
+.newsPage .text-link {
+    margin: 0;
+    padding: 0 3.1%;
+    height: 29px;
+    background: none;
+}
+
+.newsList {
+    padding-bottom: 8px;
+}
+
+.banner-gallery {
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+    margin: 0 auto 5px auto;
+    height: auto;
+}
+
+.banner-gallery li {
+    position: relative;
+    float: left;
+    width: 100%;
+    color: #363636;
+    min-height: 170px;
+}
+
+.banner-gallery img {
+    width: 100%;
+    max-width: 480px;
+    max-height: none;
+    vertical-align: top;
+}
+
+.banner-gallery .controls {
+    position: absolute;
+    right: 3.1%;
+    bottom: 0;
+    margin: 0;
+    width: auto;
+    height: 23px;
+}
+
+.banner-gallery .dot {
+    height: 4px;
+    width: 4px;
+    display: inline-block;
+    margin-left: 3px;
+    background: #e7e7e7;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    vertical-align: middle;
+    float: none;
+}
+
+.banner-gallery .dot.on {
+    background: #373737
+}
+
+.banner-gallery h2 {
+    background: rgba(255, 255, 255, .5);
+    height: 23px;
+    line-height: 23px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    margin: 0;
+    font-size: 15px;
+    text-align: left;
+    padding: 0 0 0 15px;
+    -webkit-font-smoothing: subpixel-antialiased;
+    padding-left: 0;
+    font-weight: normal;
+}
+
+.banner-gallery h2 div {
+    max-width: 465px;
+    margin: 0 auto;
+    padding-left: 10px;
+    text-align: left;
+    text-indent: 0;
+}
+
+.newsHead.f-d .newsTips {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 26px;
+    height: 16px;
+    background: url(http://img1.cache.netease.com/utf8/3g/touch/images/f-d.png) no-repeat right center;
+    background-size: 26px 15px;
+}
+
+.f-d-single, .f-d-multi {
+    height: auto !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    font-size: 16px;
+    line-height: 26px;
+}
+
+.newsPage li a {
+    height: auto !important;
+}
+
+.f-d-title, .text-link a {
+    background: url(http://img1.cache.netease.com/utf8/3g/touch/images/f-d.png) no-repeat right center;
+    background-size: 26px 15px;
+}
+
+.f-d-single img {
+    width: 100%;
+}
+
+.f-d-multi img {
+    float: left;
+    width: 32%;
+    margin-right: 2%;
+}
+
+.f-d-multi img:last-child {
+    margin-right: 0;
+}
