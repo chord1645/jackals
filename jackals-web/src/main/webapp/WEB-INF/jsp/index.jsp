@@ -6,6 +6,7 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="jackals.web.pojo.News" %>
 <%@ page import="org.apache.commons.lang3.StringUtils" %>
+<%@ page import="org.apache.commons.collections.CollectionUtils" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,16 +39,18 @@
 </script>
 <% String word = (String) request.getAttribute("word");%>
 <article class="topNews">
-    <div class="sBorder"></div>
     <nav class="channel-nav">
         <ul>
             <li page="0" tid="9ARIUJ61yswang" cname="要闻" curl="news">
                 <a class="<%=StringUtils.isEmpty(word)?"link1_chos":"link1"%>"
                    href="test.do">最新</a>
                 <a id="showSwitch" href="javascript:showInput();">+</a>
+                <% LinkedHashSet<String> words = (LinkedHashSet<String>) request.getAttribute("words");%>
+                <% if (CollectionUtils.isEmpty(words)) {%>
+                <span style="font-size: medium;color: #6e6eff">←点这里检索</span>
+                <%}%>
             </li>
             <%
-                LinkedHashSet<String> words = (LinkedHashSet<String>) request.getAttribute("words");
                 for (String s : words) {
             %>
             <li>
