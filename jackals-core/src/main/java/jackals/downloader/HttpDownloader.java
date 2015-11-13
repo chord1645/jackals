@@ -51,8 +51,12 @@ public class HttpDownloader {
     public HttpDownloader(int size) {
         logger.info("HttpClientDownloader init");
         httpClientPool = new HttpClient(size);
-        Properties uaConfig = SpringContextHolder.getBean("uaConfig");
-        uaList.addAll(uaConfig.values());
+        try{
+            Properties uaConfig = SpringContextHolder.getBean("uaConfig");
+            uaList.addAll(uaConfig.values());
+        }catch (IllegalStateException e){
+
+        }
     }
 
 
