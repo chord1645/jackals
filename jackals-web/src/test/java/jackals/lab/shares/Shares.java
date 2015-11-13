@@ -49,20 +49,20 @@ public class Shares {
 
     @Test
     public void knn() throws Exception {
-//        Data train = loadData("D:\\tmp\\calculate\\300.txt");
-        Data train = loadData("D:\\tmp\\calculate\\all.txt");
-        Data test = loadData("D:\\tmp\\calculate\\400.txt");
+        Data train = loadData("D:\\tmp\\calculate\\0_100.txt");
+//        Data train = loadData("D:\\tmp\\calculate\\all.txt");
+        Data test = loadData("D:\\tmp\\calculate\\500.txt");
         KNN<double[]> knn = KNN.learn(train.matrix, train.label, 1);
 
-        int error = 0;
+        double error = 0;
         for (int i = 0; i < train.matrix.length; i++) {
 //            System.out.println(tree.predict(train.matrix[i])+""+train.label[i]);
             if (knn.predict(train.matrix[i]) != train.label[i]) {
                 error++;
             }
         }
-        System.out.println("error1:" + error);
-        System.out.println("error1:" + error * 1.0 / train.matrix.length);
+        printAcc(error, train.matrix.length);
+
         error = 0;
         for (int i = 0; i < test.matrix.length; i++) {
 //            System.out.println(tree.predict(train.matrix[i])+""+train.label[i]);
@@ -71,24 +71,24 @@ public class Shares {
             }
 
         }
-        System.out.println("error2:" + error);
-        System.out.println("error2:" + error * 1.0 / test.matrix.length);
+        printAcc(error, test.matrix.length);
+
 
     }
 
 
     @Test
     public void runSVM() throws Exception {
-        Data train = loadData("D:\\tmp\\calculate\\300.txt");
+        Data train = loadData("D:\\tmp\\calculate\\400.txt");
 //        Data train = loadData("D:\\tmp\\calculate\\all.txt");
-        Data test = loadData("D:\\tmp\\calculate\\400.txt");
+        Data test = loadData("D:\\tmp\\calculate\\500.txt");
 
         SVM<double[]> svm = new SVM<double[]>(new GaussianKernel(0.5), 1.0, 3, SVM.Multiclass.ONE_VS_ALL);
         svm.learn(train.matrix, train.label);
         svm.finish();
 
 
-        int error = 0;
+        double error = 0;
         for (int i = 0; i < train.matrix.length; i++) {
 //            System.out.println(tree.predict(train.matrix[i])+""+train.label[i]);
             if (svm.predict(train.matrix[i]) != train.label[i]) {
@@ -96,8 +96,7 @@ public class Shares {
             }
 
         }
-        System.out.println("error1:" + error);
-        System.out.println("error1:" + error * 1.0 / train.matrix.length);
+        printAcc(error, train.matrix.length);
         error = 0;
         for (int i = 0; i < test.matrix.length; i++) {
 //            System.out.println(tree.predict(train.matrix[i])+""+train.label[i]);
@@ -106,22 +105,26 @@ public class Shares {
             }
 
         }
-        System.out.println("error2:" + error);
-        System.out.println("error2:" + error * 1.0 / test.matrix.length);
+        printAcc(error, test.matrix.length);
 
+    }
+
+    private void printAcc(double error, int length) {
+        System.out.println("error:" + error);
+        System.out.println("acc:" + (length - error) / length * 100);
     }
 
     @Test
     public void runRBF() throws Exception {
-        Data train = loadData("D:\\tmp\\calculate\\300.txt");
+        Data train = loadData("D:\\tmp\\calculate\\0_700.txt");
 //        Data train = loadData("D:\\tmp\\calculate\\all.txt");
-        Data test = loadData("D:\\tmp\\calculate\\400.txt");
-        double[][] centers = new double[150][];
+        Data test = loadData("D:\\tmp\\calculate\\500.txt");
+        double[][] centers = new double[100][];
         RadialBasisFunction basis = SmileUtils.learnGaussianRadialBasis(train.matrix, centers);
 //        RBFNetwork<double[]> rbf = new RBFNetwork<double[]>(train.matrix, train.label, new ManhattanDistance(), basis, centers);
         RBFNetwork<double[]> rbf = new RBFNetwork<double[]>(train.matrix, train.label, new EuclideanDistance(), basis, centers);
 
-        int error = 0;
+        double error = 0;
         for (int i = 0; i < train.matrix.length; i++) {
 //            System.out.println(tree.predict(train.matrix[i])+""+train.label[i]);
             if (rbf.predict(train.matrix[i]) != train.label[i]) {
@@ -129,8 +132,8 @@ public class Shares {
             }
 
         }
-        System.out.println("error1:" + error);
-        System.out.println("error1:" + error * 1.0 / train.matrix.length);
+        printAcc(error, train.matrix.length);
+
         error = 0;
         for (int i = 0; i < test.matrix.length; i++) {
 //            System.out.println(tree.predict(train.matrix[i])+""+train.label[i]);
@@ -139,42 +142,65 @@ public class Shares {
             }
 
         }
-        System.out.println("error2:" + error);
-        System.out.println("error2:" + error * 1.0 / test.matrix.length);
+        printAcc(error, test.matrix.length);
+
 
     }
 
     @Test
     public void run() throws Exception {
 //        Data train = loadData("D:\\tmp\\calculate\\test.txt");
-//        Data train = loadData("D:\\tmp\\calculate\\300.txt");
-        Data train = loadData("D:\\tmp\\calculate\\all.txt");
-        Data test = loadData("D:\\tmp\\calculate\\400.txt");
+        Data train = loadData("D:\\tmp\\calculate\\400.txt");
+//        Data train = loadData("D:\\tmp\\calculate\\0_700.txt");
+        Data test = loadData("D:\\tmp\\calculate\\000063.txt");
+//        Data test = loadData("D:\\tmp\\calculate\\500.txt");
 //        Data test = loadData("D:\\tmp\\calculate\\000063.txt");
-        DecisionTree tree = new DecisionTree(train.matrix, train.label, 5000, DecisionTree.SplitRule.ENTROPY);
+        DecisionTree tree = new DecisionTree(train.matrix, train.label, 1000, DecisionTree.SplitRule.ENTROPY);
         double error = 0;
+
         for (int i = 0; i < train.matrix.length; i++) {
 //            System.out.println(tree.predict(train.matrix[i])+""+train.label[i]);
             int result = tree.predict(train.matrix[i]);
             if (result != train.label[i]) {
                 error++;
             }
-//            System.out.println(result + "\t" + test.rows[i]);
+//            System.out.println(result + "\t" + train.rows[i]);
 
         }
-        System.out.println("error1:" + error);
-        System.out.println("error1:" + error / train.matrix.length);
+        printAcc(error, train.matrix.length);
+        System.out.print("结果"+"\t");
+        System.out.print("日期"+"\t");
+        System.out.print("开盘价" + "\t");
+        System.out.print("最高价" + "\t");
+        System.out.print("收盘价" + "\t");
+        System.out.print("最低价" + "\t");
+        System.out.print("交易金额" + "\t");
+        System.out.print("交易量" + "\t");
+        System.out.print("均价变动" + "\t");
+        System.out.print("最高变动" + "\t");
+        System.out.print("最低变动" + "\t");
+        System.out.print("高低差变动" + "\t");
+        System.out.print("量比" + "\t");
+        System.out.print("收盘5日涨幅" + "\t");
+        System.out.print("收盘10日涨幅" + "\t");
+        System.out.print("5日涨" + "\t");
+        System.out.print("10日涨" + "\t");
+        System.out.print("30日涨" + "\t");
+        System.out.print("月均价" + "\t");
+        System.out.print("月均价一日变动" + "\t");
+        System.out.println("月均价未来10日变动");
         error = 0;
+
         for (int i = 0; i < test.matrix.length; i++) {
 //            System.out.println(tree.predict(train.matrix[i])+""+train.label[i]);
             int result = tree.predict(test.matrix[i]);
             if (result != test.label[i]) {
                 error++;
             }
-//            System.out.println(result + "\t" + test.rows[i]);
+            System.out.println(result + "\t" + test.rows[i]);
         }
-        System.out.println("error2:" + error);
-        System.out.println("error2:" + error / test.matrix.length * 100);
+        printAcc(error, test.matrix.length);
+
 //        System.out.println("error2:" + new DecimalFormat("###.######").format(error / test.matrix.length));
 
     }
@@ -197,17 +223,19 @@ public class Shares {
             data.matrix[x][1] = Double.valueOf(colArr[8]);
             data.matrix[x][2] = Double.valueOf(colArr[9]);
             data.matrix[x][3] = Double.valueOf(colArr[10]);
-            data.matrix[x][4] = Double.valueOf(colArr[12]);
-            data.matrix[x][5] = Double.valueOf(colArr[13]);
-            data.matrix[x][6] = Double.valueOf(colArr[1]);
-            data.matrix[x][7] = Double.valueOf(colArr[2]);
-            data.matrix[x][8] = Double.valueOf(colArr[3]);
-            data.matrix[x][9] = Double.valueOf(colArr[4]);
-            data.matrix[x][10] = Double.valueOf(colArr[5]);
-            data.matrix[x][11] = Double.valueOf(colArr[6]);
-            data.matrix[x][12] = Double.valueOf(colArr[11]);
+            data.matrix[x][4] = Double.valueOf(colArr[11]);
+//            data.matrix[x][5] = Double.valueOf(colArr[13]);
+//            data.matrix[x][6] = Double.valueOf(colArr[1]);
+//            data.matrix[x][7] = Double.valueOf(colArr[2]);
+//            data.matrix[x][8] = Double.valueOf(colArr[3]);
+//            data.matrix[x][9] = Double.valueOf(colArr[4]);
+//            data.matrix[x][10] = Double.valueOf(colArr[5]);
+//            data.matrix[x][11] = Double.valueOf(colArr[6]);
+            data.matrix[x][5] = Double.valueOf(colArr[17]);
+            data.matrix[x][5] = Double.valueOf(colArr[18]);
+//            data.matrix[x][12] = Double.valueOf(colArr[12]);
 
-            data.label[x] = Integer.valueOf(colArr[15]);
+            data.label[x] = Integer.valueOf(colArr[19]);
         }
         data.rows = rows;
 //        NumericAttribute[] attributes = new NumericAttribute[data.matrix[0].length];
@@ -233,34 +261,51 @@ public class Shares {
     public void calculateAll() throws Exception {
         File root = new File("D:\\tmp\\code_data");
         int cnt = 0;
+        int s = 0;
+        int size = 700;
         for (File f : root.listFiles()) {
             System.out.println(cnt++);
-//            if (!f.getName().equals("000063.txt")) {
-//                continue;
-//            }
-            if (cnt < 400)
+            if (!f.getName().equals("000063.txt")) {
                 continue;
-            if (cnt > 450)
-                break;
+            }
+//            if (cnt < s)
+//                continue;
+//            if (cnt > s + size)
+//                break;
             String[] txt = FileUtil.read(f).split("\n");
 //        String[] txt = FileUtil.read(new File("D:\\tmp\\code_data\\600000.txt")).split("\n");
             Code[] codes = new Code[txt.length];
             for (int i = 0; i < txt.length; i++) {
                 codes[i] = new Code(txt[i]);
             }
-            for (int i = 0; i < codes.length; i++) {
-                calculate(i, codes);
-            }
+            calculateAvg30(codes);
             for (int i = 0; i < codes.length; i++) {
                 calculate(i, codes);
                 if (codes[i].done)
-                    FileUtil.write(new File("D:\\tmp\\calculate\\400.txt"), codes[i].calculateStr() + "\n", true);
+                    FileUtil.write(new File("D:\\tmp\\calculate\\000063.txt"), codes[i].calculateStr() + "\n", true);
+//                    FileUtil.write(new File("D:\\tmp\\calculate\\" + s + "_" + size + ".txt"), codes[i].calculateStr() + "\n", true);
             }
         }
 
     }
 
-    //        									30日涨
+    private void calculateAvg30(Code[] codes) {
+        for (int i = 30; i < codes.length; i++) {
+            Code code = codes[i];
+            double month = 0;
+            for (int x = i - 30; x <= i; x++) {
+                month += codes[x].priceAvg;
+            }
+            code.c11 = month / 30;
+        }
+    }
+
+    /**
+     * 使用20日线
+     * 加入交易量参数
+     * @param i
+     * @param codes
+     */
     private void calculate(int i, Code[] codes) {
         try {
             Code code = codes[i];
@@ -293,15 +338,28 @@ public class Shares {
             //0=涨幅>10%,
             // 1=跌幅>10%,
             // 2=-10%<区间<10%
-            if (rise > 0.1)
+            if (rise > 0.3) {
                 code.c9 = 0;
-            else if (rise < -0.1) {
+            } else if (rise > 0.2) {
                 code.c9 = 1;
-            } else {
+            } else if (rise > 0.1) {
                 code.c9 = 2;
+            } else if (rise > 0.0) {
+                code.c9 = 3;
+            } else if (rise > -0.1) {
+                code.c9 = 4;
+            } else if (rise > -0.2) {
+                code.c9 = 5;
+            } else {
+                code.c9 = 6;
             }
             //30日涨
             code.c10 = codes[i].end < codes[i + 30].end ? 1 : 0;
+            if (codes[i - 1].c11 == 0 || i + 10 > codes.length - 1) {
+                return;
+            }
+            code.c12 = code.c11 > codes[i - 1].c11 ? 1 : 0;
+            code.c13 = code.c11 < codes[i + 10].c11 ? 1 : 0;
             code.done = true;
         } catch (Throwable e) {
 

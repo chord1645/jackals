@@ -13,18 +13,20 @@ public class Code {
     double quantityAvg; //当日平均量
     double diff; //高低差
     String date;
-    double c1;
-    double c2;
-    double c3;
-    double c4;
-    double c5;
-    double c6;
-    double c7;
-    double c8;
-    double c9;
+    double c1; //7//均价变动
+    double c2;//8//最高变动
+    double c3;//9//最低变动
+    double c4;//10 //高低差变动
+    double c5;//11//量比
+    double c6;//12//收盘5日涨幅
+    double c7;//13//收盘10日涨幅
+    double c8;//14//5日涨
+    double c9;//15//10日涨 30%
+    double c10;//16//30日涨
+    double c11;//17 //月均价
+    double c12;//18//月均价一日变动
+    double c13;//19//月均价未来10日变动
     boolean done = false;
-    double c10;
-
     public Code(String s) {
         String[] arr = s.split("\\s");
         date = arr[0];//            日期
@@ -131,17 +133,19 @@ public class Code {
     public String calculateStr() {
         DecimalFormat df =  new DecimalFormat("########.#####");
         return toString()
-                + "\t" + df.format(c1)
-                + "\t" + df.format(c2)
-                + "\t" + df.format(c3)
-                + "\t" +df.format( c4)
-                + "\t" + df.format(c5)
-                + "\t" + df.format(c6)
-                + "\t" + df.format(c7)
-//                + "\t" + (int)(c7/10)
-                + "\t" + df.format(c8)
-                + "\t" + df.format(c9)
-                + "\t" + df.format(c10)
+                + "\t" + df.format(c1)//7
+                + "\t" + df.format(c2)//8
+                + "\t" + df.format(c3)//9
+                + "\t" +df.format( c4)//10
+                + "\t" + df.format(c5)//11
+                + "\t" + df.format(c6)//12
+                + "\t" + df.format(c7)//13
+                + "\t" + df.format(c8)//14
+                + "\t" + df.format(c9)//15
+                + "\t" + df.format(c10)//16
+                + "\t" + df.format(c11)//17
+                + "\t" + df.format(c12)//18
+                + "\t" + df.format(c13)//19
                 ;
     }
 }
