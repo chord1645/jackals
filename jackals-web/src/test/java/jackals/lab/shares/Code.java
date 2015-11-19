@@ -26,6 +26,10 @@ public class Code {
     double c11;//17 //月均价
     double c12;//18//月均价一日变动
     double c13;//19//月均价未来10日变动
+    double c14;//20//月均量
+    double c15;//21//月均量一日变动
+    double c16;//22//月均量未来10日变动
+    double c17;//23//均量量比
     boolean done = false;
     public Code(String s) {
         String[] arr = s.split("\\s");
@@ -37,7 +41,7 @@ public class Code {
         quantity = Double.valueOf(arr[5]);//            交易量(股)
         money = Double.valueOf(arr[6]);//            交易金额(元)
         priceAvg = (highest + lowest) / 2;
-        quantityAvg = quantity / 240;
+        quantityAvg = quantity;
         diff = Math.abs(highest - lowest);
     }
 
@@ -146,6 +150,10 @@ public class Code {
                 + "\t" + df.format(c11)//17
                 + "\t" + df.format(c12)//18
                 + "\t" + df.format(c13)//19
+                + "\t" + df.format(c14)//20
+                + "\t" + df.format(c15)//21
+                + "\t" + df.format(c16)//22
+                + "\t" + df.format(c17)//23
                 ;
     }
 }

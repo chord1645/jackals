@@ -60,4 +60,27 @@ public class FileUtil {
             output.delete();
         }
     }
+
+    public static String readLastLine(File file) {
+        BufferedReader br = null;
+        String out = null;
+        try {
+            br = new BufferedReader(
+                    new InputStreamReader(new FileInputStream(file), encoding));
+
+
+            for (String s = null; (s = br.readLine()) != null; ) {
+                out =s;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return out;
+    }
 }
