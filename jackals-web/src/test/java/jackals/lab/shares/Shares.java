@@ -1,13 +1,11 @@
 package jackals.lab.shares;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import jackals.downloader.HttpDownloader;
 import jackals.downloader.ReqCfg;
 import jackals.lab.FileUtil;
 import jackals.model.PageObj;
 import jackals.model.RequestOjb;
-import jackals.utils.BlockExecutorPool;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import smile.classification.*;
 import smile.data.NumericAttribute;
 import smile.math.distance.EuclideanDistance;
-import smile.math.distance.ManhattanDistance;
 import smile.math.kernel.GaussianKernel;
 import smile.math.rbf.RadialBasisFunction;
 import smile.util.SmileUtils;
@@ -30,18 +27,26 @@ import java.util.*;
 //@Ignore
 public class Shares {
     private Logger logger = LoggerFactory.getLogger(getClass());
-    //    String training = "D:\\tmp\\calculate\\0_10.txt";
-    String training = "D:\\tmp\\calculate\\0_50.txt";
-    int checkData = 200;
+    String training = "D:\\tmp\\calculate\\0_10.txt";
+    //    String training = "D:\\tmp\\calculate\\0_50.txt";
+    int checkData = 100;
+
+    @Test
+    public void runOneCode() throws Exception {
+        runCode("000858");
+//        runCode("600000");
+//        runCode("600373");
+    }
 
     @Test
     public void runCode() throws Exception {
+
         File f2015 = new File("D:\\tmp\\calculate2015\\");
         for (File f : f2015.listFiles()) {
-            try{
+            try {
                 runCode(f.getName().replaceAll("\\.txt", ""));
 
-            }catch (LackDataException e){
+            } catch (LackDataException e) {
                 e.printStackTrace();
             }
         }
@@ -119,8 +124,8 @@ public class Shares {
         if (!calc.exists())
             calculateFile(orig, calc, "2015");
 
-//        dtree(orig, calc);
-        runRBF(orig, calc);
+        runDTree(orig, calc);
+//        runRBF(orig, calc);
 //        runSVM(calc);
     }
 
@@ -163,9 +168,9 @@ public class Shares {
             }
 
         }
-        System.out.println(name + " " + classifier.getClass() + " error:" + error);
+//        System.out.println(name + " " + classifier.getClass().getSimpleName() + " error:" + error);
         double acc = (train.matrix.length - error) / train.matrix.length * 100;
-        System.out.println(name + " " + classifier.getClass() + "acc:" + acc);
+        System.out.println(name + " " + classifier.getClass().getSimpleName() + "acc:" + acc);
         return acc;
     }
 
@@ -174,7 +179,7 @@ public class Shares {
     public void runRBF(File orig, File calc) throws Exception {
         if (rbf == null) {
             train = loadData(training);
-            double[][] centers = new double[30][];
+            double[][] centers = new double[100][];
             RadialBasisFunction basis = SmileUtils.learnGaussianRadialBasis(train.matrix, centers);
 //        RBFNetwork<double[]> rbf = new RBFNetwork<double[]>(train.matrix, train.label, new ManhattanDistance(), basis, centers);
             rbf = new RBFNetwork<double[]>(train.matrix, train.label, new EuclideanDistance(), basis, centers);
@@ -182,8 +187,8 @@ public class Shares {
         }
 //        Data train = loadData("D:\\tmp\\calculate\\all.txt");
         Data test = loadData(calc.getPath());
-        printAcc(calc.getName(), train, rbf);
-        double acc = printAcc(calc.getName(), test, rbf);
+        printAcc("train " + calc.getName(), train, rbf);
+        double acc = printAcc("test " + calc.getName(), test, rbf);
         filter(calc, test, acc, rbf);
 
     }
@@ -203,7 +208,8 @@ public class Shares {
             int result2 = classifier.predict(loadDay(day2.split("\\s")));
             int result3 = classifier.predict(loadDay(day3.split("\\s")));
             logger.info("{} {} {} {}", calc.getName(), result1, result2, result3);
-            if ((result1 == 0 || result2 == 0) && result3 == 1)
+            if (result3 == 0)
+//            if ((result1 == 0 || result2 == 0) && result3 == 1)
                 writeResult(test, classifier, new File("D:\\tmp\\buy\\" + calc.getName()));
         }
 
@@ -214,10 +220,10 @@ public class Shares {
     Data train;
 
     //    @Test
-    public void dtree(File orig, File calc) throws Exception {
+    public void runDTree(File orig, File calc) throws Exception {
         if (tree == null) {
             train = loadData(training);
-            tree = new DecisionTree(train.matrix, train.label, 300, DecisionTree.SplitRule.ENTROPY);
+            tree = new DecisionTree(train.matrix, train.label, 350, DecisionTree.SplitRule.ENTROPY);
         }
 //        Data train = loadData("D:\\tmp\\calculate\\000063.txt");
 
@@ -227,8 +233,8 @@ public class Shares {
         Data test = loadData(calc.getPath());
 //        Data test = loadData("D:\\tmp\\calculate\\600426.txt");
 
-        printAcc(calc.getName(), train, tree);
-        double acc = printAcc(calc.getName(), test, tree);
+        printAcc("train " + calc.getName(), train, tree);
+        double acc = printAcc("test " + calc.getName(), test, tree);
         filter(calc, test, acc, tree);
 //        writeResult(test, tree,new File("D:\\tmp\\calculate\\output.txt"));
 
@@ -290,12 +296,12 @@ public class Shares {
         List<Integer> typeList = new ArrayList<Integer>();
         for (int x = 0; x < rows.length; x++) {
             String[] colArr = rows[x].split("\\s");
-            int type = Integer.valueOf(colArr[19]);
+            int type = Integer.valueOf(colArr[24]);
             if (type == -1) {
                 continue;
             }
             dataList.add(loadDay(colArr));
-            typeList.add(Integer.valueOf(colArr[19]));
+            typeList.add(type);
 
         }
         data.matrix = new double[dataList.size()][];
@@ -335,13 +341,7 @@ public class Shares {
                 //                    Double.valueOf(colArr[11]),
                 Double.valueOf(colArr[12]),
                 Double.valueOf(colArr[13]),
-                //            data.matrix[x][6] = Double.valueOf(colArr[1]);
-                //            data.matrix[x][7] = Double.valueOf(colArr[2]);
-                //            data.matrix[x][8] = Double.valueOf(colArr[3]);
-                //            data.matrix[x][9] = Double.valueOf(colArr[4]);
-                //            data.matrix[x][10] = Double.valueOf(colArr[5]);
-                //            data.matrix[x][11] = Double.valueOf(colArr[6]);
-                //                    Double.valueOf(colArr[17]),
+                Double.valueOf(colArr[17]),
                 Double.valueOf(colArr[18]),
                 //                     Double.valueOf(colArr[20]),
                 Double.valueOf(colArr[21]),
@@ -407,7 +407,7 @@ public class Shares {
 
         int cnt = 0;
         int s = 0;
-        int size = 50;
+        int size = 10;
         File result = new File("D:\\tmp\\calculate\\" + s + "_" + size + ".txt");
         result.delete();
         for (File f : root.listFiles()) {
@@ -470,7 +470,7 @@ public class Shares {
             }
             code.c5 = code.quantity / (quantitySum / 5);
             //收盘5日涨幅
-            code.c6 = (codes[i].end - codes[i - 5].end) / codes[i - 5].end * 100;
+            code.c6 = (codes[i].end - codes[i - 1].end) / codes[i - 1].end * 100;
             //收盘10日涨幅
             code.c7 = (codes[i].end - codes[i - 10].end) / codes[i - 10].end * 100;
             //5日涨
@@ -499,14 +499,33 @@ public class Shares {
 //            if (codes[i - 1].c11 == 0 || i + 10 > codes.length - 1) {
 //                return;
 //            }
-            code.c12 = code.c11 > codes[i - 5].c11 ? 1 : 0;
-            code.c15 = code.c14 > codes[i - 5].c14 ? 1 : 0;
+            code.c12 = code.c11 > codes[i - 1].c11 ? 1 : 0;
+            code.c15 = code.c14 > codes[i - 1].c14 ? 1 : 0;
             if (i + 5 > codes.length - 1) {
-                code.c13 = code.c16 = -1;
+                code.c16 = code.c18 = -1;
             } else {
-                code.c13 = code.c11 < codes[i + 5].c11 ? 1 : 0;
-                code.c16 = code.c14 < codes[i + 5].c14 ? 1 : 0;
+                code.c6 = (codes[i].end - codes[i - 5].end) / codes[i - 5].end * 100;
 
+//                double up5 = (codes[i + 5].end - code.end) / code.end * 100;
+//                if (up5 > 10) {
+//                    code.c18 = 0;
+//                } else if (up5 > 0.0) {
+//                    code.c18 = 1;
+//                } else if (up5 > -10) {
+//                    code.c18 = 2;
+//                } else {
+//                    code.c18 = 3;
+//                }
+//                code.c16=up5;
+
+                code.c16 = code.c14 < codes[i + 5].c14 ? 1 : 0;
+//                =SUM($N$1:N3)/50
+                for (int x = 0; x <= i; x++) {
+                    code.c13 += codes[i].c6;
+                }
+                double d = codes[i + 5].c11 / code.c11;
+                code.c18 = d > 1 ?1:0;
+                code.c16 = code.c14 < codes[i + 5].c14 ? 1 : 0;
             }
             //均量量比
             quantitySum = 0.00;

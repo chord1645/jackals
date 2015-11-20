@@ -20,16 +20,18 @@ public class Code {
     double c5;//11//量比
     double c6;//12//收盘5日涨幅
     double c7;//13//收盘10日涨幅
-    double c8;//14//5日涨
+    double c8;//14//1日涨
     double c9;//15//10日涨 30%
     double c10;//16//30日涨
-    double c11;//17 //月均价
-    double c12;//18//月均价一日变动
-    double c13;//19//月均价未来10日变动
+    double c11;//17 //均价
+    double c12;//18//月均价前日变动
+    double c13;//19//涨幅变动曲线
     double c14;//20//月均量
-    double c15;//21//月均量一日变动
-    double c16;//22//月均量未来10日变动
+    double c15;//21//月均量前日变动
+    double c16;//22//月均量未来变动
     double c17;//23//均量量比
+    double c18;//24//结果:收盘价未来变动
+
     boolean done = false;
     public Code(String s) {
         String[] arr = s.split("\\s");
@@ -154,6 +156,7 @@ public class Code {
                 + "\t" + df.format(c15)//21
                 + "\t" + df.format(c16)//22
                 + "\t" + df.format(c17)//23
+                + "\t" + df.format(c18)//24
                 ;
     }
 }
