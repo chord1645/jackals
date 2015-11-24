@@ -365,8 +365,9 @@ public class Shares {
         }
         if (codes.length < checkData)
             throw new LackDataException("数据不全");
-        Avg(codes);
-        for (int i = rage; i < codes.length; i++) {
+        Avg(codes,10);
+        Rise(codes,5);
+        for (int i = 10; i < codes.length; i++) {
             if (StringUtils.isNotEmpty(year) && !codes[i].date.startsWith(year))
                 continue;
             calculateOne(i, codes);
@@ -408,9 +409,8 @@ public class Shares {
         }
     }
 
-    int rage = 10;
 
-    private void Avg(Code[] codes) {
+    private void Avg(Code[] codes, int rage) {
         for (int i = rage; i < codes.length; i++) {
             Code code = codes[i];
             double priceMonth = 0;
@@ -422,6 +422,20 @@ public class Shares {
             code.c17 = priceMonth / rage;
             code.c20 = quanMonth / rage;
         }
+    }
+
+    private void Rise(Code[] codes, int days) {
+        for (int x = days; x < codes.length - days; x++) {
+            Code code = codes[x];
+            double d = (codes[x].end - codes[x - days].end) / codes[x - days].end * 100;
+            code.c12 = d;
+            if (x == days) {
+                code.c24 = d;
+            } else {
+                code.c24 = codes[x - 1].c24 + d;
+            }
+        }
+
     }
 
     /**
