@@ -468,7 +468,7 @@ public class Shares {
             }
             code.c11 = code.quantity / (quantitySum / 5);
             //收盘5日涨幅
-            code.c12 = (codes[i].end - codes[i - 1].end) / codes[i - 1].end * 100;
+//            code.c12 = (codes[i].end - codes[i - 1].end) / codes[i - 1].end * 100;
             //收盘10日涨幅
             code.c13 = (codes[i].end - codes[i - 10].end) / codes[i - 10].end * 100;
             code.c18 = code.c17 > codes[i - 1].c17 ? 1 : 0;
