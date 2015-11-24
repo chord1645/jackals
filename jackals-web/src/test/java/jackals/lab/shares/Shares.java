@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import smile.classification.*;
 import smile.data.NumericAttribute;
+import smile.math.*;
 import smile.math.distance.EuclideanDistance;
 import smile.math.kernel.GaussianKernel;
 import smile.math.rbf.RadialBasisFunction;
@@ -23,29 +24,32 @@ import smile.util.SmileUtils;
 
 import java.io.File;
 import java.util.*;
+import java.util.Random;
 
 //@Ignore
 public class Shares {
     private Logger logger = LoggerFactory.getLogger(getClass());
-    String training = "D:\\tmp\\calculate\\0_10.txt";
+    String training = "D:\\tmp\\calculate\\0_100.txt";
     //    String training = "D:\\tmp\\calculate\\0_50.txt";
-    int checkData = 100;
+    int checkData = 200;
 
     @Test
     public void runOneCode() throws Exception {
 //        runCode("000858");
 //        runCode("600000");
-        runCode("600373");
+//        runCode("600373");
+        runCode("600198");
     }
 
     @Test
     public void runCode() throws Exception {
 
-        File f2015 = new File("D:\\tmp\\calculate2015\\");
+        File f2015 = new File("D:\\tmp\\runCode\\orig");
+        int x =0;
         for (File f : f2015.listFiles()) {
             try {
+                System.out.println(x++);
                 runCode(f.getName().replaceAll("\\.txt", ""));
-
             } catch (LackDataException e) {
                 e.printStackTrace();
             }
@@ -114,8 +118,8 @@ public class Shares {
     }
 
     public void runCode(String code) throws Exception {
-        File orig = new File("D:\\tmp\\runCode\\" + code + ".txt");
-        File calc = new File("D:\\tmp\\runCode\\calc-" + code + ".txt");
+        File orig = new File("D:\\tmp\\runCode\\orig\\" + code + ".txt");
+        File calc = new File("D:\\tmp\\runCode\\calc\\calc-" + code + ".txt");
 //        File orig = new File("D:\\tmp\\find\\" + code + ".txt");
 //        File calc = new File("D:\\tmp\\calculate2015\\" + code + ".txt");
         if (!orig.exists())
@@ -195,7 +199,7 @@ public class Shares {
 
     private void filter(File calc, Data test, double acc, Classifier classifier) {
 
-        if (acc < 86)
+        if (acc < 90)
             return;
         String str = FileUtil.read(calc);
         String[] arr = str.split("\n");
@@ -203,12 +207,12 @@ public class Shares {
         String day2 = arr[arr.length - 2];
         String day3 = arr[arr.length - 1];
 //        String day = FileUtil.readLastLine(calc);
-        if (day1.startsWith("2015-11-17") && day2.startsWith("2015-11-18") && day3.startsWith("2015-11-19")) {
+        if (day1.startsWith("2015-11-18") && day2.startsWith("2015-11-19") && day3.startsWith("2015-11-20")) {
             int result1 = classifier.predict(loadDay(day1.split("\\s")));
             int result2 = classifier.predict(loadDay(day2.split("\\s")));
             int result3 = classifier.predict(loadDay(day3.split("\\s")));
             logger.info("{} {} {} {}", calc.getName(), result1, result2, result3);
-            if (result3 == 0)
+            if (result3 == 2)
 //            if ((result1 == 0 || result2 == 0) && result3 == 1)
                 writeResult(test, classifier, new File("D:\\tmp\\buy\\" + calc.getName()));
         }
@@ -296,7 +300,7 @@ public class Shares {
         List<Integer> typeList = new ArrayList<Integer>();
         for (int x = 0; x < rows.length; x++) {
             String[] colArr = rows[x].split("\\s");
-            int type = Integer.valueOf(colArr[24]);
+            int type = Integer.valueOf(colArr[25]);
             if (type == -1) {
                 continue;
             }
@@ -333,11 +337,12 @@ public class Shares {
                 //                    Double.valueOf(colArr[11]),
                 Double.valueOf(colArr[12]),
                 Double.valueOf(colArr[13]),
-                Double.valueOf(colArr[17]),
-                Double.valueOf(colArr[18]),
+//                Double.valueOf(colArr[17]),
+//                Double.valueOf(colArr[18]),
                 //                     Double.valueOf(colArr[20]),
-                Double.valueOf(colArr[21]),
-                Double.valueOf(colArr[23])
+//                Double.valueOf(colArr[21]),
+//                Double.valueOf(colArr[23]),
+                Double.valueOf(colArr[24])
         );
 
         double[] day = new double[list.size()];
@@ -365,8 +370,8 @@ public class Shares {
         }
         if (codes.length < checkData)
             throw new LackDataException("数据不全");
-        Avg(codes,10);
-        Rise(codes,5);
+        Avg(codes, 10);
+        Rise(codes, 5);
         for (int i = 10; i < codes.length; i++) {
             if (StringUtils.isNotEmpty(year) && !codes[i].date.startsWith(year))
                 continue;
@@ -395,7 +400,16 @@ public class Shares {
         int size = 10;
         File result = new File("D:\\tmp\\calculate\\" + s + "_" + size + ".txt");
         result.delete();
-        for (File f : root.listFiles()) {
+        Set<File> simple = new HashSet<File>();
+        File[] files = root.listFiles();
+        for (; ; ) {
+            if (simple.size() >= size)
+                break;
+            int i = new Random().nextInt(files.length);
+            simple.add(files[i]);
+        }
+
+        for (File f : simple) {
             System.out.println(cnt++ + "\t" + f.getName());
 //            if (!f.getName().equals("600093.txt")) {
 //                continue;
@@ -473,18 +487,25 @@ public class Shares {
             code.c13 = (codes[i].end - codes[i - 10].end) / codes[i - 10].end * 100;
             code.c18 = code.c17 > codes[i - 1].c17 ? 1 : 0;
             code.c21 = code.c20 > codes[i - 1].c20 ? 1 : 0;
-            if (i + 5 > codes.length - 1) {
+            if (i + 10 > codes.length - 1) {
                 code.c22 = code.c24 = -1;
             } else {
-                code.c12 = (codes[i].end - codes[i - 5].end) / codes[i - 5].end * 100;
-                code.c22 = code.c20 < codes[i + 5].c20 ? 1 : 0;
 //                =SUM($N$1:N3)/50
-                for (int x = 0; x <= i; x++) {
-                    code.c19 += codes[i].c12;
-                }
+//                for (int x = 0; x <= i; x++) {
+//                    code.c19 += codes[i].c12;
+//                }
+                //1111111111111111111
                 double d = codes[i + 5].c17 / code.c17;
-                code.c25 = d > 1 ?1:0;
-                code.c22 = code.c20 < codes[i + 5].c20 ? 1 : 0;
+                code.c25 = d > 1.05 ? 1 : 0;
+                //2222222222222222222
+//                code.c25 = 0;
+//                for (int x = i + 1; x < i + 10; x++) {
+//                    if (codes[x].end / code.end > 1.05) {
+//                        code.c25 = 1;
+//                        break;
+//                    }
+//                }
+//                code.c22 = code.c20 < codes[i + 5].c20 ? 1 : 0;
             }
             //均量量比
             quantitySum = 0.00;

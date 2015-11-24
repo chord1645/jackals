@@ -25,7 +25,7 @@ public class Code {
     double c16;//16//30日涨
     double c17;//17 //均价
     double c18;//18//月均价前日变动
-    double c19;//19//涨幅变动曲线
+    double c19;//19//涨幅变动曲线 和24 重复了
     double c20;//20//月均量
     double c21;//21//月均量前日变动
     double c22;//22//月均量未来变动
@@ -158,6 +158,7 @@ public class Code {
                 + "\t" + df.format(c22)//22
                 + "\t" + df.format(c23)//23
                 + "\t" + df.format(c24)//24
+                + "\t" + df.format(c25)//25
                 ;
     }
 }
