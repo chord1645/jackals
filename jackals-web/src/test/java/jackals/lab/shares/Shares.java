@@ -33,9 +33,9 @@ public class Shares {
 
     @Test
     public void runOneCode() throws Exception {
-        runCode("000858");
+//        runCode("000858");
 //        runCode("600000");
-//        runCode("600373");
+        runCode("600373");
     }
 
     @Test
@@ -114,7 +114,7 @@ public class Shares {
     }
 
     public void runCode(String code) throws Exception {
-        File orig = new File("D:\\tmp\\runCode\\orig-" + code + ".txt");
+        File orig = new File("D:\\tmp\\runCode\\" + code + ".txt");
         File calc = new File("D:\\tmp\\runCode\\calc-" + code + ".txt");
 //        File orig = new File("D:\\tmp\\find\\" + code + ".txt");
 //        File calc = new File("D:\\tmp\\calculate2015\\" + code + ".txt");
@@ -312,14 +312,6 @@ public class Shares {
 //            data.label[x] = Integer.valueOf(colArr[22]);//交易量未来变动结果
         }
         data.rows = rows;
-//        NumericAttribute[] attributes = new NumericAttribute[data.matrix[0].length];
-//        attributes[0] = new NumericAttribute("c1", null, 1.0);
-//        attributes[1] = new NumericAttribute("c2", null, 1.0);
-//        attributes[2] = new NumericAttribute("c3", null, 1.0);
-//        attributes[3] = new NumericAttribute("c4", null, 1.0);
-//        attributes[4] = new NumericAttribute("c5", null, 1.0);
-//        attributes[5] = new NumericAttribute("c6", null, 1.0);
-//        attributes[6] = new NumericAttribute("c7", null, 1.0);
         return data;
     }
 
@@ -346,14 +338,6 @@ public class Shares {
                 //                     Double.valueOf(colArr[20]),
                 Double.valueOf(colArr[21]),
                 Double.valueOf(colArr[23])
-                //            data.matrix[x][7] = Double.valueOf(colArr[22]);
-                //            double c11;//17 //月均价
-                //            double c12;//18//月均价一日变动
-                //            double c13;//19//月均价未来10日变动
-                //            double c14;//20//月均量
-                //            double c15;//21//月均量一日变动
-                //            double c16;//22//月均量未来10日变动
-                //double c17;//23//均量量比
         );
 
         double[] day = new double[list.size()];
@@ -435,8 +419,8 @@ public class Shares {
                 priceMonth += codes[x].priceAvg;
                 quanMonth += codes[x].quantity;
             }
-            code.c11 = priceMonth / rage;
-            code.c14 = quanMonth / rage;
+            code.c17 = priceMonth / rage;
+            code.c20 = quanMonth / rage;
         }
     }
 
@@ -452,90 +436,50 @@ public class Shares {
         try {
             Code code = codes[i];
             //均价变动
-            code.c1 = (codes[i].priceAvg - codes[i - 1].priceAvg) / codes[i - 1].priceAvg * 100;
+            code.c7 = (codes[i].priceAvg - codes[i - 1].priceAvg) / codes[i - 1].priceAvg * 100;
             //最高变动
-            code.c2 = (codes[i].highest - codes[i - 1].highest) / codes[i - 1].highest * 100;
+            code.c8 = (codes[i].highest - codes[i - 1].highest) / codes[i - 1].highest * 100;
             //最低变动
-            code.c3 = (codes[i].lowest - codes[i - 1].lowest) / codes[i - 1].lowest * 100;
+            code.c9 = (codes[i].lowest - codes[i - 1].lowest) / codes[i - 1].lowest * 100;
             //高低差变动
             if (codes[i - 1].diff == 0) {
-                code.c4 = 100;
+                code.c10 = 100;
             } else {
-                code.c4 = (codes[i].diff - codes[i - 1].diff) / codes[i - 1].diff * 100;
+                code.c10 = (codes[i].diff - codes[i - 1].diff) / codes[i - 1].diff * 100;
             }
             //量比
             double quantitySum = 0;
             for (int x = i - 5; x < i; x++) {
                 quantitySum += codes[x].quantity;
             }
-            code.c5 = code.quantity / (quantitySum / 5);
+            code.c11 = code.quantity / (quantitySum / 5);
             //收盘5日涨幅
-            code.c6 = (codes[i].end - codes[i - 1].end) / codes[i - 1].end * 100;
+            code.c12 = (codes[i].end - codes[i - 1].end) / codes[i - 1].end * 100;
             //收盘10日涨幅
-            code.c7 = (codes[i].end - codes[i - 10].end) / codes[i - 10].end * 100;
-            //5日涨
-//            code.c8 = codes[i].end < codes[i + 5].end ? 1 : 0;
-            //10日涨 30%
-//            double rise = (codes[i + 10].end - codes[i].end) / codes[i].end;
-            //0=涨幅>10%,
-            // 1=跌幅>10%,
-            // 2=-10%<区间<10%
-//            if (rise > 0.3) {
-//                code.c9 = 0;
-//            } else if (rise > 0.2) {
-//                code.c9 = 1;
-//            } else if (rise > 0.1) {
-//                code.c9 = 2;
-//            } else if (rise > 0.0) {
-//                code.c9 = 3;
-//            } else if (rise > -0.1) {
-//                code.c9 = 4;
-//            } else if (rise > -0.2) {
-//                code.c9 = 5;
-//            } else {
-//                code.c9 = 6;
-//            }
-//            code.c10 = codes[i].end < codes[i + 30].end ? 1 : 0;
-//            if (codes[i - 1].c11 == 0 || i + 10 > codes.length - 1) {
-//                return;
-//            }
-            code.c12 = code.c11 > codes[i - 1].c11 ? 1 : 0;
-            code.c15 = code.c14 > codes[i - 1].c14 ? 1 : 0;
+            code.c13 = (codes[i].end - codes[i - 10].end) / codes[i - 10].end * 100;
+            code.c18 = code.c17 > codes[i - 1].c17 ? 1 : 0;
+            code.c21 = code.c20 > codes[i - 1].c20 ? 1 : 0;
             if (i + 5 > codes.length - 1) {
-                code.c16 = code.c18 = -1;
+                code.c22 = code.c24 = -1;
             } else {
-                code.c6 = (codes[i].end - codes[i - 5].end) / codes[i - 5].end * 100;
-
-//                double up5 = (codes[i + 5].end - code.end) / code.end * 100;
-//                if (up5 > 10) {
-//                    code.c18 = 0;
-//                } else if (up5 > 0.0) {
-//                    code.c18 = 1;
-//                } else if (up5 > -10) {
-//                    code.c18 = 2;
-//                } else {
-//                    code.c18 = 3;
-//                }
-//                code.c16=up5;
-
-                code.c16 = code.c14 < codes[i + 5].c14 ? 1 : 0;
+                code.c12 = (codes[i].end - codes[i - 5].end) / codes[i - 5].end * 100;
+                code.c22 = code.c20 < codes[i + 5].c20 ? 1 : 0;
 //                =SUM($N$1:N3)/50
                 for (int x = 0; x <= i; x++) {
-                    code.c13 += codes[i].c6;
+                    code.c19 += codes[i].c12;
                 }
-                double d = codes[i + 5].c11 / code.c11;
-                code.c18 = d > 1 ?1:0;
-                code.c16 = code.c14 < codes[i + 5].c14 ? 1 : 0;
+                double d = codes[i + 5].c17 / code.c17;
+                code.c24 = d > 1 ?1:0;
+                code.c22 = code.c20 < codes[i + 5].c20 ? 1 : 0;
             }
             //均量量比
             quantitySum = 0.00;
             int flag = 10;
             for (int x = i - flag; x < i; x++) {
-                quantitySum += codes[x].c14;
+                quantitySum += codes[x].c20;
             }
 
-            code.c17 = code.c14 / (quantitySum == 0 ? code.c14 : quantitySum / flag);
-//            code.c17 = code.c17 > 1 ? 1 : 0;
+            code.c23 = code.c20 / (quantitySum == 0 ? code.c20 : quantitySum / flag);
             code.done = true;
 //            System.out.println(i);
         } catch (Throwable e) {

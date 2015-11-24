@@ -13,24 +13,24 @@ public class Code {
     double quantityAvg; //当日平均量
     double diff; //高低差
     String date;
-    double c1; //7//均价变动
-    double c2;//8//最高变动
-    double c3;//9//最低变动
-    double c4;//10 //高低差变动
-    double c5;//11//量比
-    double c6;//12//收盘5日涨幅
-    double c7;//13//收盘10日涨幅
-    double c8;//14//1日涨
-    double c9;//15//10日涨 30%
-    double c10;//16//30日涨
-    double c11;//17 //均价
-    double c12;//18//月均价前日变动
-    double c13;//19//涨幅变动曲线
-    double c14;//20//月均量
-    double c15;//21//月均量前日变动
-    double c16;//22//月均量未来变动
-    double c17;//23//均量量比
-    double c18;//24//结果:收盘价未来变动
+    double c7; //7//均价变动
+    double c8;//8//最高变动
+    double c9;//9//最低变动
+    double c10;//10 //高低差变动
+    double c11;//11//量比
+    double c12;//12//收盘5日涨幅
+    double c13;//13//收盘10日涨幅
+    double c14;//14//1日涨
+    double c15;//15//10日涨 30%
+    double c16;//16//30日涨
+    double c17;//17 //均价
+    double c18;//18//月均价前日变动
+    double c19;//19//涨幅变动曲线
+    double c20;//20//月均量
+    double c21;//21//月均量前日变动
+    double c22;//22//月均量未来变动
+    double c23;//23//均量量比
+    double c24;//24//结果:收盘价未来变动
 
     boolean done = false;
     public Code(String s) {
@@ -139,24 +139,24 @@ public class Code {
     public String calculateStr() {
         DecimalFormat df =  new DecimalFormat("########.#####");
         return toString()
-                + "\t" + df.format(c1)//7
-                + "\t" + df.format(c2)//8
-                + "\t" + df.format(c3)//9
-                + "\t" +df.format( c4)//10
-                + "\t" + df.format(c5)//11
-                + "\t" + df.format(c6)//12
-                + "\t" + df.format(c7)//13
-                + "\t" + df.format(c8)//14
-                + "\t" + df.format(c9)//15
-                + "\t" + df.format(c10)//16
-                + "\t" + df.format(c11)//17
-                + "\t" + df.format(c12)//18
-                + "\t" + df.format(c13)//19
-                + "\t" + df.format(c14)//20
-                + "\t" + df.format(c15)//21
-                + "\t" + df.format(c16)//22
-                + "\t" + df.format(c17)//23
-                + "\t" + df.format(c18)//24
+                + "\t" + df.format(c7)//7
+                + "\t" + df.format(c8)//8
+                + "\t" + df.format(c9)//9
+                + "\t" +df.format(c10)//10
+                + "\t" + df.format(c11)//11
+                + "\t" + df.format(c12)//12
+                + "\t" + df.format(c13)//13
+                + "\t" + df.format(c14)//14
+                + "\t" + df.format(c15)//15
+                + "\t" + df.format(c16)//16
+                + "\t" + df.format(c17)//17
+                + "\t" + df.format(c18)//18
+                + "\t" + df.format(c19)//19
+                + "\t" + df.format(c20)//20
+                + "\t" + df.format(c21)//21
+                + "\t" + df.format(c22)//22
+                + "\t" + df.format(c23)//23
+                + "\t" + df.format(c24)//24
                 ;
     }
 }
