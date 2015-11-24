@@ -44,14 +44,14 @@ public class Shares {
     @Test
     public void runCode() throws Exception {
 
-        File f2015 = new File("D:\\tmp\\runCode\\orig");
+        File f2015 = new File("D:\\tmp\\calculate2015");
         int x =0;
         for (File f : f2015.listFiles()) {
             try {
                 System.out.println(x++);
                 runCode(f.getName().replaceAll("\\.txt", ""));
             } catch (LackDataException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
         }
     }
@@ -128,8 +128,8 @@ public class Shares {
         if (!calc.exists())
             calculateFile(orig, calc, "2015");
 
-        runDTree(orig, calc);
-//        runRBF(orig, calc);
+//        runDTree(orig, calc);
+        runRBF(orig, calc);
 //        runSVM(calc);
     }
 
@@ -193,14 +193,17 @@ public class Shares {
         Data test = loadData(calc.getPath());
         printAcc("train " + calc.getName(), train, rbf);
         double acc = printAcc("test " + calc.getName(), test, rbf);
+        accSum += acc;
+        count++;
+        System.out.println("acc avg :" + accSum / count + "   ===============================");
         filter(calc, test, acc, rbf);
 
     }
 
     private void filter(File calc, Data test, double acc, Classifier classifier) {
 
-        if (acc < 90)
-            return;
+//        if (acc < 85)
+//            return;
         String str = FileUtil.read(calc);
         String[] arr = str.split("\n");
         String day1 = arr[arr.length - 3];
@@ -212,9 +215,9 @@ public class Shares {
             int result2 = classifier.predict(loadDay(day2.split("\\s")));
             int result3 = classifier.predict(loadDay(day3.split("\\s")));
             logger.info("{} {} {} {}", calc.getName(), result1, result2, result3);
-            if (result3 == 2)
+            if (result3 == 1)
 //            if ((result1 == 0 || result2 == 0) && result3 == 1)
-                writeResult(test, classifier, new File("D:\\tmp\\buy\\" + calc.getName()));
+                writeResult(test, classifier, new File("D:\\tmp\\buy\\"+acc+"-" + calc.getName()));
         }
 
 
@@ -223,11 +226,16 @@ public class Shares {
     DecisionTree tree;
     Data train;
 
+
+
+    int count = 0;
+    double accSum = 0;
+
     //    @Test
     public void runDTree(File orig, File calc) throws Exception {
         if (tree == null) {
             train = loadData(training);
-            tree = new DecisionTree(train.matrix, train.label, 350, DecisionTree.SplitRule.ENTROPY);
+            tree = new DecisionTree(train.matrix, train.label, 550, DecisionTree.SplitRule.ENTROPY);
         }
 //        Data train = loadData("D:\\tmp\\calculate\\000063.txt");
 
@@ -239,6 +247,9 @@ public class Shares {
 
         printAcc("train " + calc.getName(), train, tree);
         double acc = printAcc("test " + calc.getName(), test, tree);
+        accSum += acc;
+        count++;
+        System.out.println("acc avg :" + accSum / count + "   ===============================");
         filter(calc, test, acc, tree);
 //        writeResult(test, tree,new File("D:\\tmp\\calculate\\output.txt"));
 
@@ -397,11 +408,18 @@ public class Shares {
 
         int cnt = 0;
         int s = 0;
-        int size = 10;
+        int size = 100;
         File result = new File("D:\\tmp\\calculate\\" + s + "_" + size + ".txt");
         result.delete();
         Set<File> simple = new HashSet<File>();
         File[] files = root.listFiles();
+        for (File f:files){
+            String[] arr = FileUtil.read(f).split("\n");
+            if (arr.length<900){
+                f.delete();
+            }
+        }
+        files = root.listFiles();
         for (; ; ) {
             if (simple.size() >= size)
                 break;
