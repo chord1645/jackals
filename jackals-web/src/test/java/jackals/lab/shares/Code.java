@@ -30,7 +30,8 @@ public class Code {
     double c21;//21//月均量前日变动
     double c22;//22//月均量未来变动
     double c23;//23//均量量比
-    double c24;//24//结果:收盘价未来变动
+    double c24;//24//涨幅能量曲线
+    double c25;//25//结果:收盘价未来变动
 
     boolean done = false;
     public Code(String s) {

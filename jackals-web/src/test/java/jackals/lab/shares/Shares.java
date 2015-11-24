@@ -483,7 +483,7 @@ public class Shares {
                     code.c19 += codes[i].c12;
                 }
                 double d = codes[i + 5].c17 / code.c17;
-                code.c24 = d > 1 ?1:0;
+                code.c25 = d > 1 ?1:0;
                 code.c22 = code.c20 < codes[i + 5].c20 ? 1 : 0;
             }
             //均量量比
