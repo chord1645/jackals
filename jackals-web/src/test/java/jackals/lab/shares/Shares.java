@@ -6,6 +6,7 @@ import jackals.downloader.ReqCfg;
 import jackals.lab.FileUtil;
 import jackals.model.PageObj;
 import jackals.model.RequestOjb;
+import jackals.utils.BlockExecutorPool;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -43,8 +44,22 @@ public class Shares {
 
     @Test
     public void runCode() throws Exception {
-
-        File f2015 = new File("D:\\tmp\\calculate2015");
+//        BlockExecutorPool executor = new BlockExecutorPool(10);
+//        String[] txt = FileUtil.read(new File("D:\\tmp\\codes.txt")).split("\n");
+//        for (final String s : txt) {
+//            executor.execute(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        logger.info("download {}", s);
+//                        downloadData(s, 2015, new File(origFileName(s)));
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
+//        }
+        File f2015 = new File("D:\\tmp\\runCode\\orig");
         int x =0;
         for (File f : f2015.listFiles()) {
             try {
@@ -56,6 +71,12 @@ public class Shares {
         }
     }
 
+    private String origFileName(String s) {
+        return "D:\\tmp\\runCode\\orig\\"+s+".txt";
+    }
+    private String calcFileName(String s) {
+        return "D:\\tmp\\runCode\\calc\\calc-"+s+".txt";
+    }
 
     @Test
     public void find() throws Exception {
@@ -118,8 +139,8 @@ public class Shares {
     }
 
     public void runCode(String code) throws Exception {
-        File orig = new File("D:\\tmp\\runCode\\orig\\" + code + ".txt");
-        File calc = new File("D:\\tmp\\runCode\\calc\\calc-" + code + ".txt");
+        File orig = new File(origFileName(code));
+        File calc = new File(calcFileName(code));
 //        File orig = new File("D:\\tmp\\find\\" + code + ".txt");
 //        File calc = new File("D:\\tmp\\calculate2015\\" + code + ".txt");
         if (!orig.exists())
@@ -210,7 +231,7 @@ public class Shares {
         String day2 = arr[arr.length - 2];
         String day3 = arr[arr.length - 1];
 //        String day = FileUtil.readLastLine(calc);
-        if (day1.startsWith("2015-11-18") && day2.startsWith("2015-11-19") && day3.startsWith("2015-11-20")) {
+        if (day3.startsWith("2015-11-24")) {
             int result1 = classifier.predict(loadDay(day1.split("\\s")));
             int result2 = classifier.predict(loadDay(day2.split("\\s")));
             int result3 = classifier.predict(loadDay(day3.split("\\s")));
