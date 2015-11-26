@@ -1,23 +1,13 @@
 package jackals.lab.shares;
 
 import com.google.common.collect.Lists;
-import jackals.downloader.HttpDownloader;
-import jackals.downloader.ReqCfg;
 import jackals.lab.FileUtil;
-import jackals.model.PageObj;
-import jackals.model.RequestOjb;
-import jackals.utils.BlockExecutorPool;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import smile.classification.*;
 import smile.data.NumericAttribute;
-import smile.math.*;
 import smile.math.distance.EuclideanDistance;
 import smile.math.kernel.GaussianKernel;
 import smile.math.rbf.RadialBasisFunction;
@@ -32,35 +22,22 @@ public class Shares {
     private Logger logger = LoggerFactory.getLogger(getClass());
     String training = "D:\\tmp\\calculate\\0_100.txt";
     //    String training = "D:\\tmp\\calculate\\0_50.txt";
-    int checkData = 200;
+    static int checkData = 200;
 
     @Test
     public void runOneCode() throws Exception {
 //        runCode("000858");
 //        runCode("600000");
 //        runCode("600373");
-        runCode("600198");
+//        runCode("600198");
+        runCode("600419");
     }
 
     @Test
     public void runCode() throws Exception {
-//        BlockExecutorPool executor = new BlockExecutorPool(10);
-//        String[] txt = FileUtil.read(new File("D:\\tmp\\codes.txt")).split("\n");
-//        for (final String s : txt) {
-//            executor.execute(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        logger.info("download {}", s);
-//                        downloadData(s, 2015, new File(origFileName(s)));
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            });
-//        }
+
         File f2015 = new File("D:\\tmp\\runCode\\orig");
-        int x =0;
+        int x = 0;
         for (File f : f2015.listFiles()) {
             try {
                 System.out.println(x++);
@@ -71,12 +48,6 @@ public class Shares {
         }
     }
 
-    private String origFileName(String s) {
-        return "D:\\tmp\\runCode\\orig\\"+s+".txt";
-    }
-    private String calcFileName(String s) {
-        return "D:\\tmp\\runCode\\calc\\calc-"+s+".txt";
-    }
 
     @Test
     public void find() throws Exception {
@@ -139,13 +110,13 @@ public class Shares {
     }
 
     public void runCode(String code) throws Exception {
-        File orig = new File(origFileName(code));
-        File calc = new File(calcFileName(code));
+        File orig = new File(CodeUtil.origFileName(code));
+        File calc = new File(CodeUtil.calcFileName(code));
 //        File orig = new File("D:\\tmp\\find\\" + code + ".txt");
 //        File calc = new File("D:\\tmp\\calculate2015\\" + code + ".txt");
         if (!orig.exists())
 //            return;
-            downloadData(code, 2015, orig);
+            HistoryDownloader.downloadData(code, 2015, orig);
         if (!calc.exists())
             calculateFile(orig, calc, "2015");
 
@@ -238,7 +209,7 @@ public class Shares {
             logger.info("{} {} {} {}", calc.getName(), result1, result2, result3);
             if (result3 == 1)
 //            if ((result1 == 0 || result2 == 0) && result3 == 1)
-                writeResult(test, classifier, new File("D:\\tmp\\buy\\"+acc+"-" + calc.getName()));
+                writeResult(test, classifier, new File("D:\\tmp\\buy\\" + acc + "-" + calc.getName()));
         }
 
 
@@ -246,7 +217,6 @@ public class Shares {
 
     DecisionTree tree;
     Data train;
-
 
 
     int count = 0;
@@ -393,24 +363,47 @@ public class Shares {
         NumericAttribute[] attributes;
     }
 
-    public void calculateFile(File file, File result, String year) throws LackDataException {
+    public DataDay[] calculateFile(File file, File result, String year) throws LackDataException {
         String[] txt = FileUtil.read(file).split("\n");
 //        String[] txt = FileUtil.read(new File("D:\\tmp\\code_data\\600000.txt")).split("\n");
-        Code[] codes = new Code[txt.length];
+        DataDay[] days = new DataDay[txt.length];
         for (int i = 0; i < txt.length; i++) {
-            codes[i] = new Code(txt[i]);
+            days[i] = new DataDay(txt[i]);
         }
-        if (codes.length < checkData)
+        if (days.length < checkData)
             throw new LackDataException("数据不全");
-        Avg(codes, 10);
-        Rise(codes, 5);
-        for (int i = 10; i < codes.length; i++) {
-            if (StringUtils.isNotEmpty(year) && !codes[i].date.startsWith(year))
+        Avg(days, 10);
+        Rise(days, 5);
+        Macd(days, 12, 26, 10);
+        for (int i = 10; i < days.length; i++) {
+            if (StringUtils.isNotEmpty(year) && !days[i].date.startsWith(year))
                 continue;
-            calculateOne(i, codes);
+            calculateOne(i, days);
 //            if (codes[i].done)
 //                    FileUtil.write(new File("D:\\tmp\\calculate\\600093.txt"), codes[i].calculateStr() + "\n", true);
-            FileUtil.write(result, codes[i].calculateStr() + "\n", true);
+            FileUtil.write(result, days[i].calculateStr() + "\n", true);
+        }
+        return days;
+    }
+
+    /**
+     * int emaDays1 = 12;
+     * int emaDays2 = 26;
+     * int deaDays = 9;
+     */
+    private void Macd(DataDay[] days, int emaDays1, int emaDays2, int deaDays) {
+        for (int i = 1; i < days.length; i++) {
+            MACD macd = new MACD();
+            MACD lastMacd = days[i - 1].macd;
+            macd.emaDays1 = emaDays1;
+            macd.emaDays2 = emaDays2;
+            macd.deaDays = deaDays;
+            macd.emaFast = lastMacd.emaFast * (emaDays1 - 1) / (emaDays1 + 1) + days[i].end * 2 / (emaDays1 + 1);
+            macd.emaSlow = lastMacd.emaSlow * (emaDays2 - 1) / (emaDays2 + 1) + days[i].end * 2 / (emaDays2 + 1);
+            macd.dif = macd.emaFast - macd.emaSlow;
+            macd.dea = lastMacd.dif * (deaDays - 1) / (deaDays + 1) + macd.dif * 2 / (deaDays + 1);
+            macd.macd= (macd.dif-macd.dea)*2;
+            days[i].macd = macd;
         }
     }
 
@@ -434,9 +427,9 @@ public class Shares {
         result.delete();
         Set<File> simple = new HashSet<File>();
         File[] files = root.listFiles();
-        for (File f:files){
+        for (File f : files) {
             String[] arr = FileUtil.read(f).split("\n");
-            if (arr.length<900){
+            if (arr.length < 900) {
                 f.delete();
             }
         }
@@ -463,9 +456,9 @@ public class Shares {
     }
 
 
-    private void Avg(Code[] codes, int rage) {
+    private void Avg(DataDay[] codes, int rage) {
         for (int i = rage; i < codes.length; i++) {
-            Code code = codes[i];
+            DataDay code = codes[i];
             double priceMonth = 0;
             double quanMonth = 0;
             for (int x = i - rage; x < i; x++) {
@@ -477,9 +470,9 @@ public class Shares {
         }
     }
 
-    private void Rise(Code[] codes, int days) {
+    private void Rise(DataDay[] codes, int days) {
         for (int x = days; x < codes.length - days; x++) {
-            Code code = codes[x];
+            DataDay code = codes[x];
             double d = (codes[x].end - codes[x - days].end) / codes[x - days].end * 100;
             code.c12 = d;
             if (x == days) {
@@ -498,10 +491,10 @@ public class Shares {
      * @param i
      * @param codes
      */
-    private void calculateOne(int i, Code[] codes) {
+    private void calculateOne(int i, DataDay[] codes) {
 
         try {
-            Code code = codes[i];
+            DataDay code = codes[i];
             //均价变动
             code.c7 = (codes[i].priceAvg - codes[i - 1].priceAvg) / codes[i - 1].priceAvg * 100;
             //最高变动
@@ -564,33 +557,11 @@ public class Shares {
 
     }
 
-    public void downloadData(String code, int year, File output) throws Exception {
-        List<Code> codes = new ArrayList<Code>();
-        for (int y = year; y <= year; y++) {  //循环年
-            for (int z = 1; z <= 4; z++) {                //循环季度
-                String url = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/" + code + ".phtml?year=" + y + "&jidu=" + z;
-                codes.addAll(onePage(url));
-            }
-        }
-
-        Collections.sort(codes, new Comparator<Code>() {
-            @Override
-            public int compare(Code o1, Code o2) {
-                return o1.date.compareTo(o2.date);
-            }
-        });
-        for (Code c : codes) {
-            FileUtil.write(output, c.toString() + "\n", true);
-        }
-
-        if (codes.size() < checkData)
-            throw new LackDataException("");
-    }
 
     //    000063
     @Test
     public void downloadData1() throws Exception {
-        downloadData("", 2015, new File("D:\\tmp\\calculate\\" + "" + "_" + 1 + ".txt"));
+        HistoryDownloader.downloadData("", 2015, new File("D:\\tmp\\calculate\\" + "" + "_" + 1 + ".txt"));
     }
 
     @Test
@@ -600,59 +571,29 @@ public class Shares {
         String[] txt = FileUtil.read(new File("D:\\tmp\\codes.txt")).split("\n");
         go1:
         for (int x = 0; x < txt.length; x++) {
-            List<Code> codes = new ArrayList<Code>();
+            List<DataDay> codes = new ArrayList<DataDay>();
             String code = txt[x];
             for (int y = 2006; y <= 2009; y++) {  //循环年
                 for (int z = 1; z <= 4; z++) {                //循环季度
                     String url = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/" + code + ".phtml?year=" + y + "&jidu=" + z;
                     try {
-                        codes.addAll(onePage(url));
+                        codes.addAll(HistoryDownloader.onePage(url));
                     } catch (Throwable e) {
                         continue go1;
                     }
 
                 }
             }
-            Collections.sort(codes, new Comparator<Code>() {
+            Collections.sort(codes, new Comparator<DataDay>() {
                 @Override
-                public int compare(Code o1, Code o2) {
+                public int compare(DataDay o1, DataDay o2) {
                     return o1.date.compareTo(o2.date);
                 }
             });
-            for (Code c : codes) {
+            for (DataDay c : codes) {
                 FileUtil.write(new File("D:\\tmp\\code_data\\" + code + ".txt"), c.toString() + "\n", true);
             }
         }
-
-    }
-
-    HttpDownloader downloader = new HttpDownloader(1);
-
-    //http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/000063.phtml?year=2006&jidu=3
-    public List<Code> onePage(String url) {
-        List<Code> codes = new ArrayList<Code>();
-        try {
-            PageObj page = downloader.download(new RequestOjb(url),
-                    ReqCfg.deft().setTimeOut(10000));
-            Document doc = Jsoup.parse(page.getRawText());
-            Elements elements = doc.select("table#FundHoldSharesTable>tbody>tr");
-            elements.remove(0);
-            for (Element e : elements) {
-                Code code = new Code();
-                code.date = e.child(0).text();//            日期
-                code.start = Double.valueOf(e.child(1).text());//            开盘价
-                code.highest = Double.valueOf(e.child(2).text());//            最高价
-                code.end = Double.valueOf(e.child(3).text());//            收盘价
-                code.lowest = Double.valueOf(e.child(4).text());//            最低价
-                code.quantity = Double.valueOf(e.child(5).text());//            交易量(股)
-                code.money = Double.valueOf(e.child(6).text());//            交易金额(元)
-//                logger.info("{}", JSON.toJSONString(code));
-                codes.add(code);
-            }
-        } catch (Throwable e) {
-        }
-
-        return codes;
 
     }
 

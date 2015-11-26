@@ -2,7 +2,7 @@ package jackals.lab.shares;
 
 import java.text.DecimalFormat;
 
-public class Code {
+public class DataDay {
     double start;
     double highest;
     double end;
@@ -32,9 +32,14 @@ public class Code {
     double c23;//23//均量量比
     double c24;//24//涨幅能量曲线
     double c25;//25//结果:收盘价未来变动
-
+    MACD macd;
+    //    + "\t" + df.format(macd.dif)//26
+//            + "\t" + df.format(macd.dea)//27
+//            + "\t" + df.format(macd.macd)//28
     boolean done = false;
-    public Code(String s) {
+
+    public DataDay(String s) {
+        this();
         String[] arr = s.split("\\s");
         date = arr[0];//            日期
         start = Double.valueOf(arr[1]);//            开盘价
@@ -46,10 +51,16 @@ public class Code {
         priceAvg = (highest + lowest) / 2;
         quantityAvg = quantity;
         diff = Math.abs(highest - lowest);
+        if (arr.length < 8)
+            return;
+        macd = new MACD();
+        macd.dif = Double.valueOf(arr[26]);
+        macd.dea = Double.valueOf(arr[27]);
+        macd.macd = Double.valueOf(arr[28]);
     }
 
-    public Code() {
-
+    public DataDay() {
+        macd = new MACD();
     }
 
     public double getPriceAvg() {
@@ -138,12 +149,12 @@ public class Code {
     }
 
     public String calculateStr() {
-        DecimalFormat df =  new DecimalFormat("########.#####");
+        DecimalFormat df = new DecimalFormat("########.#####");
         return toString()
                 + "\t" + df.format(c7)//7
                 + "\t" + df.format(c8)//8
                 + "\t" + df.format(c9)//9
-                + "\t" +df.format(c10)//10
+                + "\t" + df.format(c10)//10
                 + "\t" + df.format(c11)//11
                 + "\t" + df.format(c12)//12
                 + "\t" + df.format(c13)//13
@@ -159,6 +170,9 @@ public class Code {
                 + "\t" + df.format(c23)//23
                 + "\t" + df.format(c24)//24
                 + "\t" + df.format(c25)//25
+                + "\t" + df.format(macd.dif)//26
+                + "\t" + df.format(macd.dea)//27
+                + "\t" + df.format(macd.macd)//28
                 ;
     }
 }
