@@ -1,2 +1,5 @@
 .idea
 /target
+/jackals-core/*.iml
+/jackals-web/*.iml
+/jackals-web/jackals-web.iml
