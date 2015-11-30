@@ -41,10 +41,21 @@ public class FindLowDIF {
             if (!orig.exists())
                 continue;
             try {
-                DataDay[] dataDay = shares.calculateFile(orig, calc, "2015");
-                if (dataDay[dataDay.length - 1].macd.dif < -0.5) {
+                DataDay dataDay = null;
+                if (!calc.exists()) {
+                    DataDay[] dataDays = shares.calculateFile(orig, calc, "2015");
+                    dataDay = dataDays[dataDays.length - 1];
+                } else {
+                    String[] dataDayStr = FileUtil.read(calc).split("\n");
+                    dataDay = new DataDay(dataDayStr[dataDayStr.length - 1]);
+                }
+                if (dataDay.macd.macd < 0
+                        && dataDay.macd.dif < 0
+                        && dataDay.macd.dea < 0
+                        && dataDay.macd.dif > dataDay.macd.dea) {
                     System.out.println(code);
                 }
+
             } catch (LackDataException e) {
                 continue;
             }

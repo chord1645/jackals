@@ -29,6 +29,8 @@ public class HistoryDownloader {
         BlockExecutorPool executor = new BlockExecutorPool(10);
         String[] txt = FileUtil.read(new File("D:\\tmp\\codes.txt")).split("\n");
         for (final String s : txt) {
+            if (CodeUtil.blackList.contains(s))
+                continue;
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
