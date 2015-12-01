@@ -3,6 +3,7 @@ package jackals.lab.shares;
 import java.text.DecimalFormat;
 
 public class DataDay {
+    String code;
     double start;
     double highest;
     double end;
@@ -37,6 +38,7 @@ public class DataDay {
 //            + "\t" + df.format(macd.dea)//27
 //            + "\t" + df.format(macd.macd)//28
     boolean done = false;
+    public double ratio;
 
     public DataDay(String s) {
         this();

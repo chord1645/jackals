@@ -401,7 +401,7 @@ public class Shares {
             macd.emaFast = lastMacd.emaFast * (emaDays1 - 1) / (emaDays1 + 1) + days[i].end * 2 / (emaDays1 + 1);
             macd.emaSlow = lastMacd.emaSlow * (emaDays2 - 1) / (emaDays2 + 1) + days[i].end * 2 / (emaDays2 + 1);
             macd.dif = macd.emaFast - macd.emaSlow;
-            macd.dea = lastMacd.dif * (deaDays - 1) / (deaDays + 1) + macd.dif * 2 / (deaDays + 1);
+            macd.dea = lastMacd.dea * (deaDays - 1) / (deaDays + 1) + macd.dif * 2 / (deaDays + 1);
             macd.macd= (macd.dif-macd.dea)*2;
             days[i].macd = macd;
         }

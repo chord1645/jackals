@@ -35,31 +35,71 @@ public class FindLowDIF {
     public void run1() throws Exception {
         Shares shares = new Shares();
         String[] txt = FileUtil.read(new File("D:\\tmp\\codes.txt")).split("\n");
+        List<DataDay> list = new ArrayList<DataDay>();
         for (String code : txt) {
             File orig = new File(CodeUtil.origFileName(code));
             File calc = new File(CodeUtil.calcFileName(code));
+            DataDay[] tmp = new DataDay[10];
             if (!orig.exists())
                 continue;
             try {
-                DataDay dataDay = null;
                 if (!calc.exists()) {
                     DataDay[] dataDays = shares.calculateFile(orig, calc, "2015");
-                    dataDay = dataDays[dataDays.length - 1];
+//                    dataDay = dataDays[dataDays.length - 1];
+                    tmp = Arrays.copyOfRange(dataDays, dataDays.length - 10, dataDays.length - 1);
                 } else {
                     String[] dataDayStr = FileUtil.read(calc).split("\n");
-                    dataDay = new DataDay(dataDayStr[dataDayStr.length - 1]);
+                    for (int x = dataDayStr.length - 10, y = 0; x < dataDayStr.length; x++, y++) {
+                        tmp[y] = new DataDay(dataDayStr[x]);
+                    }
+
                 }
-                if (dataDay.macd.macd < 0
-                        && dataDay.macd.dif < 0
-                        && dataDay.macd.dea < 0
-                        && dataDay.macd.dif > dataDay.macd.dea) {
-                    System.out.println(code);
+                double ratio = 0;
+                for (int m = 0; m < tmp.length-1; m++) {
+                    double y = tmp[tmp.length - 1].macd.dif - tmp[m].macd.dif;
+                    double x = tmp.length - m;
+                    if (Math.abs(y/x)>ratio)
+                        ratio = y/x;
                 }
+//                System.out.println(ratio);
+                DataDay dataDay = tmp[tmp.length - 1];
+                dataDay.code = code;
+                dataDay.ratio = ratio;
+                if (dataDay.macd.dif < 0 && dataDay.end > 10)
+//                if (dataDay.end > 10)
+                    list.add(dataDay);
+//                if (dataDay.macd.macd < 0
+//                        && dataDay.macd.dif < 0
+//                        && dataDay.macd.dea < 0
+//                        && dataDay.macd.dif -dataDay.macd.dea<0.3
+//                        ) {
+//                    System.out.println(code);
+//                }
 
             } catch (LackDataException e) {
                 continue;
             }
 
+        }
+        Collections.sort(list, new Comparator<DataDay>() {
+            @Override
+            public int compare(DataDay o1, DataDay o2) {
+                if (o1.ratio > o2.ratio) {
+                    return -1;
+                } else if (o1.ratio <o2.ratio) {
+                    return 1;
+                } else
+                    return 0;
+//                if (Math.abs(o1.macd.macd) > Math.abs(o2.macd.macd)) {
+//                    return 1;
+//                } else if (Math.abs(o1.macd.macd) < Math.abs(o2.macd.macd)) {
+//                    return -1;
+//                } else
+//                    return 0;
+            }
+        });
+        for (DataDay d : list) {
+            System.out.println(d.code+"\t"+d.ratio + "\t " + d.macd.macd);
         }
     }
 
