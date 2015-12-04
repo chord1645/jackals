@@ -116,7 +116,7 @@ public class Shares {
 //        File calc = new File("D:\\tmp\\calculate2015\\" + code + ".txt");
         if (!orig.exists())
 //            return;
-            HistoryDownloader.downloadData(code, 2015, orig);
+            new HistoryDownloader().downloadData(code, 2015, orig);
         if (!calc.exists())
             calculateFile(orig, calc, "2015");
 
@@ -203,9 +203,9 @@ public class Shares {
         String day3 = arr[arr.length - 1];
 //        String day = FileUtil.readLastLine(calc);
         if (day3.startsWith("2015-11-24")) {
-            int result1 = classifier.predict(loadDay(day1.split("\\s")));
-            int result2 = classifier.predict(loadDay(day2.split("\\s")));
-            int result3 = classifier.predict(loadDay(day3.split("\\s")));
+            int result1 = classifier.predict(CodeUtil.loadDay(day1.split("\\s")));
+            int result2 = classifier.predict(CodeUtil.loadDay(day2.split("\\s")));
+            int result3 = classifier.predict(CodeUtil.loadDay(day3.split("\\s")));
             logger.info("{} {} {} {}", calc.getName(), result1, result2, result3);
             if (result3 == 1)
 //            if ((result1 == 0 || result2 == 0) && result3 == 1)
@@ -306,7 +306,7 @@ public class Shares {
             if (type == -1) {
                 continue;
             }
-            dataList.add(loadDay(colArr));
+            dataList.add(CodeUtil.loadDay(colArr));
             typeList.add(type);
 
         }
@@ -319,40 +319,6 @@ public class Shares {
         }
         data.rows = rows;
         return data;
-    }
-
-    private double[] loadDay(String[] colArr) {
-
-//            System.out.println(colArr.length);
-//            for (int y = 0; y < 7; y++) {
-//                data.matrix[x][y] = Double.valueOf(colArr[y + 7]);
-//            }
-        ArrayList<Double> list = Lists.newArrayList(
-                Double.valueOf(colArr[1]),
-                Double.valueOf(colArr[2]),
-                Double.valueOf(colArr[3]),
-                Double.valueOf(colArr[4]),
-                Double.valueOf(colArr[7]),
-                Double.valueOf(colArr[8]),
-                Double.valueOf(colArr[9]),
-                Double.valueOf(colArr[10]),
-                //                    Double.valueOf(colArr[11]),
-                Double.valueOf(colArr[12]),
-                Double.valueOf(colArr[13]),
-//                Double.valueOf(colArr[17]),
-//                Double.valueOf(colArr[18]),
-                //                     Double.valueOf(colArr[20]),
-//                Double.valueOf(colArr[21]),
-//                Double.valueOf(colArr[23]),
-                Double.valueOf(colArr[24])
-        );
-
-        double[] day = new double[list.size()];
-
-        for (int i = 0; i < list.size(); i++) {
-            day[i] = list.get(i);
-        }
-        return day;
     }
 
 
@@ -369,6 +335,9 @@ public class Shares {
         DataDay[] days = new DataDay[txt.length];
         for (int i = 0; i < txt.length; i++) {
             days[i] = new DataDay(txt[i]);
+//            if (i > 0 && days[i].start < days[i - 1].start / 0.6) {
+//                throw new LackDataException("派股未复权");
+//            }
         }
         if (days.length < checkData)
             throw new LackDataException("数据不全");
@@ -402,7 +371,7 @@ public class Shares {
             macd.emaSlow = lastMacd.emaSlow * (emaDays2 - 1) / (emaDays2 + 1) + days[i].end * 2 / (emaDays2 + 1);
             macd.dif = macd.emaFast - macd.emaSlow;
             macd.dea = lastMacd.dea * (deaDays - 1) / (deaDays + 1) + macd.dif * 2 / (deaDays + 1);
-            macd.macd= (macd.dif-macd.dea)*2;
+            macd.macd = (macd.dif - macd.dea) * 2;
             days[i].macd = macd;
         }
     }
@@ -561,7 +530,7 @@ public class Shares {
     //    000063
     @Test
     public void downloadData1() throws Exception {
-        HistoryDownloader.downloadData("", 2015, new File("D:\\tmp\\calculate\\" + "" + "_" + 1 + ".txt"));
+        new HistoryDownloader().downloadData("", 2015, new File("D:\\tmp\\calculate\\" + "" + "_" + 1 + ".txt"));
     }
 
     @Test

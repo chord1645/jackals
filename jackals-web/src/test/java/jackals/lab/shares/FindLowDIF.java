@@ -32,7 +32,7 @@ public class FindLowDIF {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
-    public void run1() throws Exception {
+    public void ratio() throws Exception {
         Shares shares = new Shares();
         String[] txt = FileUtil.read(new File("D:\\tmp\\codes.txt")).split("\n");
         List<DataDay> list = new ArrayList<DataDay>();
@@ -84,22 +84,22 @@ public class FindLowDIF {
         Collections.sort(list, new Comparator<DataDay>() {
             @Override
             public int compare(DataDay o1, DataDay o2) {
-                if (o1.ratio > o2.ratio) {
-                    return -1;
-                } else if (o1.ratio <o2.ratio) {
-                    return 1;
-                } else
-                    return 0;
-//                if (Math.abs(o1.macd.macd) > Math.abs(o2.macd.macd)) {
-//                    return 1;
-//                } else if (Math.abs(o1.macd.macd) < Math.abs(o2.macd.macd)) {
+//                if (o1.ratio > o2.ratio) {
 //                    return -1;
+//                } else if (o1.ratio <o2.ratio) {
+//                    return 1;
 //                } else
 //                    return 0;
+                if (Math.abs(o1.macd.dif) > Math.abs(o2.macd.dif)) {
+                    return 1;
+                } else if (Math.abs(o1.macd.dif) < Math.abs(o2.macd.dif)) {
+                    return -1;
+                } else
+                    return 0;
             }
         });
         for (DataDay d : list) {
-            System.out.println(d.code+"\t"+d.ratio + "\t " + d.macd.macd);
+            System.out.println(d.code+"\t"+d.macd.dif + "\t " + d.macd.macd);
         }
     }
 

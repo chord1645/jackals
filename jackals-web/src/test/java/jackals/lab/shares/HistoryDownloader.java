@@ -6,6 +6,7 @@ import jackals.lab.FileUtil;
 import jackals.model.PageObj;
 import jackals.model.RequestOjb;
 import jackals.utils.BlockExecutorPool;
+import org.apache.commons.collections.CollectionUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,6 +25,12 @@ import java.util.List;
 public class HistoryDownloader {
     static HttpDownloader downloader = new HttpDownloader(10);
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Test
+    public void downloadOne() throws Exception {
+        downloadData("600750", 2015, new File(CodeUtil.origFileName("600750")));
+    }
+
     @Test
     public void run() throws Exception {
         BlockExecutorPool executor = new BlockExecutorPool(10);
@@ -45,12 +52,23 @@ public class HistoryDownloader {
         }
     }
 
-    public static void downloadData(String code, int year, File output) throws Exception {
+    int retry = 3;
+
+    public void downloadData(String code, int year, File output) throws Exception {
+        if (output.exists())
+            return;
         List<DataDay> codes = new ArrayList<DataDay>();
         for (int y = year; y <= year; y++) {  //循环年
             for (int z = 1; z <= 4; z++) {                //循环季度
-                String url = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/" + code + ".phtml?year=" + y + "&jidu=" + z;
-                codes.addAll(onePage(url));
+                int retryCnt = 0;
+                do {
+                    String url = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/" + code + ".phtml?year=" + y + "&jidu=" + z;
+                    List<DataDay> tmp = onePage(url);
+                    if (!CollectionUtils.isEmpty(tmp)) {
+                        codes.addAll(tmp);
+                        break;
+                    }
+                } while (retryCnt++ > retry);
             }
         }
 
