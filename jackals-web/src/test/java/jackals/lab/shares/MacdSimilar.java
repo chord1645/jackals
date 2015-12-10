@@ -27,9 +27,8 @@ public class MacdSimilar {
     }
 
     @Test
-    public void run1() throws Exception {
-//        new HistoryDownloader().run();
-
+    public void run() throws Exception {
+        new HistoryDownloader().run();
         new Calculate().run();
         go1:
         for (File calc : new File("D:\\tmp\\runCode\\calc").listFiles()) {

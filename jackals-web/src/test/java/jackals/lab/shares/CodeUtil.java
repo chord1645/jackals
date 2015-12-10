@@ -16,13 +16,31 @@ public class CodeUtil {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
 
-    static List<String> blackList = ImmutableList.of("600022", "600019", "600018", "000629", "000898", "150018", "600005", "601991", "600795", "600726");
+    static List<String> blackList = ImmutableList.of(
+            "300295",
+            "601633",
+            "002547",
+            "300373",
+            "601929",
+            "300399",
+            "002568",
+            "600252",
+            "000425",
+            "601126",
+            "300345",
+            "002252",
+            "300289",
+            "002424",
+            "600816",
+            "002640",
+            "600022", "600019", "600018", "000629", "000898", "150018", "600005", "601991", "600795", "600726");
 
-    public  static void main(String args[]){
-        double[] arr1 = new double[]{1,2,3};
-        double[] arr2 = new double[]{-3,-2,-1};
-        System.out.println(similar(arr1,arr2));
+    public static void main(String args[]) {
+        double[] arr1 = new double[]{1, 2, 3};
+        double[] arr2 = new double[]{-3, -2, -1};
+        System.out.println(similar(arr1, arr2));
     }
+
     public static String origFileName(String s) {
         return "D:\\tmp\\runCode\\orig\\" + s + ".txt";
     }

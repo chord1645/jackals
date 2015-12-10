@@ -21,11 +21,16 @@ public class Calculate {
         Shares shares = new Shares();
         String[] txt = FileUtil.read(new File("D:\\tmp\\codes.txt")).split("\n");
         for (String code : txt) {
+            if (CodeUtil.blackList.contains(code)){
+                new File(CodeUtil.calcFileName(code)).delete();
+                continue;
+            }
             File orig = new File(CodeUtil.origFileName(code));
             File calc = new File(CodeUtil.calcFileName(code));
             if (!orig.exists()||calc.exists())
                 continue;
             try {
+                System.out.println(code);
                 shares.calculateFile(orig, calc, "2015");
             } catch (LackDataException e) {
                 continue;
