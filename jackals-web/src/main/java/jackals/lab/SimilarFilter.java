@@ -2,11 +2,9 @@ package jackals.lab;
 
 import cn.nhorizon.commons.classfier.constant.Constants;
 import cn.nhorizon.commons.classfier.service.VSMService;
-import cn.nhorizon.commons.classfier.utils.FileTokenizer;
 import edu.udo.cs.wvtool.main.WVTWordVector;
 import jackals.solr.IndexDao;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.common.SolrDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import smile.clustering.SpectralClustering;
@@ -47,7 +45,7 @@ public class SimilarFilter {
         config.put("CORPUS", root1.getPath());
         config.put("ENCODE_TRAIN", "utf-8");
         config.put("ENCODE_RECOGNIZE", "utf-8");
-        VSMService.build(config, new FileTokenizer());
+//        VSMService.build(config, new FileTokenizer());
         service = VSMService.getInstance();
 //        _dimension();
 //        config.put("CORPUS", root.getPath());
@@ -77,10 +75,10 @@ public class SimilarFilter {
     public void main() {
         double[][] data = buildData();
         SpectralClustering clustering = cluster(data, data.length - 1);
-        double[] eigenValues = clustering.getEigen().getEigenValues();
-        int count = bestCount(eigenValues);
+//        double[] eigenValues = clustering.getEigen().getEigenValues();
+//        int count = bestCount(eigenValues);
 //        for (;count<100;){
-        clustering = cluster(data, count);
+//        clustering = cluster(data, count);
 //        }
 //        SpectralClustering clustering = cluster(data, 379);
         print(clustering);
@@ -229,17 +227,17 @@ public class SimilarFilter {
         System.out.println("toString:" + cluster.toString());
         /***************************************************************/
         boolean more = true;
-        EigenValueDecomposition eigen = cluster.getEigen();
-        double[] lab = eigen.getEigenValues();
-        double sd = smile.math.Math.sd(eigen.getEigenValues());
+//        EigenValueDecomposition eigen = cluster.getEigen();
+//        double[] lab = eigen.getEigenValues();
+//        double sd = smile.math.Math.sd(eigen.getEigenValues());
 
-        System.out.println("sd(eigen.getEigenValues()):" + sd);
-        if (Math.min(eigen.getEigenValues()) > 0.3) {
-            result = cluster;
-            cluster(data, k + 1);
-        } else {
-            return;
-        }
+//        System.out.println("sd(eigen.getEigenValues()):" + sd);
+//        if (Math.min(eigen.getEigenValues()) > 0.3) {
+//            result = cluster;
+//            cluster(data, k + 1);
+//        } else {
+//            return;
+//        }
     }
 
     class WordSort {

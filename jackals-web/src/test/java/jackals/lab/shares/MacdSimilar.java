@@ -4,7 +4,6 @@ import jackals.lab.FileUtil;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import smile.math.*;
 
 import java.io.File;
 import java.util.Arrays;
@@ -28,12 +27,12 @@ public class MacdSimilar {
 
     @Test
     public void run() throws Exception {
-        new HistoryDownloader().run();
-        new Calculate().run();
+//        new HistoryDownloader().run();
+//        new Calculate().run();
         go1:
         for (File calc : new File("D:\\tmp\\runCode\\calc").listFiles()) {
             String[] dataDayStr = FileUtil.read(calc).split("\n");
-            compare(calc.getName(), base, dataDayStr, 40);
+            compare(calc.getName(), base, dataDayStr, 31);
 //            double[] arr = buildArr(dataDayStr, base.length);
 //            for (int y = 0; y < arr.length; y++) {
 //                if (arr[y] > 0)
@@ -62,9 +61,11 @@ public class MacdSimilar {
      */
     private void compare(String name, double[] base, String[] dataDayStr, int i) {
         double score = -1;
+        double[] result = null;
         int index = -1;
+
         go1:
-        for (int x = i; x < base.length; x++) {
+        for (int x = i; x <= base.length; x++) {
             double[] origArr = Arrays.copyOfRange(base, 0, x);
             double[] arr = buildArr(dataDayStr, origArr.length);
 //            if (smile.math.Math.min(arr) > 0)
@@ -77,10 +78,11 @@ public class MacdSimilar {
             if (tmp > score) {
                 index = x;
                 score = tmp;
+                result = arr;
             }
 
         }
-        if (score > 0)
+        if (score > 0 && result[0] < 0 && result[result.length - 1] < 0)
             System.out.println(index + "\t" + name + "\t" + score);
     }
 }
