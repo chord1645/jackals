@@ -8,8 +8,8 @@ import java.io.IOException;
 /**
  */
 public interface MQListener {
-    void onReceived(String message) throws IOException;
+    void requestReceived(String message) throws IOException;
 
-    void onReceived(MessageAndMetadata<byte[], byte[]> mnm) throws IOException;
-//    void onReceived(MessageAndMetadata<String, String> mnm);
+    void requestReceived(MessageAndMetadata<byte[], byte[]> mnm) throws IOException;
+//    void requestReceived(MessageAndMetadata<String, String> mnm);
 }

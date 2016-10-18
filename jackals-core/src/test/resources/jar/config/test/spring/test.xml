@@ -53,7 +53,7 @@
 
     <import resource="redis.xml"/>
     <import resource="beans.xml"/>
-    <import resource="solr.xml"/>
+    <!--<import resource="solr.xml"/>-->
 
     <bean class="jackals.utils.LogbackConfigurer" init-method="init">
         <constructor-arg name="path" value="jar/config/test/logback.xml"/>

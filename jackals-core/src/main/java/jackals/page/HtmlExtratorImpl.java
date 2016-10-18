@@ -66,7 +66,7 @@ public class HtmlExtratorImpl extends HtmlExtrator {
 
 
     public static void regexAnalyz(String str, String reg) {
-        Matcher m = Pattern.compile(reg).matcher(str);
+        Matcher m = Pattern.compile(reg,Pattern.DOTALL).matcher(str);
         while (m.find()) {
             for (int i = 0; i <= m.groupCount(); i++) {
                 System.out.println(i + " >>> " + m.group(i));
@@ -77,7 +77,7 @@ public class HtmlExtratorImpl extends HtmlExtrator {
     public static String regexGet(String str, String reg, int group) {
         if (showAnalys)
             regexAnalyz(str, reg);
-        Matcher m = Pattern.compile(reg).matcher(str);
+        Matcher m = Pattern.compile(reg,Pattern.DOTALL).matcher(str);
         if (m.find()) {
 //            System.out.println(m.groupCount());
             if (group > m.groupCount())

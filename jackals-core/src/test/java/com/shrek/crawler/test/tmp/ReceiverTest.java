@@ -72,7 +72,7 @@ public class ReceiverTest implements MessageListener {
 
         try {
             System.out.println(msg.getText());
-//            System.out.println("onReceived");
+//            System.out.println("requestReceived");
 //            String group = msg.getStringProperty("JMSXGroupID");
 //            if ("A".equals(group)){
 //                System.out.println();

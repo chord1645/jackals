@@ -12,7 +12,6 @@ public class URLRedisFilter implements URLFilter {
     public URLRedisFilter(){
         redisTemplate = SpringContextHolder.getBean(StringRedisTemplate.class);
     }
-    @Override
     public boolean exist(JobInfo jobInfo, String url) {
         url = url.replaceAll("\\?.*","");
         return redisTemplate.opsForSet().isMember(getKey(jobInfo.getId()), url);
@@ -22,7 +21,6 @@ public class URLRedisFilter implements URLFilter {
         redisTemplate.delete(getKey(jobInfo.getId()));
     }
 
-    @Override
     public void add(JobInfo jobInfo, String url) {
         url = url.replaceAll("\\?.*","");
          redisTemplate.opsForSet().add(getKey(jobInfo.getId()), url);

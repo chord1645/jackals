@@ -1,7 +1,8 @@
-package jackals.allocation;
+package jackals.single;
 
 import com.alibaba.fastjson.JSON;
 import jackals.Constants;
+import jackals.allocation.Allocation;
 import jackals.job.pojo.JobInfo;
 import jackals.model.RequestOjb;
 import jackals.mq.kafka.KafkaSender;
@@ -17,13 +18,13 @@ import java.util.Set;
 
 /**
  */
-public class KafkaAllocationImpl implements Allocation {
+public class SingleAllocationImpl implements Allocation {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     //    SpiderJob spider;
     protected KafkaSender kafkaSender;
 
-    public KafkaAllocationImpl() {
+    public SingleAllocationImpl() {
         kafkaSender = new KafkaSender();
     }
 

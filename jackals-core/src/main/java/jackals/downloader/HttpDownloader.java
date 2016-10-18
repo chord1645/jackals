@@ -7,6 +7,7 @@ import jackals.utils.StringUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.annotation.ThreadSafe;
 import org.apache.http.client.config.CookieSpecs;
@@ -109,7 +110,9 @@ public class HttpDownloader {
                 builder.addHeader(headerEntry.getKey(), headerEntry.getValue());
             }
         }
+        HttpHost proxy = new HttpHost("14.29.124.53", 80);
         RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()
+                .setProxy(proxy)
                 .setConnectionRequestTimeout(cfg.getTimeOut())
                 .setSocketTimeout(cfg.getTimeOut())
                 .setConnectTimeout(cfg.getTimeOut())

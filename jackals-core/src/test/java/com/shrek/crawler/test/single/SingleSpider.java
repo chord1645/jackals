@@ -1,33 +1,31 @@
-package jackals.job;
+package com.shrek.crawler.test.single;
 
 import com.alibaba.fastjson.JSON;
 import jackals.URLFilter;
 import jackals.allocation.Allocation;
 import jackals.job.pojo.JobInfo;
 import jackals.model.RequestOjb;
-import jackals.mq.MQListener;
 import jackals.page.PageProcess;
 import jackals.utils.BlockExecutorPool;
-import jackals.utils.LogbackConfigurer;
-import kafka.message.MessageAndMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
- * Created by scott on 2015/7/6.
+ * 2016/10/17
+ *
+ * @author Scott Lee
  */
-abstract public class SpiderJob extends Thread implements MQListener {
-
-
-    public static void main(String[] args) {
-        new LogbackConfigurer();
-    }
-
+public class SingleSpider extends Thread {
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+
     protected PageProcess pageProcess;
     protected BlockExecutorPool executor;
     protected URLFilter urlFilter;
@@ -40,7 +38,7 @@ abstract public class SpiderJob extends Thread implements MQListener {
         return pageProcess;
     }
 
-    public SpiderJob setPageProcess(PageProcess pageProcess) {
+    public SingleSpider setPageProcess(PageProcess pageProcess) {
         this.pageProcess = pageProcess;
         return this;
     }
@@ -49,7 +47,7 @@ abstract public class SpiderJob extends Thread implements MQListener {
         return executor;
     }
 
-    public SpiderJob setExecutor(BlockExecutorPool executor) {
+    public SingleSpider setExecutor(BlockExecutorPool executor) {
         this.executor = executor;
         return this;
     }
@@ -58,7 +56,7 @@ abstract public class SpiderJob extends Thread implements MQListener {
         return urlFilter;
     }
 
-    public SpiderJob setUrlFilter(URLFilter urlFilter) {
+    public SingleSpider setUrlFilter(URLFilter urlFilter) {
         this.urlFilter = urlFilter;
         return this;
     }
@@ -67,13 +65,18 @@ abstract public class SpiderJob extends Thread implements MQListener {
         return allocation;
     }
 
-    public SpiderJob setAllocation(Allocation allocation) {
+    public SingleSpider setAllocation(Allocation allocation) {
         this.allocation = allocation;
         return this;
     }
 
-    public SpiderJob(JobInfo jobInfo) {
+    public SingleSpider(JobInfo jobInfo) {
         this.jobInfo = jobInfo;
+        List<RequestOjb> out = jobInfo.getSeed().stream().map(e -> {
+            RequestOjb requestOjb = new RequestOjb(e);
+            return requestOjb;
+        }).collect(Collectors.toList());
+        queue.addAll(out);
     }
 
     public JobInfo getJobInfo() {
@@ -88,6 +91,8 @@ abstract public class SpiderJob extends Thread implements MQListener {
     public boolean isRunning() {
         return executor != null && executor.getThreadAlive() != 0;
     }
+
+    LinkedBlockingQueue<RequestOjb> queue = new LinkedBlockingQueue<RequestOjb>();
 
     public void executeRequest(final RequestOjb link) {
         if (executor.isShutdown()) {
@@ -107,10 +112,11 @@ abstract public class SpiderJob extends Thread implements MQListener {
                     long s = System.currentTimeMillis();
                     ArrayList<RequestOjb> list = pageProcess.process(link, jobInfo);
                     logger.info("process cost {} {}", (System.currentTimeMillis() - s), link.getUrl());
+//                    s = System.currentTimeMillis();
+//                    allocation.allocate(jobInfo, list);
+//                    logger.info("allocate cost {} {}", (System.currentTimeMillis() - s), link.getUrl());
                     s = System.currentTimeMillis();
-                    allocation.allocate(jobInfo, list);
-                    logger.info("allocate cost {} {}", (System.currentTimeMillis() - s), link.getUrl());
-                    s = System.currentTimeMillis();
+                    queue.addAll(list);
                     TimeUnit.MILLISECONDS.sleep(jobInfo.getSleep());//TODO 定制休眠
                     logger.info("sleep cost {} {}", (System.currentTimeMillis() - s), link.getUrl());
                 } catch (Throwable e) {
@@ -125,15 +131,6 @@ abstract public class SpiderJob extends Thread implements MQListener {
         });
     }
 
-    abstract public void run();
-
-    abstract public void requestReceived(MessageAndMetadata<byte[], byte[]> mnm);
-//        long s = System.currentTimeMillis();
-//        String key = mnm.key() == null ? null : new String(mnm.key());
-//        logger.debug("partition {} {} {} {} ", mnm.topic(), mnm.partition(), key, new String(mnm.message()));
-//        String msg = new String(mnm.message());
-//        requestReceived(msg);
-//    }
 
     //    @Override
     public void requestReceived(String message) {
@@ -145,8 +142,6 @@ abstract public class SpiderJob extends Thread implements MQListener {
         logger.info("executeRequest cost {} {}", (System.currentTimeMillis() - s), request.getUrl());
     }
 
-    abstract public void shutdown();
-
     public void start(boolean filterClean) {
         if (filterClean) {
             urlFilter.clean(jobInfo);
@@ -154,7 +149,40 @@ abstract public class SpiderJob extends Thread implements MQListener {
         start();
     }
 
+    @Override
+    public void run() {
+        RequestOjb requestOjb = null;
+        try {
+            while ((requestOjb = queue.poll(3, TimeUnit.SECONDS)) != null)
+                executeRequest(requestOjb);
+        } catch (InterruptedException e) {
+            logger.error("run ex", e);
+        }
+        logger.info("job done");
+    }
+
     public void cleanFilter() {
         urlFilter.clean(jobInfo);
     }
+
+
+//    public static JobInfo job() {
+//        //http://bbs.nga.cn/thread.php?fid=538&rand=356
+//        JobInfo jobInfo = JobInfo.create("bbs.nga.cn");
+//        jobInfo.setMaxDepth(1);
+//        jobInfo.setJobThreadNum(5);
+//        jobInfo.setSleep(200L);
+//        jobInfo.setReset(true);
+//        jobInfo.getSeed().add("http://bbs.nga.cn/thread.php?fid=459");
+//        Orders orders = new Orders();
+//        orders.setPathRegx("http://bbs.nga.cn/thread.php\\?fid=[0-9]+");
+//        orders.setTargetRegx("^http://bbs.nga.cn/read.php\\?tid=[0-9]+.*$");
+//        orders.setFields(ImmutableMap.of(
+//                "title",
+//                new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str)
+//        ));
+//        jobInfo.setOrders(orders);
+//        return jobInfo;
+//    }
+
 }

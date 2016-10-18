@@ -65,9 +65,9 @@ public class ActiveMQSpiderJob extends SpiderJob {
         public void onMessage(Message message) {
             try {
                 //取得监听的任务ID
-                logger.info("onReceived job_{} ", message);
+                logger.info("requestReceived job_{} ", message);
                 TextMessage textMessage = (TextMessage) message;
-                callback.onReceived(textMessage.getText());
+                callback.requestReceived(textMessage.getText());
             } catch (JMSException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -82,9 +82,9 @@ public class ActiveMQSpiderJob extends SpiderJob {
     }
 
 //    @Override
-//    public void onReceived(Message message) {
+//    public void requestReceived(Message message) {
 //        try {
-//            logger.info("onReceived spider_{} {}", this.num, message);
+//            logger.info("requestReceived spider_{} {}", this.num, message);
 //            TextMessage textMessage = (TextMessage) message;
 //            Request request = JSON.parseObject(textMessage.getText(), Request.class);
 //            startListen(request);
@@ -94,8 +94,8 @@ public class ActiveMQSpiderJob extends SpiderJob {
 //    }
 
     @Override
-    public void onReceived(String message) {
-        logger.info("onReceived job_{} {}", this.getJobInfo().getId(), message);
+    public void requestReceived(String message) {
+        logger.info("requestReceived job_{} {}", this.getJobInfo().getId(), message);
 //            logger.info(objectMessage.toString());
         RequestOjb request = JSON.parseObject(message, RequestOjb.class);
         executeRequest(request);
@@ -108,7 +108,7 @@ public class ActiveMQSpiderJob extends SpiderJob {
     }
 
     @Override
-    public void onReceived(MessageAndMetadata<byte[], byte[]> mnm) {
+    public void requestReceived(MessageAndMetadata<byte[], byte[]> mnm) {
 
     }
 }

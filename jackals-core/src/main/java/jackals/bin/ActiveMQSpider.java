@@ -1,19 +1,12 @@
 package jackals.bin;
 
-import com.alibaba.fastjson.JSON;
 import jackals.Constants;
-import jackals.URLRedisFilter;
-import jackals.allocation.KafkaAllocationImpl;
 import jackals.job.ActiveMQSpiderJob;
 import jackals.job.pojo.JobInfo;
-import jackals.job.KafkaSpiderJob;
 import jackals.job.SpiderJob;
 import jackals.model.RequestOjb;
-import jackals.mq.MQListener;
 import jackals.mq.activemq.ActiveMQReceiver;
 import jackals.mq.activemq.ActiveMQSender;
-import jackals.page.DefaultPageProcessImpl;
-import jackals.utils.BlockExecutorPool;
 import jackals.utils.LogbackConfigurer;
 import jackals.utils.SpringContextHolder;
 import kafka.message.MessageAndMetadata;
@@ -62,12 +55,11 @@ public class ActiveMQSpider extends SpiderBase implements MessageListener {
     private ConcurrentHashMap<String, SpiderJob> spiders = new ConcurrentHashMap<String, SpiderJob>();
 
 
-    @Override
     public void onMessage(Message message) {
         try {
-            logger.info("onReceived spider_{} ", message);
+            logger.info("requestReceived spider_{} ", message);
             TextMessage textMessage = (TextMessage) message;
-            onReceived(textMessage.getText());
+            requestReceived(textMessage.getText());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JMSException e) {
@@ -100,8 +92,7 @@ public class ActiveMQSpider extends SpiderBase implements MessageListener {
         receiver.addListener(queueId, this);
     }
 
-    @Override
-    public void onReceived(MessageAndMetadata<byte[], byte[]> mnm) throws IOException {
+    public void requestReceived(MessageAndMetadata<byte[], byte[]> mnm) throws IOException {
 
     }
 }

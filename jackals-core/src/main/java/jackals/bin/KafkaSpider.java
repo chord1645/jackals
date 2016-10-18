@@ -1,8 +1,6 @@
 package jackals.bin;
 
-import com.alibaba.fastjson.JSON;
 import jackals.Constants;
-import jackals.mq.MQListener;
 import jackals.URLRedisFilter;
 import jackals.allocation.KafkaAllocationImpl;
 import jackals.job.pojo.JobInfo;
@@ -22,7 +20,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by scott on 2015/7/6.
@@ -74,10 +71,9 @@ public class KafkaSpider extends SpiderBase {
         kafkaReceiver.startListen(Constants.TopicSpiderPrefix + spiderId, this);
     }
 
-    @Override
-    public void onReceived(MessageAndMetadata<byte[], byte[]> mnm) throws IOException {
-        logger.info("onReceived spider_{}", mnm);
-        onReceived(new String(mnm.message(), "utf-8"));
-//        onReceived(mnm.message());
+    public void requestReceived(MessageAndMetadata<byte[], byte[]> mnm) throws IOException {
+        logger.info("requestReceived spider_{}", mnm);
+        requestReceived(new String(mnm.message(), "utf-8"));
+//        requestReceived(mnm.message());
     }
 }

@@ -25,13 +25,10 @@ public class KafkaReceiverTest extends BaseTest implements Runnable {
         new LogbackConfigurer("/jar/config/test/logback.xml");
         KafkaReceiver receiver = new KafkaReceiver();
         receiver.startListen(KafkaConsumer.testTopic,new MQListener() {
-            @Override
-            public void onReceived(String message) throws IOException {
+            public void requestReceived(String message) throws IOException {
                 System.out.println(message);
             }
-
-            @Override
-            public void onReceived(MessageAndMetadata<byte[], byte[]> mnm) throws IOException {
+            public void requestReceived(MessageAndMetadata<byte[], byte[]> mnm) throws IOException {
                 String key = mnm.key() == null ? null : new String(mnm.key());
                 System.out.println("partition " + mnm.topic() + "\t" + mnm.partition() + " " + key
                         + ": " + new String(mnm.message()));
@@ -39,7 +36,6 @@ public class KafkaReceiverTest extends BaseTest implements Runnable {
         });
     }
 
-    @Override
     public void run() {
 
     }

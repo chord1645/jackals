@@ -1,5 +1,6 @@
 package jackals.output;
 
+import com.alibaba.fastjson.JSONObject;
 import jackals.job.pojo.JobInfo;
 import jackals.model.PageObj;
 import jackals.utils.SpringContextHolder;
@@ -26,10 +27,11 @@ public class JsonFileOutputPipe implements OutputPipe {
     @Override
     public void save(JobInfo spiderJob, PageObj page, Object obj) {
         try {
-//            JSONObject jsonObject = (JSONObject) obj;
-            File path = new File(root + spiderJob.getId(),new File(page.getRequest().getUrl()).getName());
+            JSONObject jsonObject = (JSONObject) obj;
+            File path = new File(root + spiderJob.getId(),new File(System.currentTimeMillis()+"").getName());
+//            File path = new File(root + spiderJob.getId(),new File(page.getRequest().getUrl()).getName());
 //        File path = new File(root + spiderJob.getId(), (String) jsonObject.get("title"));
-
+            System.out.println(jsonObject.get("title"));
             BufferedWriter printWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
                     getFile(path.getPath() + ".json")), "UTF-8"));
             printWriter.write(obj.toString());

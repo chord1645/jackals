@@ -27,11 +27,10 @@ abstract public class SpiderBase implements MQListener {
      *
      * @param message
      */
-    @Override
-    synchronized public void onReceived(String message) throws IOException {
+    synchronized public void requestReceived(String message) throws IOException {
 //        ThreadLocal<KafkaSpiderJob> threadLocal = new ThreadLocal<KafkaSpiderJob>();
         //取得监听的任务ID
-        logger.info("onReceived spider_{} ", message);
+        logger.info("requestReceived spider_{} ", message);
 //        ObjectMapper mapper = new ObjectMapper();
 //        JobInfo jobInfo = mapper.readValue(message, JobInfo.class);
         JobInfo jobInfo = JSON.parseObject(message, JobInfo.class);

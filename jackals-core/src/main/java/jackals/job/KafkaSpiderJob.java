@@ -26,7 +26,7 @@ public class KafkaSpiderJob extends SpiderJob {
     }
 
    /* @Override
-    public void onReceived(String message) {
+    public void requestReceived(String message) {
         Request r = JSON.parseObject(new String(message), Request.class);
         executeRequest(r);
     }*/
@@ -38,11 +38,11 @@ public class KafkaSpiderJob extends SpiderJob {
     }
 
     @Override
-    public void onReceived(MessageAndMetadata<byte[], byte[]> mnm) {
+    public void requestReceived(MessageAndMetadata<byte[], byte[]> mnm) {
         String key = mnm.key() == null ? null : new String(mnm.key());
         logger.debug("partition {} {} {} {} ", mnm.topic(), mnm.partition(), key, new String(mnm.message()));
         String msg = new String(mnm.message());
-        onReceived(msg);
+        requestReceived(msg);
 
     }
 

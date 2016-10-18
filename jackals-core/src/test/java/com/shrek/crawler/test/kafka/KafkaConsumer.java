@@ -82,7 +82,7 @@ public class KafkaConsumer extends BaseTest implements Runnable {
                     MessageAndMetadata<byte[], byte[]> mnm = it.next();
 
                     try {
-                        callback.onReceived(mnm);
+                        callback.requestReceived(mnm);
                     } catch (Throwable e) {
                         e.printStackTrace();
                     } finally {
@@ -105,7 +105,6 @@ public class KafkaConsumer extends BaseTest implements Runnable {
 
         public void execute(String message) {
             executor.execute(new Runnable() {
-                @Override
                 public void run() {
 //                    System.out.println("======================================");
                     try {
@@ -120,8 +119,7 @@ public class KafkaConsumer extends BaseTest implements Runnable {
 
         }
 
-        @Override
-        public void onReceived(MessageAndMetadata<byte[], byte[]> mnm) {
+        public void requestReceived(MessageAndMetadata<byte[], byte[]> mnm) {
 //            System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
 
             String key = mnm.key() == null ? null : new String(mnm.key());
@@ -129,11 +127,11 @@ public class KafkaConsumer extends BaseTest implements Runnable {
                     + ": " + new String(mnm.message()));
 
             String msg = new String(mnm.message());
-            onReceived(msg);
+            requestReceived(msg);
         }
 
         //    @Override
-        public void onReceived(String message) {
+        public void requestReceived(String message) {
             execute(message);
         }
     }
@@ -154,7 +152,6 @@ public class KafkaConsumer extends BaseTest implements Runnable {
 //        System.out.println("finish");
 //    }
 
-    @Override
     public void run() {
         run(new Foo());
     }

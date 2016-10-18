@@ -1,7 +1,6 @@
 package com.shrek.crawler.test.activemq;
 
 import com.shrek.crawler.test.kafka.KafkaConsumer;
-import jackals.Constants;
 import jackals.mq.MQListener;
 import jackals.mq.activemq.ActiveMQReceiver;
 import jackals.utils.LogbackConfigurer;
@@ -28,7 +27,7 @@ public class ActiveMQConsumer extends ActiveMQReceiver {
         try {
             //取得监听的任务ID
             TextMessage textMessage = (TextMessage) message;
-            callback.onReceived(textMessage.getText());
+            callback.requestReceived(textMessage.getText());
         } catch (JMSException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -60,13 +59,11 @@ public class ActiveMQConsumer extends ActiveMQReceiver {
         new LogbackConfigurer("/jar/config/test/logback.xml");
         Properties mqConfig = SpringContextHolder.getBean("mqConfig");
         ActiveMQConsumer testReceiver = new ActiveMQConsumer( mqConfig.getProperty("mq.amq.broker"), KafkaConsumer.testTopic, new MQListener() {
-            @Override
-            public void onReceived(String message) throws IOException {
+            public void requestReceived(String message) throws IOException {
                 System.out.println(message);
             }
 
-            @Override
-            public void onReceived(MessageAndMetadata<byte[], byte[]> mnm) throws IOException {
+            public void requestReceived(MessageAndMetadata<byte[], byte[]> mnm) throws IOException {
 
             }
         });

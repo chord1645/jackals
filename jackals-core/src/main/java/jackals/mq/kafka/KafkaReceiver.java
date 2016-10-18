@@ -42,7 +42,7 @@ public class KafkaReceiver {
 
                 logger.debug("kafka msg [{}] [{}] [{}] [{}]", topic, mnm.partition(), mnm.offset(), mnm);
                 try {
-                    callback.onReceived(mnm);
+                    callback.requestReceived(mnm);
                 } catch (Throwable e) {
                     logger.error("MQListener callback Exception [{}] [{}] [{}] [{}] [{}] [{}]:",
                             topic, mnm.partition(), mnm.offset(), new String(mnm.message()), e.toString(), e);
@@ -79,19 +79,17 @@ public class KafkaReceiver {
                 kafkaReceiver.startListen("test", "group003", new MQListener() {
                     long id = 1;
 
-                    @Override
-                    public void onReceived(String message) {
+                    public void requestReceived(String message) {
                     }
 
-                    @Override
-                    public void onReceived(MessageAndMetadata<byte[], byte[]> mnm) {
+                    public void requestReceived(MessageAndMetadata<byte[], byte[]> mnm) {
 
                         long offset = mnm.offset();
 //                        if (id == offset % 2) {
                         String msg = new String(mnm.message());
                         String key = new String(mnm.key());
 //                        if (offset)
-                        System.out.println("onReceived " + "test  " + key + "  " + mnm.offset() + "    " + msg);
+                        System.out.println("requestReceived " + "test  " + key + "  " + mnm.offset() + "    " + msg);
 //                        }
 
                     }

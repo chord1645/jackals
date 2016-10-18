@@ -79,7 +79,7 @@ public class UrlReceiver implements MessageListener {
     public void onMessage(Message message) {
 
         try {
-            logger.info("onReceived spider_{} {}",spider.getJobInfo().getId(),message);
+            logger.info("requestReceived spider_{} {}",spider.getJobInfo().getId(),message);
             TextMessage textMessage = (TextMessage) message;
 //            logger.info(objectMessage.toString());
 //            ObjectMapper mapper = new ObjectMapper();

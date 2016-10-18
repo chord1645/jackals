@@ -34,6 +34,13 @@ public class DefaultPageProcessImpl implements PageProcess {
     HttpDownloader downloader;
     HtmlExtrator extrator;
 
+    public OutputPipe getOutputPipe() {
+        return outputPipe;
+    }
+
+    public void setOutputPipe(OutputPipe outputPipe) {
+        this.outputPipe = outputPipe;
+    }
 
     public DefaultPageProcessImpl(int size) {
         outputPipe = new SolrOutputPipe();
