@@ -9,4 +9,7 @@
     <bean class="jackals.downloader.HttpDownloader">
         <constructor-arg name="size" value="20"/>
     </bean>
+    <bean class="jackals.downloader.ProxyHttpDownloader">
+        <constructor-arg name="size" value="20"/>
+    </bean>
 </beans>

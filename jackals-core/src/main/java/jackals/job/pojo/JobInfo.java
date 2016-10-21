@@ -1,5 +1,7 @@
 package jackals.job.pojo;
 
+import jackals.model.PageObj;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,10 @@ public class JobInfo {
     Boolean reset = false;
     Orders orders = new Orders();
     List<String> seed = new ArrayList<String>();
+
+    public boolean useful(PageObj pageObj) {
+        return true;
+    }
 
     public Integer getJobModel() {
         return jobModel;

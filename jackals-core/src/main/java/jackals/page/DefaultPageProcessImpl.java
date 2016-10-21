@@ -2,6 +2,7 @@ package jackals.page;
 
 import com.alibaba.fastjson.JSONObject;
 import jackals.downloader.HttpDownloader;
+import jackals.downloader.ProxyHttpDownloader;
 import jackals.downloader.ReqCfg;
 import jackals.job.pojo.JobInfo;
 import jackals.job.pojo.Orders;
@@ -44,7 +45,7 @@ public class DefaultPageProcessImpl implements PageProcess {
 
     public DefaultPageProcessImpl(int size) {
         outputPipe = new SolrOutputPipe();
-        downloader = SpringContextHolder.getBean(HttpDownloader.class, size);
+        downloader = SpringContextHolder.getBean(ProxyHttpDownloader.class, size);
 //        downloader = new HttpDownloader(size);
         extrator = new HtmlExtratorImpl();
     }
@@ -56,7 +57,7 @@ public class DefaultPageProcessImpl implements PageProcess {
         PageObj page = downloader.download(new RequestOjb(link.getUrl()),
                 ReqCfg.deft().setTimeOut(10000));
 //        logger.debug("show html {} {} ", link.getUrl(), page.getRawText());
-        logger.info("rejected {}", page.getRawText().contains("换一张图"));
+//        logger.info("rejected {}", page.getRawText().contains("换一张图"));
         Pattern target = Pattern.compile(job.getOrders().getTargetRegx());
         Pattern path = Pattern.compile(job.getOrders().getPathRegx());
         if (target.matcher(link.getUrl()).find()) {
@@ -89,6 +90,7 @@ public class DefaultPageProcessImpl implements PageProcess {
 
             for (Element a : links) {
                 String href = LinkUtil.clean(a.attr("abs:href"));
+//                System.out.println(href+","+path.matcher(href).find()+","+target.matcher(href).find()+"");
                 if (!StringUtils.hasText(href))
                     continue;
                 if (path.matcher(href).find() || target.matcher(href).find()) {

@@ -153,7 +153,7 @@ public class SingleSpider extends Thread {
     public void run() {
         RequestOjb requestOjb = null;
         try {
-            while ((requestOjb = queue.poll(3, TimeUnit.SECONDS)) != null)
+            while ((requestOjb = queue.poll(10, TimeUnit.MINUTES)) != null)
                 executeRequest(requestOjb);
         } catch (InterruptedException e) {
             logger.error("run ex", e);

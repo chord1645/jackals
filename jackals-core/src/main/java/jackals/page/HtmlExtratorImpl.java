@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  */
 public class HtmlExtratorImpl extends HtmlExtrator {
     Logger logger = LoggerFactory.getLogger(PageProcess.class);
-    boolean autoContentExtrat = true;
+    boolean autoContentExtrat = false;
     ContentExtrat contentExtrat = new ContentExtrat();
 
     @Override

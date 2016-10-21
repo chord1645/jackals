@@ -44,6 +44,7 @@
     <util:properties id="jackalsConfig" location="jar/config/test/config-jackals.properties" />
     <util:properties id="mqConfig" location="jar/config/test/config-mq.properties" />
     <util:properties id="uaConfig" location="jar/config/test/config-ua.properties" />
+    <util:properties id="proxyConfig" location="jar/config/test/proxy.properties" />
 
     <!--<context:component-scan base-package="com.wisers.crawler.controller" />-->
     <!--<context:component-scan base-package="com.wisers.crawler.dao" />-->
