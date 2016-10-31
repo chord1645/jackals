@@ -15,6 +15,7 @@ public class OneFileOutputPipe implements OutputPipe {
     Logger logger = LoggerFactory.getLogger(OneFileOutputPipe.class);
 
     String root = "D:\\Work\\tmp\\jackals\\haodaifu.txt";
+    String error = "D:\\Work\\tmp\\jackals\\haodaifu_error.txt";
 
     @Override
     public void save(JobInfo spiderJob, PageObj page, Object obj) {
@@ -40,5 +41,15 @@ public class OneFileOutputPipe implements OutputPipe {
             file.mkdirs();
         }
     }
-
+    @Override
+    public void error(JobInfo job, PageObj page) {
+        try {
+            BufferedWriter printWriter = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(getFile(error),true), "UTF-8"));
+            printWriter.write(page.getRequest().getUrl());
+            printWriter.close();
+        } catch (IOException e) {
+            logger.warn("write file error", e);
+        }
+    }
 }

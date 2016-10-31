@@ -41,6 +41,11 @@ public class JsonFileOutputPipe implements OutputPipe {
         }
     }
 
+    @Override
+    public void error(JobInfo job, PageObj page) {
+
+    }
+
     public File getFile(String fullName) {
         checkAndMakeParentDirecotry(fullName);
         return new File(fullName);

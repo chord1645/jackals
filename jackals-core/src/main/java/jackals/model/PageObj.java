@@ -7,6 +7,15 @@ public class PageObj {
     String rawText;
     int statusCode;
     RequestOjb request;
+    boolean success = false;
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
 
     public String getRawText() {
         return rawText;

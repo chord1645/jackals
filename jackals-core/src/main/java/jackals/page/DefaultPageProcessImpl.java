@@ -55,24 +55,27 @@ public class DefaultPageProcessImpl implements PageProcess {
         ArrayList<RequestOjb> list = new ArrayList<RequestOjb>();
         logger.info(job.getId() + " >>>>>>>> {}", link);
         PageObj page = downloader.download(new RequestOjb(link.getUrl()),
-                ReqCfg.deft().setTimeOut(10000));
+                ReqCfg.deft().setTimeOut(10000).setJobInfo(job));
 //        logger.debug("show html {} {} ", link.getUrl(), page.getRawText());
 //        logger.info("rejected {}", page.getRawText().contains("换一张图"));
         Pattern target = Pattern.compile(job.getOrders().getTargetRegx());
         Pattern path = Pattern.compile(job.getOrders().getPathRegx());
-        if (target.matcher(link.getUrl()).find()) {
-            JSONObject jsonObject = (JSONObject) extrator.extrat(page, job.getOrders());
-            outputPipe.save(job, page, jsonObject);
-        }
-        if (isMaxDepth(link, job)) { //到达最大深度,不再提取url
-            return new ArrayList<RequestOjb>();
-        }
-        logger.info("extratLinks {}", link.getUrl());
+        if (page.isSuccess()) {
+            if (target.matcher(link.getUrl()).find()) {
+                JSONObject jsonObject = (JSONObject) extrator.extrat(page, job.getOrders());
+                outputPipe.save(job, page, jsonObject);
+            }
+            if (isMaxDepth(link, job)) { //到达最大深度,不再提取url
+                return new ArrayList<RequestOjb>();
+            }
+            logger.info("extratLinks {}", link.getUrl());
 //        if (link.isSeed() || path.matcher(link.getUrl()).find())
-        list = extratLinks(page, link, job.getOrders());
-        logger.info("process done {} {} links: {}", job.getId(), list.size(), link.getUrl());
+            list = extratLinks(page, link, job.getOrders());
+            logger.info("process done {} {} links: {}", job.getId(), list.size(), link.getUrl());
+        } else {
+            outputPipe.error(job, page);
+        }
         return list;
-
     }
 
     private boolean isMaxDepth(RequestOjb link, JobInfo job) {

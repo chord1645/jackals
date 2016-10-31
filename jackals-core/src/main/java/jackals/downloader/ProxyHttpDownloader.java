@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class ProxyHttpDownloader extends HttpDownloader {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    List<HttpHost> proxyPool = Lists.newArrayList();
+    ProxyPool proxyPool = new ProxyPool();
 
     public static void main(String[] args) {
         PageObj page = new ProxyHttpDownloader(3).download(
@@ -40,48 +40,41 @@ public class ProxyHttpDownloader extends HttpDownloader {
 
     public ProxyHttpDownloader(int size) {
         super(size);
-        Properties proxyConfig = SpringContextHolder.getBean("proxyConfig");
-        proxyPool = proxyConfig.keySet().stream()
-                .map(e -> {
-                    HttpHost proxy = new HttpHost(e.toString(), Integer.valueOf(proxyConfig.getProperty(e.toString())));
-                    return proxy;
-                })
-                .filter(e -> e.getPort() == 80)
-                .collect(Collectors.toList());
-        proxyPool.stream().forEach(e ->
-                logger.info("proxy:" + e)
-        );
     }
 
     @Override
     public PageObj download(RequestOjb request, ReqCfg cfg) {
         logger.debug("downloading page {}", request.getUrl());
+        HttpHost proxy = null;
         try {
             long s = System.currentTimeMillis();
-            PageObj page = test(request, cfg);
+            PageObj page = test(request, cfg,proxy);
             logger.info("download cost {} {} [{}]", (System.currentTimeMillis() - s), request.getUrl());
             return page;
         } catch (Throwable e) {
             logger.error("download error {}" + request.getUrl() + " error", e);
             return handleError(request, e);
+        }finally {
+
         }
     }
 
-    public PageObj test(RequestOjb request, ReqCfg cfg) throws Exception {
+    public PageObj test(RequestOjb request, ReqCfg cfg, HttpHost proxy) throws Exception {
         CloseableHttpResponse httpResponse = null;
-        HttpHost proxy = null;
         PageObj page;
         int retry = 0;
-        for (; ; ) {//遍历所有代理
+        for (; retry<3; ) {//遍历所有代理
             try {
-                proxy = getProxy();
+                proxy = proxyPool.getProxy();
                 if (proxy == null) break;
                 logger.error("try[{}] {} {}", retry, proxy, request.getUrl());
                 randomUa(cfg);
+                //////////////////////////
                 HttpUriRequest httpRequest = buildHttpRequest(request, cfg, null, proxy);
                 CloseableHttpClient client = httpClientPool.createClient(cfg);
                 httpResponse = client.execute(httpRequest);
                 page = handleResponse(request, httpResponse);
+                //////////////////////////
                 logger.info("rawtext {} {} {}", proxy, request.getUrl(), page.getRawText().substring(0, Math.min(page.getRawText().length(), 30)));
                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
                     if (page.getRawText().contains("好大夫在线")) {
@@ -96,22 +89,12 @@ public class ProxyHttpDownloader extends HttpDownloader {
                 } catch (IOException e) {
                     logger.warn("close response fail", e);
                 }
+
+                retry++;
             }
-            dropProxy(proxy);
-            retry++;
         }
         throw new Exception("retry timeout");
     }
 
-    private void dropProxy(HttpHost proxy) {
-        logger.info("drop proxy {}", proxy);
-        proxyPool.remove(proxy);
-    }
 
-
-    public HttpHost getProxy() {
-        logger.info("proxy pool {}", proxyPool.size());
-        if (proxyPool.size() < 1) return null;
-        return proxyPool.get(RandomUtils.nextInt(proxyPool.size()));
-    }
 }

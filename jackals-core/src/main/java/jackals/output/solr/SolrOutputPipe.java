@@ -38,6 +38,11 @@ public class SolrOutputPipe implements OutputPipe {
 //        solrServer.commit();
     }
 
+    @Override
+    public void error(JobInfo job, PageObj page) {
+
+    }
+
     private SolrInputDocument buildDoc(JobInfo spiderJob, PageObj page, JSONObject jsonObject) {
         SolrInputDocument doc = new SolrInputDocument();
         for (Map.Entry<String, Object> e : jsonObject.entrySet()) {

@@ -39,6 +39,9 @@ public class PageFileOutputPipe implements OutputPipe {
             file.mkdirs();
         }
     }
+    @Override
+    public void error(JobInfo job, PageObj page) {
 
+    }
 
 }

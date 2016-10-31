@@ -1,10 +1,11 @@
 package jackals.downloader;
 
-import org.apache.http.HttpHost;
+import jackals.job.pojo.JobInfo;
 
 public class ReqCfg {
     int timeOut;
     String userAgent;
+    JobInfo jobInfo;
     //    HttpHost proxy = new HttpHost("103.240.241.182", 80);
 
     private ReqCfg() {
@@ -34,4 +35,12 @@ public class ReqCfg {
         return this;
     }
 
+    public JobInfo getJobInfo() {
+        return jobInfo;
+    }
+
+    public ReqCfg setJobInfo(JobInfo jobInfo) {
+        this.jobInfo = jobInfo;
+        return this;
+    }
 }
