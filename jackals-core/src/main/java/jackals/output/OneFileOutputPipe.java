@@ -46,7 +46,7 @@ public class OneFileOutputPipe implements OutputPipe {
         try {
             BufferedWriter printWriter = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(getFile(error),true), "UTF-8"));
-            printWriter.write(page.getRequest().getUrl());
+            printWriter.write(page.getRequest().getUrl()+"\n");
             printWriter.close();
         } catch (IOException e) {
             logger.warn("write file error", e);

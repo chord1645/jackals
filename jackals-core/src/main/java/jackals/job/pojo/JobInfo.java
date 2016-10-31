@@ -16,7 +16,22 @@ public class JobInfo {
     Integer jobModel;
     Boolean reset = false;
     Orders orders = new Orders();
+
     List<String> seed = new ArrayList<String>();
+    Valid valid;
+
+    public interface Valid {
+        boolean success(PageObj page);
+    }
+
+    public Valid getValid() {
+        return valid;
+    }
+
+    public JobInfo setValid(Valid valid) {
+        this.valid = valid;
+        return this;
+    }
 
     public boolean useful(PageObj pageObj) {
         return true;

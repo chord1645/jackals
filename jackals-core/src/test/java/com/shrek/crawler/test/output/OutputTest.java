@@ -31,9 +31,8 @@ public class OutputTest extends BaseTest {
     public void start() throws Exception {
         OutputPipe outputPipe = new SolrOutputPipe();
         JobInfo jobInfo = News163.job();
-        PageObj pageObj = new PageObj();
         String url = "http://news.163.com/15/0824/02/B1OISJ3A00014AED.html?f=jsearch";
-        pageObj.setRequest(new RequestOjb(url));
+        PageObj pageObj = new PageObj(new RequestOjb(url));
         Object obj = new HtmlExtratorImpl()
                 .test(jobInfo.getOrders(), url);
         outputPipe.save(jobInfo, pageObj, obj);

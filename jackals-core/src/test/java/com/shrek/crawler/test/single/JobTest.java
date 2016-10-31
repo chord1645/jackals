@@ -22,17 +22,18 @@ import java.util.concurrent.TimeUnit;
 
 
 public class JobTest extends BaseTest {
-    class HaodaifuJob extends JobInfo{
+    class HaodaifuJob extends JobInfo {
         @Override
         public boolean useful(PageObj pageObj) {
-           return false;
+            return false;
         }
     }
+
     public static JobInfo haodaifu() {
         //http://bbs.nga.cn/thread.php?fid=538&rand=356
         JobInfo jobInfo = JobInfo.create("www.haodf.com");
         jobInfo.setMaxDepth(1);
-        jobInfo.setJobThreadNum(10);
+        jobInfo.setJobThreadNum(1);
         jobInfo.setSleep(200L);
         jobInfo.setReset(true);
 //        jobInfo.getSeed().add("http://www.haodf.com/hospital/DE4r0Fy0C9LuwWCOYx29oa1OdBHBTXzVa.htm");
@@ -45,8 +46,15 @@ public class JobTest extends BaseTest {
                 new ExtratField("title", "<title>([^_]+).*</title>", 1, Constants.FmtType.str)
         ));
         jobInfo.setOrders(orders);
+        jobInfo.setValid(new JobInfo.Valid() {
+            @Override
+            public boolean success(PageObj page) {
+                return page.getStatusCode() == 200 && page.getRawText().contains("好大夫");
+            }
+        });
         return jobInfo;
     }
+
     @Test
     public void page() {
         JobInfo jobInfo = haodaifu();
@@ -55,6 +63,7 @@ public class JobTest extends BaseTest {
 //        Object obj = new HtmlExtratorImpl()
 //                .test(jobInfo.getOrders(), "http://www.haodf.com/yiyuan/hebei/list.htm");
     }
+
     @Test
     public void youtube() {
         JobInfo jobInfo = haodaifu();
@@ -66,7 +75,7 @@ public class JobTest extends BaseTest {
     public void start() throws InterruptedException {
         new LogbackConfigurer();
         JobInfo jobInfo = haodaifu();
-        DefaultPageProcessImpl pageProces= new DefaultPageProcessImpl(jobInfo.getJobThreadNum());
+        DefaultPageProcessImpl pageProces = new DefaultPageProcessImpl(jobInfo.getJobThreadNum());
         pageProces.setOutputPipe(new OneFileOutputPipe());
         new SingleSpider(jobInfo)
                 .setPageProcess(pageProces)

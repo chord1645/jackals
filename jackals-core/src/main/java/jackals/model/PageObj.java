@@ -5,9 +5,22 @@ package jackals.model;
  */
 public class PageObj {
     String rawText;
-    int statusCode;
+    int statusCode = -1;
+    long cost;
     RequestOjb request;
     boolean success = false;
+
+    public PageObj(RequestOjb request) {
+        this.request = request;
+    }
+
+    public long getCost() {
+        return cost;
+    }
+
+    public void setCost(long cost) {
+        this.cost = cost;
+    }
 
     public boolean isSuccess() {
         return success;

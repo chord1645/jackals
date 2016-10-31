@@ -88,9 +88,9 @@ abstract public class Downloader {
         if (StringUtils.isEmpty(charset)) charset = "utf-8";
         if (charset.equals("gb2312")) charset = "gbk";
         content = new String(content.getBytes("iso-8859-1"), charset);
-        PageObj page = new PageObj();
+        PageObj page = new PageObj(request);
         page.setRawText(content);
-        page.setRequest(request);
+        page.setSuccess(true);
         page.setStatusCode(httpResponse.getStatusLine().getStatusCode());
         return page;
     }
@@ -104,7 +104,7 @@ abstract public class Downloader {
 
 
     protected PageObj handleError(RequestOjb request, Throwable e) {
-        PageObj page = new PageObj();
+        PageObj page = new PageObj(request);
         page.setRequest(request);
         page.setRawText(e.toString());
         page.setStatusCode(-1);

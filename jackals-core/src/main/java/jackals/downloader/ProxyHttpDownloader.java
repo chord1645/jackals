@@ -1,6 +1,7 @@
 package jackals.downloader;
 
 import com.google.common.collect.Lists;
+import jackals.job.pojo.JobInfo;
 import jackals.model.PageObj;
 import jackals.model.RequestOjb;
 import jackals.utils.SpringContextHolder;
@@ -42,30 +43,64 @@ public class ProxyHttpDownloader extends HttpDownloader {
         super(size);
     }
 
+    int MAX_RETRY = 3;
+
     @Override
     public PageObj download(RequestOjb request, ReqCfg cfg) {
         logger.debug("downloading page {}", request.getUrl());
-        HttpHost proxy = null;
-        try {
+        HttpHost proxy = proxyPool.getProxy();
+        if (proxy == null) { //无代理，return
+            logger.error("proxy pool empty!");
+            return new PageObj(request);
+        }
+        CloseableHttpResponse httpResponse = null;
+        JobInfo jobInfo = cfg.getJobInfo();
+        PageObj page = null;
+        for (int retry = 1; ; retry++) {
             long s = System.currentTimeMillis();
-            PageObj page = test(request, cfg,proxy);
-            logger.info("download cost {} {} [{}]", (System.currentTimeMillis() - s), request.getUrl());
-            return page;
-        } catch (Throwable e) {
-            logger.error("download error {}" + request.getUrl() + " error", e);
-            return handleError(request, e);
-        }finally {
-
+            try {
+                logger.error("try[{}] {} {}", retry, proxy, request.getUrl());
+                randomUa(cfg);
+                //////////////////////////
+                HttpUriRequest httpRequest = buildHttpRequest(request, cfg, null, proxy);
+                CloseableHttpClient client = httpClientPool.createClient(cfg);
+                httpResponse = client.execute(httpRequest);
+                long cost = System.currentTimeMillis() - s;
+                logger.info("rawtext {} {} {}ms", proxy, request.getUrl(), cost);
+                page = handleResponse(request, httpResponse);
+//                    page.setCost(cost);
+                //////////////////////////
+                boolean success = jobInfo.getValid().success(page);
+                proxyPool.update(proxy, success, cost);
+                if (success)
+                    return page;
+//                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
+//                        if (page.getRawText().contains("好大夫在线")) {
+//                            return page;
+//                        }
+//                    }
+            } catch (Throwable e) {
+                logger.error("try  error[" + retry + "]  " + request.getUrl() + " error: " + e.getMessage());
+                proxyPool.update(proxy, false, System.currentTimeMillis() - s);
+                if (retry >= MAX_RETRY)
+                    return handleError(request, e);
+            } finally {
+                try {
+                    if (httpResponse != null) EntityUtils.consume(httpResponse.getEntity());
+                } catch (IOException e) {
+                    logger.warn("close response fail", e);
+                }
+            }
         }
     }
 
-    public PageObj test(RequestOjb request, ReqCfg cfg, HttpHost proxy) throws Exception {
+    public PageObj test(RequestOjb request, ReqCfg cfg) throws Exception {
         CloseableHttpResponse httpResponse = null;
         PageObj page;
         int retry = 0;
-        for (; retry<3; ) {//遍历所有代理
+        for (; retry < 3; ) {//遍历所有代理
             try {
-                proxy = proxyPool.getProxy();
+                HttpHost proxy = proxyPool.getProxy();
                 if (proxy == null) break;
                 logger.error("try[{}] {} {}", retry, proxy, request.getUrl());
                 randomUa(cfg);

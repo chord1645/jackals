@@ -59,7 +59,7 @@ public class DefaultPageProcessImpl implements PageProcess {
 //        logger.debug("show html {} {} ", link.getUrl(), page.getRawText());
 //        logger.info("rejected {}", page.getRawText().contains("换一张图"));
         Pattern target = Pattern.compile(job.getOrders().getTargetRegx());
-        Pattern path = Pattern.compile(job.getOrders().getPathRegx());
+        //        Pattern path = Pattern.compile(job.getOrders().getPathRegx());
         if (page.isSuccess()) {
             if (target.matcher(link.getUrl()).find()) {
                 JSONObject jsonObject = (JSONObject) extrator.extrat(page, job.getOrders());
