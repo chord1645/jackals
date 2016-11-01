@@ -56,7 +56,7 @@ public class ProxyHttpDownloader extends HttpDownloader {
         CloseableHttpResponse httpResponse = null;
         JobInfo jobInfo = cfg.getJobInfo();
         PageObj page = null;
-        for (int retry = 1; ; retry++) {
+        for (int retry = 1; retry <= MAX_RETRY; retry++) {
             long s = System.currentTimeMillis();
             try {
                 logger.error("try[{}] {} {}", retry, proxy, request.getUrl());
@@ -92,6 +92,7 @@ public class ProxyHttpDownloader extends HttpDownloader {
                 }
             }
         }
+        return page;
     }
 
     public PageObj test(RequestOjb request, ReqCfg cfg) throws Exception {

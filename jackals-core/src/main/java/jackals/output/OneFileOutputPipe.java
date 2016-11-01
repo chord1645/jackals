@@ -16,7 +16,10 @@ public class OneFileOutputPipe implements OutputPipe {
 
     String root = "D:\\Work\\tmp\\jackals\\haodaifu.txt";
     String error = "D:\\Work\\tmp\\jackals\\haodaifu_error.txt";
-
+    public OneFileOutputPipe(){
+        new File(root).delete();
+        new File(error).delete();
+    }
     @Override
     public void save(JobInfo spiderJob, PageObj page, Object obj) {
         try {
@@ -24,7 +27,8 @@ public class OneFileOutputPipe implements OutputPipe {
             System.out.println(jsonObject.get("title"));
             BufferedWriter printWriter = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(getFile(root),true), "UTF-8"));
-            printWriter.write(jsonObject.get("title").toString()+"\n");
+//            printWriter.write(jsonObject.get("title").toString()+"\n");
+            printWriter.write(jsonObject.toString()+"\n");
             printWriter.close();
         } catch (IOException e) {
             logger.warn("write file error", e);

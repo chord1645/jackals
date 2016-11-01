@@ -33,7 +33,7 @@ public class JobTest extends BaseTest {
         //http://bbs.nga.cn/thread.php?fid=538&rand=356
         JobInfo jobInfo = JobInfo.create("www.haodf.com");
         jobInfo.setMaxDepth(1);
-        jobInfo.setJobThreadNum(1);
+        jobInfo.setJobThreadNum(5);
         jobInfo.setSleep(200L);
         jobInfo.setReset(true);
 //        jobInfo.getSeed().add("http://www.haodf.com/hospital/DE4r0Fy0C9LuwWCOYx29oa1OdBHBTXzVa.htm");
@@ -49,7 +49,7 @@ public class JobTest extends BaseTest {
         jobInfo.setValid(new JobInfo.Valid() {
             @Override
             public boolean success(PageObj page) {
-                return page.getStatusCode() == 200 && page.getRawText().contains("好大夫");
+                return page.getStatusCode() == 200 && page.getRawText().contains("医院介绍");
             }
         });
         return jobInfo;

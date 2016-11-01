@@ -103,8 +103,10 @@ public class SingleSpider extends Thread {
                 try {
                     executing.incrementAndGet();
                     if (urlFilter.exist(jobInfo, link.getUrl())) {
-                        logger.info("ignore :" + link.getUrl());
-                        return;
+                        if (!link.isRetry()) {
+                            logger.info("ignore :" + link.getUrl());
+                            return;
+                        }
                     } else {
                         urlFilter.add(jobInfo, link.getUrl());
 
@@ -122,9 +124,10 @@ public class SingleSpider extends Thread {
                 } catch (Throwable e) {
                     logger.error("Executor Exception " + link.getUrl() + " > " + e.toString(), e);
                 } finally {
-                    if (executing.decrementAndGet() == 0) {
-                        logger.info("job stoped {} {} {}", jobInfo.getId());
-                    }
+                    logger.info(" executing={}", executing.decrementAndGet());
+//                        if (executing.decrementAndGet() == 0) {
+//                        logger.info("job stoped {} {} {}", jobInfo.getId());
+//                    }
                 }
 
             }

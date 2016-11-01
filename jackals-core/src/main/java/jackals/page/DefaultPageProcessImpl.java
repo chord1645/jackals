@@ -73,6 +73,8 @@ public class DefaultPageProcessImpl implements PageProcess {
             list = extratLinks(page, link, job.getOrders());
             logger.info("process done {} {} links: {}", job.getId(), list.size(), link.getUrl());
         } else {
+            link.setRetry(true);
+            list.add(link);//如果失败，需要重新加入队列
             outputPipe.error(job, page);
         }
         return list;

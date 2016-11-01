@@ -20,7 +20,7 @@ public class ProxyPool {//TODO later
 
     class Proxy {
         HttpHost httpHost;
-        long cost = 1000*60*30;
+        long cost = 1000 * 60 * 30;
         int useful = 1;
 
         public Proxy(HttpHost httpHost) {
@@ -29,7 +29,7 @@ public class ProxyPool {//TODO later
 
         @Override
         public String toString() {
-            return Joiner.on(",").join(httpHost.toString(), useful, cost);
+            return Joiner.on(" ").join(useful, cost, httpHost.toString());
         }
     }
 
@@ -89,6 +89,6 @@ public class ProxyPool {//TODO later
         logger.info("proxy pool {}", proxyPool.size());
         if (CollectionUtils.isEmpty(proxyPool)) return null;
 //        return proxyPool.get(0).httpHost;
-        return proxyPool.get(RandomUtils.nextInt(3)).httpHost;
+        return proxyPool.get(RandomUtils.nextInt(proxyPool.size() / 3)).httpHost;
     }
 }

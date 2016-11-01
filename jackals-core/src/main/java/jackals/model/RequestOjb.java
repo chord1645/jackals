@@ -9,6 +9,7 @@ public class RequestOjb {
     String url;
     Integer depth;
     boolean isSeed = false;
+    boolean retry = false;
 
     public RequestOjb() {
     }
@@ -34,6 +35,14 @@ public class RequestOjb {
     public RequestOjb(String url, int depth) {
         this.url = url;
         this.depth = depth;
+    }
+
+    public boolean isRetry() {
+        return retry;
+    }
+
+    public void setRetry(boolean retry) {
+        this.retry = retry;
     }
 
     public String getUrl() {
