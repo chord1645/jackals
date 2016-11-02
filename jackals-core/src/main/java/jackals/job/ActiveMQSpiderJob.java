@@ -2,7 +2,7 @@ package jackals.job;
 
 import com.alibaba.fastjson.JSON;
 import jackals.Constants;
-import jackals.URLRedisFilter;
+import jackals.filter.URLRedisFilter;
 import jackals.allocation.AmqAllocation;
 import jackals.mq.MQListener;
 import jackals.job.pojo.JobInfo;

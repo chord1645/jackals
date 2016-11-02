@@ -1,8 +1,7 @@
-package com.shrek.crawler.test.single;
+package jackals.single;
 
-import com.alibaba.fastjson.JSON;
-import jackals.URLFilter;
 import jackals.allocation.Allocation;
+import jackals.filter.URLFilter;
 import jackals.job.pojo.JobInfo;
 import jackals.model.RequestOjb;
 import jackals.page.PageProcess;
@@ -119,7 +118,7 @@ public class SingleSpider extends Thread {
 //                    logger.info("allocate cost {} {}", (System.currentTimeMillis() - s), link.getUrl());
                     s = System.currentTimeMillis();
                     queue.addAll(list);
-                    TimeUnit.MILLISECONDS.sleep(jobInfo.getSleep());//TODO 定制休眠
+                    TimeUnit.MILLISECONDS.sleep(jobInfo.getSleep());
                     logger.info("sleep cost {} {}", (System.currentTimeMillis() - s), link.getUrl());
                 } catch (Throwable e) {
                     logger.error("Executor Exception " + link.getUrl() + " > " + e.toString(), e);
@@ -135,16 +134,6 @@ public class SingleSpider extends Thread {
     }
 
 
-    //    @Override
-    public void requestReceived(String message) {
-        long s = System.currentTimeMillis();
-//        logger.debug("requestReceived job_{} {} {}", this.getJobInfo().getId(), executing.incrementAndGet(), message);
-        RequestOjb request = JSON.parseObject(message, RequestOjb.class);
-        logger.debug("000000000000000000000000000000000000000000000000");
-        executeRequest(request);
-        logger.info("executeRequest cost {} {}", (System.currentTimeMillis() - s), request.getUrl());
-    }
-
     public void start(boolean filterClean) {
         if (filterClean) {
             urlFilter.clean(jobInfo);
@@ -156,7 +145,7 @@ public class SingleSpider extends Thread {
     public void run() {
         RequestOjb requestOjb = null;
         try {
-            while ((requestOjb = queue.poll(10, TimeUnit.MINUTES)) != null)
+            while ((requestOjb = queue.poll(3, TimeUnit.MINUTES)) != null)
                 executeRequest(requestOjb);
         } catch (InterruptedException e) {
             logger.error("run ex", e);

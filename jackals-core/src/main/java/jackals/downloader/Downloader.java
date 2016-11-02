@@ -9,12 +9,8 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
-import org.apache.http.annotation.ThreadSafe;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.config.SocketConfig;
@@ -40,7 +36,7 @@ import java.util.Properties;
 abstract public class Downloader {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
-
+    private int maxRetry = 3;
     protected HttpClient httpClientPool;
     List<Object> uaList = new ArrayList<Object>();
 
@@ -51,19 +47,18 @@ abstract public class Downloader {
         uaList.addAll(uaConfig.values());
     }
 
-
-    public PageObj download(RequestOjb request, ReqCfg cfg) {
+    public PageObj download(RequestOjb request, ReqCfg cfg, Valid valid) {
         Map<String, String> headers = null;
         logger.debug("downloading page {}", request.getUrl());
         CloseableHttpResponse httpResponse = null;
         try {
             long s = System.currentTimeMillis();
             randomUa(cfg);
-            HttpUriRequest httpRequest = buildHttpRequest(request, cfg, headers,null);
+            HttpUriRequest httpRequest = buildHttpRequest(request, cfg, headers, null);
             CloseableHttpClient client = httpClientPool.createClient(cfg);
             httpResponse = client.execute(httpRequest);
 //            int statusCode = httpResponse.getStatusLine().getStatusCode();
-            PageObj page = handleResponse(request, httpResponse);
+            PageObj page = handleResponse(request, httpResponse, valid);
             logger.info("download cost {} {}", (System.currentTimeMillis() - s), request.getUrl());
             return page;
         } catch (Throwable e) {
@@ -81,7 +76,16 @@ abstract public class Downloader {
         }
     }
 
-    protected PageObj handleResponse(RequestOjb request, HttpResponse httpResponse) throws IOException {
+    public PageObj download(RequestOjb request, ReqCfg cfg) {
+        return download(request, cfg, new Valid() {
+            @Override
+            public boolean success(PageObj page) {
+                return true;
+            }
+        });
+    }
+
+    protected PageObj handleResponse(RequestOjb request, HttpResponse httpResponse, Valid valid) throws IOException {
         String content = IOUtils.toString(httpResponse.getEntity().getContent(), "iso-8859-1");
         //text/html; charset=gb2312
         String charset = StringUtil.regxGet("charset\\s*=\\s*['\"]*([^\\s;'\"]*)", 1, content);
@@ -90,8 +94,8 @@ abstract public class Downloader {
         content = new String(content.getBytes("iso-8859-1"), charset);
         PageObj page = new PageObj(request);
         page.setRawText(content);
-        page.setSuccess(true);
         page.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+        page.setSuccess(valid.success(page));
         return page;
     }
 
@@ -108,12 +112,12 @@ abstract public class Downloader {
         page.setRequest(request);
         page.setRawText(e.toString());
         page.setStatusCode(-1);
+        page.setSuccess(false);
         return page;
     }
 
 
     abstract protected HttpUriRequest buildHttpRequest(RequestOjb request, ReqCfg cfg, Map<String, String> headers, HttpHost proxy);
-
 
 
     class HttpClient {
@@ -140,5 +144,11 @@ abstract public class Downloader {
         }
     }
 
+    public int getMaxRetry() {
+        return maxRetry;
+    }
 
+    public void setMaxRetry(int maxRetry) {
+        this.maxRetry = maxRetry;
+    }
 }

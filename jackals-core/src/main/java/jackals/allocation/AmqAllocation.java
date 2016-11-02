@@ -1,13 +1,11 @@
 package jackals.allocation;
 
-import com.alibaba.fastjson.JSON;
 import jackals.Constants;
-import jackals.URLRedisFilter;
+import jackals.filter.URLRedisFilter;
 import jackals.job.pojo.JobInfo;
 import jackals.model.RequestOjb;
 import jackals.mq.activemq.ActiveMQSender;
 import jackals.utils.SpringContextHolder;
-import kafka.producer.KeyedMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;

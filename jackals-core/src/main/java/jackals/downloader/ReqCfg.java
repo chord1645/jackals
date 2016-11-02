@@ -5,7 +5,7 @@ import jackals.job.pojo.JobInfo;
 public class ReqCfg {
     int timeOut;
     String userAgent;
-    JobInfo jobInfo;
+    Valid valid;
     //    HttpHost proxy = new HttpHost("103.240.241.182", 80);
 
     private ReqCfg() {
@@ -35,12 +35,12 @@ public class ReqCfg {
         return this;
     }
 
-    public JobInfo getJobInfo() {
-        return jobInfo;
+    public Valid getValid() {
+        return valid;
     }
 
-    public ReqCfg setJobInfo(JobInfo jobInfo) {
-        this.jobInfo = jobInfo;
+    public ReqCfg setValid(Valid valid) {
+        this.valid = valid;
         return this;
     }
 }

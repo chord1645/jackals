@@ -1,9 +1,6 @@
-package com.shrek.crawler.test.single;
+package jackals.filter;
 
-import jackals.URLFilter;
 import jackals.job.pojo.JobInfo;
-import jackals.utils.SpringContextHolder;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.HashSet;
 import java.util.Set;

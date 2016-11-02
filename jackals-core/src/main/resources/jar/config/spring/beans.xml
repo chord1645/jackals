@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
-    <bean class="jackals.URLRedisFilter">
+    <bean class="jackals.filter.URLRedisFilter">
     </bean>
     <bean class="jackals.downloader.HttpDownloader">
         <constructor-arg name="size" value="20"/>

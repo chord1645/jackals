@@ -1,5 +1,6 @@
 package jackals.job.pojo;
 
+import jackals.downloader.Valid;
 import jackals.model.PageObj;
 
 import java.util.ArrayList;
@@ -20,9 +21,6 @@ public class JobInfo {
     List<String> seed = new ArrayList<String>();
     Valid valid;
 
-    public interface Valid {
-        boolean success(PageObj page);
-    }
 
     public Valid getValid() {
         return valid;

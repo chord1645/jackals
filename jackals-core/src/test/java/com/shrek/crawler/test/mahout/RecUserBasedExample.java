@@ -18,8 +18,6 @@ import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 public class RecUserBasedExample {
 
   public static void main(String[] args) throws IOException, TasteException {
-    // TODO Auto-generated method stub
-
     DataModel model = new FileDataModel(new File("D:\\work\\workspace\\crawler\\jackals\\src\\test\\java\\com\\shrek\\crawler\\test\\mahout\\/dataset.csv"));
     UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
     UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.1, similarity, model);

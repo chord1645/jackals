@@ -26,8 +26,8 @@ public class HtmlExtratorImpl extends HtmlExtrator {
         JSONObject object = new JSONObject();
         for (Map.Entry<String, ExtratField> e : jobInfo.getFields().entrySet()) {
             try {
-                String s = regexGet(page.getRawText(), e.getValue().getRegx(), e.getValue().getGroup());
-                Object obj = format(s, e.getValue());
+                String result = regexGet(page.getRawText(), e.getValue().getRegx(), e.getValue().getGroup());
+                Object obj = format(result, e.getValue());
                 object.put(e.getKey(), obj);
             } catch (Throwable ex) {
                 logger.error("doExtrat Exception", ex);
@@ -41,22 +41,22 @@ public class HtmlExtratorImpl extends HtmlExtrator {
     }
 
 
-    private Object format(String s, ExtratField field) {
+    private Object format(String result, ExtratField field) {
         try {
-            if (StringUtils.isEmpty(s))
+            if (StringUtils.isEmpty(result))
                 return null;
             switch (field.getFmtType()) {
                 case Constants.FmtType.str:
-                    return s != null ? s.trim() : null;
+                    return result != null ? result.trim() : null;
                 case Constants.FmtType.date:
                     SimpleDateFormat sdf;
                     if (!StringUtils.isEmpty(field.getFmtStr()))
                         sdf = new SimpleDateFormat(field.getFmtStr());
                     else
                         sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    return sdf.parse(s.trim());
+                    return sdf.parse(result.trim());
                 default:
-                    return s;
+                    return result;
             }
         } catch (Exception e) {
         }

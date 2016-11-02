@@ -1,5 +1,6 @@
-package jackals;
+package jackals.filter;
 
+import jackals.filter.URLFilter;
 import jackals.job.pojo.JobInfo;
 import jackals.utils.SpringContextHolder;
 import org.springframework.data.redis.core.StringRedisTemplate;

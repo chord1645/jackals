@@ -1,14 +1,12 @@
 package jackals.page;
 
 import com.alibaba.fastjson.JSONObject;
-import jackals.downloader.Downloader;
-import jackals.downloader.HttpDownloader;
-import jackals.downloader.ProxyHttpDownloader;
-import jackals.downloader.ReqCfg;
+import jackals.downloader.*;
 import jackals.job.pojo.Orders;
 import jackals.model.PageObj;
 import jackals.model.RequestOjb;
 import jackals.utils.LinkUtil;
+import org.apache.http.HttpHost;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -39,10 +37,15 @@ abstract public class HtmlExtrator {
         showAnalys = true;
         return _test(jobInfo, url, new HttpDownloader(1));
     }
+
     public Object testProxy(Orders jobInfo, String url) {
         showAnalys = true;
-        return _test(jobInfo, url, new ProxyHttpDownloader(1));
+        Proxy proxy = new Proxy(new HttpHost("122.96.59.99", 80));
+        OneProxyHttpDownloader downloader = new OneProxyHttpDownloader(1, proxy);
+        downloader.setMaxRetry(1);
+        return _test(jobInfo, url, downloader);
     }
+
     public Object _test(Orders jobInfo, String url, Downloader downloader) {
         showAnalys = true;
         Pattern path = Pattern.compile(jobInfo.getPathRegx());

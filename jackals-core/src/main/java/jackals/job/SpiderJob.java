@@ -1,7 +1,7 @@
 package jackals.job;
 
 import com.alibaba.fastjson.JSON;
-import jackals.URLFilter;
+import jackals.filter.URLFilter;
 import jackals.allocation.Allocation;
 import jackals.job.pojo.JobInfo;
 import jackals.model.RequestOjb;
@@ -111,7 +111,7 @@ abstract public class SpiderJob extends Thread implements MQListener {
                     allocation.allocate(jobInfo, list);
                     logger.info("allocate cost {} {}", (System.currentTimeMillis() - s), link.getUrl());
                     s = System.currentTimeMillis();
-                    TimeUnit.MILLISECONDS.sleep(jobInfo.getSleep());//TODO 定制休眠
+                    TimeUnit.MILLISECONDS.sleep(jobInfo.getSleep());
                     logger.info("sleep cost {} {}", (System.currentTimeMillis() - s), link.getUrl());
                 } catch (Throwable e) {
                     logger.error("Executor Exception " + link.getUrl() + " > " + e.toString(), e);

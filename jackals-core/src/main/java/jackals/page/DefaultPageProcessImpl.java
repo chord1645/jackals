@@ -2,6 +2,7 @@ package jackals.page;
 
 import com.alibaba.fastjson.JSONObject;
 import jackals.downloader.HttpDownloader;
+import jackals.downloader.PoolProxyHttpDownloader;
 import jackals.downloader.ProxyHttpDownloader;
 import jackals.downloader.ReqCfg;
 import jackals.job.pojo.JobInfo;
@@ -45,7 +46,7 @@ public class DefaultPageProcessImpl implements PageProcess {
 
     public DefaultPageProcessImpl(int size) {
         outputPipe = new SolrOutputPipe();
-        downloader = SpringContextHolder.getBean(ProxyHttpDownloader.class, size);
+        downloader = SpringContextHolder.getBean(PoolProxyHttpDownloader.class, size);
 //        downloader = new HttpDownloader(size);
         extrator = new HtmlExtratorImpl();
     }
@@ -55,7 +56,7 @@ public class DefaultPageProcessImpl implements PageProcess {
         ArrayList<RequestOjb> list = new ArrayList<RequestOjb>();
         logger.info(job.getId() + " >>>>>>>> {}", link);
         PageObj page = downloader.download(new RequestOjb(link.getUrl()),
-                ReqCfg.deft().setTimeOut(10000).setJobInfo(job));
+                ReqCfg.deft().setTimeOut(10000).setValid(job.getValid()));
 //        logger.debug("show html {} {} ", link.getUrl(), page.getRawText());
 //        logger.info("rejected {}", page.getRawText().contains("换一张图"));
         Pattern target = Pattern.compile(job.getOrders().getTargetRegx());

@@ -1,7 +1,7 @@
 package jackals.bin;
 
 import jackals.Constants;
-import jackals.URLRedisFilter;
+import jackals.filter.URLRedisFilter;
 import jackals.allocation.KafkaAllocationImpl;
 import jackals.job.pojo.JobInfo;
 import jackals.job.KafkaSpiderJob;

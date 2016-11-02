@@ -24,7 +24,7 @@ public class OneFileOutputPipe implements OutputPipe {
     public void save(JobInfo spiderJob, PageObj page, Object obj) {
         try {
             JSONObject jsonObject = (JSONObject) obj;
-            System.out.println(jsonObject.get("title"));
+//            System.out.println(jsonObject.get("title"));
             BufferedWriter printWriter = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(getFile(root),true), "UTF-8"));
 //            printWriter.write(jsonObject.get("title").toString()+"\n");

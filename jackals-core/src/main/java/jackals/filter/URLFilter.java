@@ -1,4 +1,4 @@
-package jackals;
+package jackals.filter;
 
 import jackals.job.pojo.JobInfo;
 
