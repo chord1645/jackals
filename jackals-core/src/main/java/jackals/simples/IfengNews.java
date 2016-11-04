@@ -29,12 +29,12 @@ public class IfengNews {
                 "(?is)<span[^>]*?itemprop=\"datePublished\"[^>]*?>\\s*(.+?)\\s*</span>", 1,
                 Constants.FmtType.date);
         dateField.setFmtStr("yyyy'年'MM'月'dd'日' HH:mm");
-        orders.setFields(ImmutableMap.of(
-                "title",
-                new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
-                "infoTime_dt",
-                dateField
-        ));
+//        orders.setFields(ImmutableMap.of(
+//                "title",
+//                new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
+//                "infoTime_dt",
+//                dateField
+//        ));
         jobInfo.setOrders(orders);
         return jobInfo;
     }

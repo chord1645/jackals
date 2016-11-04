@@ -30,12 +30,12 @@ public class TencentNews {
                 "(?is)<span\\s*class=\"article-time\"\\s*>\\s*(.+?)\\s*</span>", 1,
                 Constants.FmtType.date);
         dateField.setFmtStr("yyyy-MM-dd HH:mm");
-        orders.setFields(ImmutableMap.of(
-                "title",
-                new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
-                "infoTime_dt",
-                dateField
-        ));
+//        orders.setFields(ImmutableMap.of(
+//                "title",
+//                new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
+//                "infoTime_dt",
+//                dateField
+//        ));
         jobInfo.setOrders(orders);
         return jobInfo;
     }

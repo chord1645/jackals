@@ -25,23 +25,4 @@ public class HttpDownloader extends Downloader {
         super(size);
     }
 
-    @Override
-    protected HttpUriRequest buildHttpRequest(RequestOjb request, ReqCfg cfg, Map<String, String> headers,HttpHost proxy) {
-        RequestBuilder builder = RequestBuilder.get().setUri(request.getUrl());
-        if (headers != null) {
-            for (Map.Entry<String, String> headerEntry : headers.entrySet()) {
-                builder.addHeader(headerEntry.getKey(), headerEntry.getValue());
-            }
-        }
-        RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()
-                .setProxy(proxy)
-                .setConnectionRequestTimeout(cfg.getTimeOut())
-                .setSocketTimeout(cfg.getTimeOut())
-                .setConnectTimeout(cfg.getTimeOut())
-                .setCookieSpec(CookieSpecs.BEST_MATCH);
-        builder.setConfig(requestConfigBuilder.build());
-        return builder.build();
-    }
-
-
 }

@@ -40,13 +40,13 @@ public class XiachufangJob extends BaseTest {
         Orders orders = new Orders();
         orders.setPathRegx("http://www.xiachufang.com/category/\\d+/$");
         orders.setTargetRegx("http://www.xiachufang.com/recipe/\\d+/$");
-        orders.setFields(ImmutableMap.of(
-                "title", new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
-//                <span class="number" itemprop="ratingValue">7.5</span>
-                "rating_d", new ExtratField("rating_d", "(?is)<span class=\"number\" itemprop=\"ratingValue\">([0-9.]+)</span>", 1, Constants.FmtType.str),
-                "pop_i", new ExtratField("pop_i", "(?is)<span class=\"number\">(\\d+)</span>", 1, Constants.FmtType.str)
-
-        ));
+//        orders.setFields(ImmutableMap.of(
+//                "title", new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
+////                <span class="number" itemprop="ratingValue">7.5</span>
+//                "rating_d", new ExtratField("rating_d", "(?is)<span class=\"number\" itemprop=\"ratingValue\">([0-9.]+)</span>", 1, Constants.FmtType.str),
+//                "pop_i", new ExtratField("pop_i", "(?is)<span class=\"number\">(\\d+)</span>", 1, Constants.FmtType.str)
+//
+//        ));
         jobInfo.setOrders(orders);
         return jobInfo;
     }

@@ -1,6 +1,8 @@
 package jackals.job.pojo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -8,7 +10,8 @@ import java.util.Map;
 public class Orders {
     String pathRegx;
     String targetRegx;
-    Map<String, ExtratField> fields = new HashMap<String, ExtratField>();
+    //    Map<String, ExtratField> fields = new HashMap<String, ExtratField>();
+    List<ExtratField> fields = new ArrayList<>();
 
     public String getPathRegx() {
         return pathRegx;
@@ -26,11 +29,11 @@ public class Orders {
         this.targetRegx = targetRegx;
     }
 
-    public Map<String, ExtratField> getFields() {
+    public List<ExtratField> getFields() {
         return fields;
     }
 
-    public void setFields(Map<String, ExtratField> fields) {
+    public void setFields(List<ExtratField> fields) {
         this.fields = fields;
     }
 }

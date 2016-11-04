@@ -1,10 +1,7 @@
 package jackals.page;
 
 import com.alibaba.fastjson.JSONObject;
-import jackals.downloader.HttpDownloader;
-import jackals.downloader.PoolProxyHttpDownloader;
-import jackals.downloader.ProxyHttpDownloader;
-import jackals.downloader.ReqCfg;
+import jackals.downloader.*;
 import jackals.job.pojo.JobInfo;
 import jackals.job.pojo.Orders;
 import jackals.model.PageObj;
@@ -33,7 +30,7 @@ public class DefaultPageProcessImpl implements PageProcess {
 
     //    OutputPipe outputPipe = new PageFileOutputPipe<JSONObject>();
     OutputPipe outputPipe;
-    HttpDownloader downloader;
+    Downloader downloader;
     HtmlExtrator extrator;
 
     public OutputPipe getOutputPipe() {
@@ -46,7 +43,8 @@ public class DefaultPageProcessImpl implements PageProcess {
 
     public DefaultPageProcessImpl(int size) {
         outputPipe = new SolrOutputPipe();
-        downloader = SpringContextHolder.getBean(PoolProxyHttpDownloader.class, size);
+//        downloader = SpringContextHolder.getBean(PoolProxyHttpDownloader.class, size);
+        downloader = SpringContextHolder.getBean(HttpDownloader.class, size);
 //        downloader = new HttpDownloader(size);
         extrator = new HtmlExtratorImpl();
     }

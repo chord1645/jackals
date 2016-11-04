@@ -31,12 +31,12 @@ public class DuowanJob extends JobInfo {
         Orders orders = new Orders();
         orders.setPathRegx("http://www.cnblogs.com/zhuyaguang/archive/2015/08/04.html");
         orders.setTargetRegx("http://www.cnblogs.com/zhuyaguang/p/\\d+.html");
-        orders.setFields(ImmutableMap.of(
-                "title",
-                new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
-                "content",
-                new ExtratField("content", "(?is)<div[^>]*id=\"cnblogs_post_body\"[^>]*>(.*)</div>", 1,Constants.FmtType.str)
-        ));
+//        orders.setFields(ImmutableMap.of(
+//                "title",
+//                new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
+//                "content",
+//                new ExtratField("content", "(?is)<div[^>]*id=\"cnblogs_post_body\"[^>]*>(.*)</div>", 1,Constants.FmtType.str)
+//        ));
         jobInfo.setOrders(orders);
         return jobInfo;
     }

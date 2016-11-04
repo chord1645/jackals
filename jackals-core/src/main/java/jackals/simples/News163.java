@@ -27,15 +27,14 @@ public class News163 {
         orders.setPathRegx("(http://\\w+.163.com/\\w+/\\d+/\\w+.html.*)|(http://\\w+.163.com/\\w+/)|(http://\\w+.163.com)");
 //        orders.setTargetRegx("http://\\w+.163.com/15/\\d+/\\d+/\\w+.html.*");
         orders.setTargetRegx("http://\\w+.163.com/15/" + dateStr + "/\\d+/\\w+.html.*");
-        orders.setFields(ImmutableMap.of(
-                "title",
-                new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
-//                "html", new ExtratField("html", ".*(<body>.*?</body>).*", 1),
-                //<p class="mt15 ml25 newstime ">2015-08-12 15:44:03 	<span class="ml15">
-                "infoTime_dt",
-                new ExtratField("infoTime", "(?is)<div\\s*class=\"ep-time-soure cDGray\">\\s*(.+?)[\\　\\s]*来源.*</div>", 1, Constants.FmtType.date)
-
-        ));
+//        orders.setFields(ImmutableMap.of(
+//                "title",
+//                new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
+////                "html", new ExtratField("html", ".*(<body>.*?</body>).*", 1),
+//                //<p class="mt15 ml25 newstime ">2015-08-12 15:44:03 	<span class="ml15">
+//                "infoTime_dt",
+//                new ExtratField("infoTime", "(?is)<div\\s*class=\"ep-time-soure cDGray\">\\s*(.+?)[\\　\\s]*来源.*</div>", 1, Constants.FmtType.date)
+//        ));
         jobInfo.setOrders(orders);
         return jobInfo;
     }

@@ -22,12 +22,12 @@ public class SinaJob {
         Orders orders = new Orders();
         orders.setPathRegx("(^http://\\w+.\\w+.qq.com/*$)|(^http://\\w+.qq.com/([a-zA-Z]+/)*\\w+.s*html*$)");
         orders.setTargetRegx("http://news.qq.com/a/\\d+/\\d+.htm");
-        orders.setFields(ImmutableMap.of(
-                "title",
-                new ExtratField("title", "<title>([^_]+).*</title>", 1, Constants.FmtType.str),
-                "infoTime_dt",
-                new ExtratField("infoTime_dt", "(?is)<span\\s*class=\"article-time\"\\s*>\\s*(.+?)\\s*</span>", 1, Constants.FmtType.date)
-        ));
+//        orders.setFields(ImmutableMap.of(
+//                "title",
+//                new ExtratField("title", "<title>([^_]+).*</title>", 1, Constants.FmtType.str),
+//                "infoTime_dt",
+//                new ExtratField("infoTime_dt", "(?is)<span\\s*class=\"article-time\"\\s*>\\s*(.+?)\\s*</span>", 1, Constants.FmtType.date)
+//        ));
         jobInfo.setOrders(orders);
         return jobInfo;
     }

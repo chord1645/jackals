@@ -15,7 +15,7 @@ import java.io.IOException;
 
 
 @ThreadSafe
-abstract public class ProxyHttpDownloader extends HttpDownloader {
+abstract public class ProxyHttpDownloader extends Downloader {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
 

@@ -70,15 +70,15 @@ public class MTimeJob extends BaseTest {
         Orders orders = new Orders();
         orders.setPathRegx("http://news.mtime.com/movie/2/index.html(#nav)*");
         orders.setTargetRegx("http://news.mtime.com/2015/\\d+/\\d+/\\d+.html");
-        orders.setFields(ImmutableMap.of(
-                "title",
-                new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
-//                "html", new ExtratField("html", ".*(<body>.*?</body>).*", 1),
-                //<p class="mt15 ml25 newstime ">2015-08-12 15:44:03 	<span class="ml15">
-                "infoTime_dt",
-                new ExtratField("infoTime", "<p\\s*class=\".*newstime\\s*\">([^<]+).*</p>", 1, Constants.FmtType.date)
-
-        ));
+//        orders.setFields(ImmutableMap.of(
+//                "title",
+//                new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
+////                "html", new ExtratField("html", ".*(<body>.*?</body>).*", 1),
+//                //<p class="mt15 ml25 newstime ">2015-08-12 15:44:03 	<span class="ml15">
+//                "infoTime_dt",
+//                new ExtratField("infoTime", "<p\\s*class=\".*newstime\\s*\">([^<]+).*</p>", 1, Constants.FmtType.date)
+//
+//        ));
         jobInfo.setOrders(orders);
         return jobInfo;
     }

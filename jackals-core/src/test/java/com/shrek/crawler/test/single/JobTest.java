@@ -1,6 +1,7 @@
 package com.shrek.crawler.test.single;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.shrek.crawler.test.BaseTest;
 import jackals.Constants;
 import jackals.downloader.ProxyPool;
@@ -32,8 +33,8 @@ public class JobTest extends BaseTest {
     public static JobInfo haodaifu() {
         //http://bbs.nga.cn/thread.php?fid=538&rand=356
         JobInfo jobInfo = JobInfo.create("www.haodf.com");
-        jobInfo.setMaxDepth(2);
-        jobInfo.setJobThreadNum(5);
+        jobInfo.setMaxDepth(1);
+        jobInfo.setJobThreadNum(3);
         jobInfo.setSleep(200L);
         jobInfo.setReset(true);
 //        jobInfo.getSeed().add("http://www.haodf.com/hospital/DE4r0Fy0C9LuwWCOYx29oa1OdBHBTXzVa.htm");
@@ -42,16 +43,20 @@ public class JobTest extends BaseTest {
         Orders orders = new Orders();
         orders.setPathRegx("http://www.haodf.com/yiyuan/.*?/list.htm");
         orders.setTargetRegx("^http://www.haodf.com/hospital/.+\\.htm$");
-        orders.setFields(ImmutableMap.of(
-//                "title",
-//                new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
-                "name",
+        orders.setFields(Lists.newArrayList(
                 new ExtratField("name", "\"keywords\" content=\"(.*?),", 1, Constants.FmtType.str),
-                "address",
-                new ExtratField("address", "地址:(.*?);", 1, Constants.FmtType.str),
-                "source",
-                new ExtratField("source", "(.*?)", 1, Constants.FmtType.str)
+                new ExtratField("address", "地址:(.*?);", 1, Constants.FmtType.str)
         ));
+//        orders.setFields(ImmutableMap.of(
+////                "title",
+////                new ExtratField("title", "<title>([^<]+)</title>", 1, Constants.FmtType.str),
+//                "name",
+//                new ExtratField("name", "\"keywords\" content=\"(.*?),", 1, Constants.FmtType.str),
+//                "address",
+//                new ExtratField("address", "地址:(.*?);", 1, Constants.FmtType.str)
+////                "source",
+////                new ExtratField("source", "(.*?)", 1, Constants.FmtType.str)
+//        ));
         jobInfo.setOrders(orders);
         jobInfo.setValid(new Valid() {
             @Override

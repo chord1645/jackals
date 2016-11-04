@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,15 +23,11 @@ public class HtmlExtratorImpl extends HtmlExtrator {
     @Override
     public Object doExtrat(PageObj page, Orders jobInfo) {
         JSONObject object = new JSONObject();
-        for (Map.Entry<String, ExtratField> e : jobInfo.getFields().entrySet()) {
-            try {
-                String result = regexGet(page.getRawText(), e.getValue().getRegx(), e.getValue().getGroup());
-                Object obj = format(result, e.getValue());
-                object.put(e.getKey(), obj);
-            } catch (Throwable ex) {
-                logger.error("doExtrat Exception", ex);
-            }
-        }
+        jobInfo.getFields().stream().forEach(e->{
+            String result = regexGet(page.getRawText(), e.getRegx(), e.getGroup());
+            Object obj = format(result, e);
+            object.put(e.getName(), obj);
+        });
         object.put("url", page.getRequest().getUrl());
         if (autoContentExtrat) {
             object.put("content_css", contentExtrat.process(page.getRawText(), page.getRequest().getUrl()));

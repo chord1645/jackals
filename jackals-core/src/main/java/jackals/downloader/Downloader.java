@@ -9,8 +9,11 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.config.SocketConfig;
@@ -47,6 +50,22 @@ abstract public class Downloader {
         uaList.addAll(uaConfig.values());
     }
 
+    protected HttpUriRequest buildHttpRequest(RequestOjb request, ReqCfg cfg, Map<String, String> headers,HttpHost proxy) {
+        RequestBuilder builder = RequestBuilder.get().setUri(request.getUrl());
+        if (headers != null) {
+            for (Map.Entry<String, String> headerEntry : headers.entrySet()) {
+                builder.addHeader(headerEntry.getKey(), headerEntry.getValue());
+            }
+        }
+        RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()
+                .setProxy(proxy)
+                .setConnectionRequestTimeout(cfg.getTimeOut())
+                .setSocketTimeout(cfg.getTimeOut())
+                .setConnectTimeout(cfg.getTimeOut())
+                .setCookieSpec(CookieSpecs.BEST_MATCH);
+        builder.setConfig(requestConfigBuilder.build());
+        return builder.build();
+    }
     public PageObj download(RequestOjb request, ReqCfg cfg, Valid valid) {
         Map<String, String> headers = null;
         logger.debug("downloading page {}", request.getUrl());
@@ -115,9 +134,6 @@ abstract public class Downloader {
         page.setSuccess(false);
         return page;
     }
-
-
-    abstract protected HttpUriRequest buildHttpRequest(RequestOjb request, ReqCfg cfg, Map<String, String> headers, HttpHost proxy);
 
 
     class HttpClient {

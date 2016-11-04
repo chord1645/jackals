@@ -97,17 +97,17 @@ public class AmazonJob extends BaseTest {
         orders.setPathRegx("(http://www.amazon.cn/s/ref=sr_pg_\\d+[/?]{1}.*)|(http://www.amazon.cn/gp/search/ref=sr_pg_\\d+[/?]{1}.*)");
 //        http://www.amazon.cn/%E%E8%80%85/dp/B00YMKG4OU/ref=sr_1_1?s=digital-text&ie=UTF8&qid=1440143007&sr=1-1
         orders.setTargetRegx("http://www.amazon.cn/[^/]+/dp/\\w+/ref=sr_\\d+_\\d+[/?]{1}.*");
-        orders.setFields(ImmutableMap.of(
-                "title",
-                new ExtratField("title", "<title>《(.+)》.*</title>", 1, Constants.FmtType.str),
-                "comment_i",
-                new ExtratField("comment_i", "(?is)>(\\d+)\\s*条商品评论", 1, Constants.FmtType.str),
-//                "html", new ExtratField("html", ".*(<body>.*?</body>).*", 1),
-                //<p class="mt15 ml25 newstime ">2015-08-12 15:44:03 	<span class="ml15">
-                "price_d",
-                new ExtratField("price_d", "(?is)<b\\s*class=\"priceLarge\"\\s*>\\s*￥\\s*([^<]+)\\s*</b>", 1, Constants.FmtType.str)
-
-        ));
+//        orders.setFields(ImmutableMap.of(
+//                "title",
+//                new ExtratField("title", "<title>《(.+)》.*</title>", 1, Constants.FmtType.str),
+//                "comment_i",
+//                new ExtratField("comment_i", "(?is)>(\\d+)\\s*条商品评论", 1, Constants.FmtType.str),
+////                "html", new ExtratField("html", ".*(<body>.*?</body>).*", 1),
+//                //<p class="mt15 ml25 newstime ">2015-08-12 15:44:03 	<span class="ml15">
+//                "price_d",
+//                new ExtratField("price_d", "(?is)<b\\s*class=\"priceLarge\"\\s*>\\s*￥\\s*([^<]+)\\s*</b>", 1, Constants.FmtType.str)
+//
+//        ));
         jobInfo.setOrders(orders);
         return jobInfo;
     }
