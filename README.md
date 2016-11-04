@@ -1,3 +1,5 @@
 # jackals
 分布式爬虫
-Demo:http://www.chord1645.com:8890/test.do
+
+20161104，单机爬虫，利用代理池抓取整站，测试用例：JobTest.start()
+20161105，使用List保存ExtratField
