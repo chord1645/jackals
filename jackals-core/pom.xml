@@ -48,11 +48,11 @@
         <!--<version>1.0</version>-->
         <!--</dependency>-->
 
-        <dependency>
-            <groupId>org.wltea.analyzer</groupId>
-            <artifactId>IKAnalyzer</artifactId>
-            <version>1.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.wltea.analyzer</groupId>-->
+            <!--<artifactId>IKAnalyzer</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.apache.mahout</groupId>
             <artifactId>mahout-integration</artifactId>
@@ -189,11 +189,11 @@
         <!--<version>1.0.3</version>-->
         <!--</dependency>-->
 
-        <dependency>
-            <groupId>com.github.haifengl</groupId>
-            <artifactId>smile-core</artifactId>
-            <version>1.0.3-local</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.github.haifengl</groupId>-->
+            <!--<artifactId>smile-core</artifactId>-->
+            <!--<version>1.0.3-local</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>com.google.guava</groupId>
