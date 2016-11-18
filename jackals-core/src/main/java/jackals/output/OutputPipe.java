@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  */
 public interface OutputPipe {
-    void save(JobInfo spiderJob, PageObj page, Object e) throws IOException, SolrServerException, Exception;
+    void save(JobInfo spiderJob, PageObj page, Object e) throws IOException, Exception;
 
     void error(JobInfo job, PageObj page);
 }

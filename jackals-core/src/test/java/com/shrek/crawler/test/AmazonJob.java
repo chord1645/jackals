@@ -1,12 +1,9 @@
 package com.shrek.crawler.test;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import jackals.Constants;
 import jackals.downloader.HttpDownloader;
 import jackals.downloader.ReqCfg;
 import jackals.job.JobManager;
-import jackals.job.pojo.ExtratField;
 import jackals.job.pojo.JobInfo;
 import jackals.job.pojo.Orders;
 import jackals.model.PageObj;
@@ -15,7 +12,6 @@ import jackals.mq.activemq.ActiveMQSender;
 import jackals.page.HtmlExtratorImpl;
 import jackals.utils.LinkUtil;
 import jackals.utils.SpringContextHolder;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -42,7 +38,7 @@ public class AmazonJob extends BaseTest {
     }
 
     @Test
-    public void start() throws IOException, SolrServerException {
+    public void start() throws IOException {
 //        SolrServer solrServer = SpringContextHolder.getBean(SolrServer.class);
 //        solrServer.deleteByQuery("*:*");
 //        solrServer.commit();
