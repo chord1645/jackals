@@ -24,46 +24,46 @@
         <jackson.version>2.4.1</jackson.version>
         <redis.version>1.5.2.RELEASE</redis.version>
         <jest.version>2.0.0</jest.version>
-        <elasticsearch.version>2.4.1</elasticsearch.version>
+        <elasticsearch.version>2.0.2</elasticsearch.version>
         <solrj.version>6.1.0</solrj.version>
         <build.mainClass></build.mainClass>
         <build.mainClass></build.mainClass>
     </properties>
     <dependencies>
-        <!--<dependency>-->
-        <!--<groupId>org.elasticsearch</groupId>-->
-        <!--<artifactId>elasticsearch</artifactId>-->
-        <!--<version>${elasticsearch.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>${elasticsearch.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.searchbox</groupId>
             <artifactId>jest</artifactId>
             <version>${jest.version}</version>
             <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.apache.httpcomponents</groupId>-->
-                    <!--<artifactId>httpclient</artifactId>-->
-                <!--</exclusion>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.apache.httpcomponents</groupId>-->
-                    <!--<artifactId>httpcore-nio</artifactId>-->
-                <!--</exclusion>-->
-                <!--<exclusion>-->
-                    <!--<groupId>org.apache.httpcomponents</groupId>-->
-                    <!--<artifactId>httpasyncclient</artifactId>-->
-                <!--</exclusion>-->
+            <!--<exclusion>-->
+            <!--<groupId>org.apache.httpcomponents</groupId>-->
+            <!--<artifactId>httpclient</artifactId>-->
+            <!--</exclusion>-->
+            <!--<exclusion>-->
+            <!--<groupId>org.apache.httpcomponents</groupId>-->
+            <!--<artifactId>httpcore-nio</artifactId>-->
+            <!--</exclusion>-->
+            <!--<exclusion>-->
+            <!--<groupId>org.apache.httpcomponents</groupId>-->
+            <!--<artifactId>httpasyncclient</artifactId>-->
+            <!--</exclusion>-->
             <!--</exclusions>-->
         </dependency>
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-core</artifactId>
-            <version>4.10.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-analyzers-common</artifactId>
-            <version>4.10.4</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.apache.lucene</groupId>-->
+            <!--<artifactId>lucene-core</artifactId>-->
+            <!--<version>4.10.4</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.lucene</groupId>-->
+            <!--<artifactId>lucene-analyzers-common</artifactId>-->
+            <!--<version>4.10.4</version>-->
+        <!--</dependency>-->
 
         <!--<dependency>-->
         <!--<groupId>org.apache.mahout</groupId>-->
@@ -450,11 +450,11 @@
 
     <repositories>
         <!--<repository>-->
-            <!--<id>oschina nexus</id>-->
-            <!--<url>http://maven.oschina.net/content/groups/public/</url>-->
-            <!--<snapshots>-->
-                <!--<enabled>false</enabled>-->
-            <!--</snapshots>-->
+        <!--<id>oschina nexus</id>-->
+        <!--<url>http://maven.oschina.net/content/groups/public/</url>-->
+        <!--<snapshots>-->
+        <!--<enabled>false</enabled>-->
+        <!--</snapshots>-->
         <!--</repository>-->
         <repository>
             <id>sonatype</id>

@@ -7,6 +7,7 @@ import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.JestResult;
 import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Search;
+import io.searchbox.core.SearchResult;
 import io.searchbox.indices.CreateIndex;
 import io.searchbox.indices.mapping.PutMapping;
 import jackals.Constants;
@@ -25,6 +26,8 @@ import jackals.utils.BlockExecutorPool;
 import jackals.utils.LogbackConfigurer;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.lucene.util.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,6 +64,18 @@ public class JestTest  {
                 "{ \"type1\" : { \"properties\" : { \"message\" : {\"type\" : \"string\",\"analyzer\": \"ik_max_word\",\"search_analyzer\": \"ik_max_word\",\"store\" : \"yes\"} } } }"
         ).build();
         JestResult result= client.execute(putMapping);
+        System.out.println(result.getJsonObject().toString());
+    }
+
+    @Test
+    public void query() throws IOException {
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchQuery("user", "kimchy"));
+        Search search = new Search.Builder(searchSourceBuilder.toString())
+                .addIndex("index1")
+                .addType("type1")
+                .build();
+        SearchResult result = client.execute(search);
         System.out.println(result.getJsonObject().toString());
     }
 }
