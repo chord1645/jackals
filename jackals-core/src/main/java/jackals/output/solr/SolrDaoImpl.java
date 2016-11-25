@@ -1,7 +1,7 @@
 package jackals.output.solr;
 
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrDocumentList;
@@ -16,13 +16,13 @@ import java.util.*;
  */
 public class SolrDaoImpl implements IndexDao {
     private Logger log = LoggerFactory.getLogger(this.getClass());
-    private SolrServer solrServer;
+    private SolrClient solrServer;//TODO 升级到6.10后未测试
 
-    public SolrServer getSolrServer() {
+    public SolrClient getSolrServer() {
         return solrServer;
     }
 
-    public void setSolrServer(SolrServer solrServer) {
+    public void setSolrServer(SolrClient solrServer) {
         this.solrServer = solrServer;
     }
 

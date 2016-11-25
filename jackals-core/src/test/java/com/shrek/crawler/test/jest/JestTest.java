@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import com.shrek.crawler.test.BaseTest;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
+import io.searchbox.client.JestResult;
 import io.searchbox.client.config.HttpClientConfig;
+import io.searchbox.core.Search;
 import io.searchbox.indices.CreateIndex;
 import io.searchbox.indices.mapping.PutMapping;
 import jackals.Constants;
@@ -22,6 +24,7 @@ import jackals.single.SingleSpider;
 import jackals.utils.BlockExecutorPool;
 import jackals.utils.LogbackConfigurer;
 import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.lucene.util.QueryBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,20 +52,15 @@ public class JestTest  {
     }
     @Test
     public void mapping() throws IOException {
-
+//        org.apache.http.nio.reactor.IOReactorException
 //        "analyzer": "ik_max_word",
 //                "search_analyzer": "ik_max_word",
         PutMapping putMapping = new PutMapping.Builder(
                 "index1",
                 "type1",
-                "{ \"type1\" : { \"properties\" : { \"message\" : {" +
-                        "\"type\" : \"string\"," +
-                        " \"analyzer\": \"ik_max_word\""+
-                        "\"search_analyzer\": \"ik_max_word\""+
-                        " \"store\" : \"yes\"} } } }"
+                "{ \"type1\" : { \"properties\" : { \"message\" : {\"type\" : \"string\",\"analyzer\": \"ik_max_word\",\"search_analyzer\": \"ik_max_word\",\"store\" : \"yes\"} } } }"
         ).build();
-        client.execute(putMapping);
+        JestResult result= client.execute(putMapping);
+        System.out.println(result.getJsonObject().toString());
     }
-
-
 }

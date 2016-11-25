@@ -2,7 +2,6 @@ package jackals.output;
 
 import jackals.job.pojo.JobInfo;
 import jackals.model.PageObj;
-import org.apache.solr.client.solrj.SolrServerException;
 
 import java.io.IOException;
 

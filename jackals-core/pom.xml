@@ -23,21 +23,37 @@
         <google-guava.version>17.0</google-guava.version>
         <jackson.version>2.4.1</jackson.version>
         <redis.version>1.5.2.RELEASE</redis.version>
-        <jest.version>2.0.4</jest.version>
+        <jest.version>2.0.0</jest.version>
         <elasticsearch.version>2.4.1</elasticsearch.version>
+        <solrj.version>6.1.0</solrj.version>
+        <build.mainClass></build.mainClass>
         <build.mainClass></build.mainClass>
     </properties>
     <dependencies>
-        <dependency>
-        <groupId>org.elasticsearch</groupId>
-        <artifactId>elasticsearch</artifactId>
-        <version>${elasticsearch.version}</version>
-        </dependency>
         <!--<dependency>-->
-            <!--<groupId>io.searchbox</groupId>-->
-            <!--<artifactId>jest</artifactId>-->
-            <!--<version>${jest.version}</version>-->
+        <!--<groupId>org.elasticsearch</groupId>-->
+        <!--<artifactId>elasticsearch</artifactId>-->
+        <!--<version>${elasticsearch.version}</version>-->
         <!--</dependency>-->
+        <dependency>
+            <groupId>io.searchbox</groupId>
+            <artifactId>jest</artifactId>
+            <version>${jest.version}</version>
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.httpcomponents</groupId>-->
+                    <!--<artifactId>httpclient</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.httpcomponents</groupId>-->
+                    <!--<artifactId>httpcore-nio</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.httpcomponents</groupId>-->
+                    <!--<artifactId>httpasyncclient</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
@@ -93,17 +109,17 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.apache.solr</groupId>-->
-        <!--<artifactId>solr-solrj</artifactId>-->
-        <!--<version>4.10.4</version>-->
-        <!--<exclusions>-->
-        <!--<exclusion>-->
-        <!--<groupId>org.slf4j</groupId>-->
-        <!--<artifactId>slf4j-api</artifactId>-->
-        <!--</exclusion>-->
-        <!--</exclusions>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>${solrj.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
@@ -433,13 +449,13 @@
     </build>
 
     <repositories>
-        <repository>
-            <id>oschina nexus</id>
-            <url>http://maven.oschina.net/content/groups/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
+        <!--<repository>-->
+            <!--<id>oschina nexus</id>-->
+            <!--<url>http://maven.oschina.net/content/groups/public/</url>-->
+            <!--<snapshots>-->
+                <!--<enabled>false</enabled>-->
+            <!--</snapshots>-->
+        <!--</repository>-->
         <repository>
             <id>sonatype</id>
             <name>Sonatype Groups</name>

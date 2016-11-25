@@ -1,15 +1,11 @@
 package com.shrek.crawler.test;
 
 import jackals.utils.SpringContextHolder;
-import org.apache.solr.client.solrj.SolrServer;
-import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.SolrClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 //@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -17,8 +13,8 @@ import java.util.concurrent.TimeUnit;
 public class BaseTest {
 
     @Test
-    public void start() throws Exception {
-        SolrServer solrServer = SpringContextHolder.getBean(SolrServer.class);
+    public void start() throws Exception {//TODO 升级到6.10后未测试
+        SolrClient solrServer = SpringContextHolder.getBean(SolrClient.class);
         while (true) {
             solrServer.deleteByQuery("*:*");
 //            TimeUnit.MILLISECONDS.sleep(50);
